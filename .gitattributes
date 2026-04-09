@@ -1,0 +1,2 @@
+plantvillage/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+plantvillage/**/*.JPG filter=lfs diff=lfs merge=lfs -text
