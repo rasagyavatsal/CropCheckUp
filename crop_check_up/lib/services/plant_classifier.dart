@@ -70,10 +70,11 @@ class PlantClassifier {
         .toList();
   }
 
-  /// Resize to 224×224 and convert to a normalised `[1, 224, 224, 3]` tensor.
+  /// Resize to 224×224 and convert to a `[1, 224, 224, 3]` tensor.
   ///
-  /// Pixel values remain in the `[0, 255]` range (matching the Keras MobileNetV3
-  /// preprocessing used during training).
+  /// Pixel values are kept in the raw `[0, 255]` range.  The TFLite model
+  /// contains a built‑in `preprocess_input` Lambda layer that normalises
+  /// to `[-1, 1]` internally, so no manual scaling is needed here.
   List<List<List<List<double>>>> _preprocessImage(img.Image image) {
     final resized = img.copyResize(
       image,
