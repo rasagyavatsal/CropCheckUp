@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
 
 
+import '../services/background_removal_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
 import '../widgets/diagnosis_sheet.dart';
@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _classifier = PlantClassifier();
+  final _bgRemover = BackgroundRemovalService();
   final _imagePicker = ImagePicker();
   
   bool _isInitialising = true;
@@ -38,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await _classifier.init();
+      await Future.wait([
+        _classifier.init(),
+        _bgRemover.init(),
+      ]);
     } catch (e) {
       _initError = e.toString();
     } finally {
@@ -56,18 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final bytes = await File(file.path).readAsBytes();
-      final image = img.decodeImage(bytes);
+      final processedImage = await _bgRemover.processImageBytes(bytes);
       
-      if (image == null) {
+      if (processedImage == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to decode image.')),
+            const SnackBar(content: Text('Failed to remove background and process image.')),
           );
         }
         return;
       }
 
-      final result = _classifier.classifyImage(image);
+      final result = _classifier.classifyImage(processedImage);
       
       if (!mounted) return;
       

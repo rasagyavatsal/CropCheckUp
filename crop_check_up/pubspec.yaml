@@ -17,6 +17,7 @@ dependencies:
   path_provider: ^2.1.5
   google_fonts: ^6.2.1
   image_picker: ^1.1.2
+  image_background_remover: ^2.0.0
 
 dev_dependencies:
   flutter_test:

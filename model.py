@@ -84,8 +84,8 @@ NUM_CLASSES = 38
 #    (Colab T4 only has 2 CPU cores).
 data_augmentation = models.Sequential([
     layers.RandomFlip("horizontal_and_vertical"),
-    layers.RandomRotation(0.2),
-    layers.RandomZoom(0.2),
+    layers.RandomRotation(0.2, fill_mode='constant', fill_value=0.0),
+    layers.RandomZoom(0.2, fill_mode='constant', fill_value=0.0),
     layers.RandomContrast(0.2),
 ], name='augmentation')
 

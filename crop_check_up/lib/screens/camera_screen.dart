@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 
+import '../services/background_removal_service.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
@@ -26,6 +27,7 @@ class _CameraScreenState extends State<CameraScreen>
     with WidgetsBindingObserver {
   final _cameraService = CameraService();
   final _classifier = PlantClassifier();
+  final _bgRemover = BackgroundRemovalService();
 
   bool _isInitialising = true;
   String? _initError;
@@ -74,6 +76,7 @@ class _CameraScreenState extends State<CameraScreen>
     try {
       await Future.wait([
         _classifier.init(),
+        _bgRemover.init(),
         _cameraService.start(),
       ]);
     } catch (e) {
@@ -102,7 +105,12 @@ class _CameraScreenState extends State<CameraScreen>
 
     setState(() => _isDiagnosing = true);
     try {
-      final result = _classifier.classifyImage(frame);
+      final processedFrame = await _bgRemover.processImageObj(frame);
+      if (processedFrame == null) {
+          throw Exception("Background removal failed.");
+      }
+
+      final result = _classifier.classifyImage(processedFrame);
       if (result != null && mounted) {
         DiagnosisSheet.show(context, result);
       } else if (mounted) {

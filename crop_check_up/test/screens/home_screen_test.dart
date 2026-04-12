@@ -10,8 +10,9 @@ void main() {
       // which will fail outside of an emulator/device. It will present the error UI eventually.
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
       
-      // Wait for initialization to happen and eventually trigger error or completion state.
-      await tester.pumpAndSettle();
+      // We use pump with a duration instead of pumpAndSettle because native plugin 
+      // initialization (TFLite/ONNX) might block endlessly in a test environment.
+      await tester.pump(const Duration(seconds: 2));
 
       // Check that at least some core framework layers exist
       expect(find.byType(HomeScreen), findsOneWidget);

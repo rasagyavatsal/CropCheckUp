@@ -91,11 +91,18 @@ class PlantClassifier {
           _inputSize,
           (x) {
             final pixel = resized.getPixel(x, y);
-            return [
-              pixel.r.toDouble(),
-              pixel.g.toDouble(),
-              pixel.b.toDouble(),
-            ];
+            double r = pixel.r.toDouble();
+            double g = pixel.g.toDouble();
+            double b = pixel.b.toDouble();
+            
+            // Treat perfectly transparent pixels (background) as solid black
+            if (pixel.a == 0) {
+              r = 0.0;
+              g = 0.0;
+              b = 0.0;
+            }
+            
+            return [r, g, b];
           },
         ),
       ),
