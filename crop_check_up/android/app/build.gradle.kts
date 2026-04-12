@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.cropcheckup.crop_check_up"
-        minSdk = 21
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
