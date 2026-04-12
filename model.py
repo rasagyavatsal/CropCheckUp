@@ -4,12 +4,10 @@ from tensorflow.keras.applications.mobilenet_v3 import preprocess_input
 import os
 import zipfile
 
-# --- T4 GPU OPTIMIZATIONS ---
-# Mixed Precision: Uses FP16 on T4 Tensor Cores for ~2-3× speedup
-# while keeping numerically sensitive ops in FP32 automatically.
-tf.keras.mixed_precision.set_global_policy('mixed_float16')
-print(f"Compute dtype: {tf.keras.mixed_precision.global_policy().compute_dtype}")
-print(f"Variable dtype: {tf.keras.mixed_precision.global_policy().variable_dtype}")
+# --- P100 GPU SETUP ---
+# P100 (Pascal architecture) does not have Tensor Cores like T4, so mixed_float16
+# would trigger TF performance warnings. Using standard float32.
+tf.keras.mixed_precision.set_global_policy('float32')
 
 # Verify GPU is available
 gpus = tf.config.list_physical_devices('GPU')
@@ -19,59 +17,63 @@ if gpus:
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
-# 1. Google Colab Setup
-try:
-    # --- HIGH-SPEED DATA ACCESS ---
-    ZIP_PATH = '/content/plantvillage.zip'
-    LOCAL_DATA_PATH = '/content/plant_data' 
-    
-    if not os.path.exists(LOCAL_DATA_PATH):
-        print(f"Unzipping {ZIP_PATH} to local storage...")
-        with zipfile.ZipFile(ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(LOCAL_DATA_PATH)
-        print("Unzip complete.")
-        
-        # --- ROBUST CLEANUP & FOLDER DISCOVERY ---
-        print("Cleaning up and discovering dataset structure...")
-        actual_data_dir = LOCAL_DATA_PATH
-        
-        # 1. Delete the pesky __MACOSX folder if it exists
-        macosx_path = os.path.join(LOCAL_DATA_PATH, '__MACOSX')
-        if os.path.exists(macosx_path):
-            import shutil
-            shutil.rmtree(macosx_path)
-            print("Removed __MACOSX metadata folder.")
+# 1. Kaggle / Local Setup
+KAGGLE_WORKING = '/kaggle/working'
+KAGGLE_INPUT = '/kaggle/input'
 
-        # 2. Find the folder that actually contains subdirectories (the classes)
-        # Sometimes zipping creates a nested structure: plant_data/plantvillage/Apple...
-        for root, dirs, files in os.walk(LOCAL_DATA_PATH):
+if os.path.exists(KAGGLE_WORKING):
+    print("Running in Kaggle environment.")
+    OUTPUT_DIR = os.path.join(KAGGLE_WORKING, 'plant_disease_outputs')
+    
+    # Kaggle automatically unzips datasets added via the "Add Data" button into /kaggle/input/
+    # Let's search for the unzipped dataset there first.
+    actual_data_dir = None
+    if os.path.exists(KAGGLE_INPUT):
+        print("Discovering dataset structure in /kaggle/input...")
+        for root, dirs, files in os.walk(KAGGLE_INPUT):
             if len(dirs) >= 30: # Look for the folder with many sub-folders (classes)
                 actual_data_dir = root
                 break
-        
-        DATASET_PATH = actual_data_dir
-        print(f"Corrected DATASET_PATH to: {DATASET_PATH}")
 
-        # 3. Final cleanup of any stray non-image files
-        valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp')
-        for root, dirs, files in os.walk(DATASET_PATH):
-            for file in files:
-                if not file.lower().endswith(valid_extensions):
-                    os.remove(os.path.join(root, file))
+    if actual_data_dir:
+        DATASET_PATH = actual_data_dir
+        print(f"Found DATASET_PATH at: {DATASET_PATH}")
     else:
-        # If folder already exists, we still need to find the correct nested path
-        for root, dirs, files in os.walk(LOCAL_DATA_PATH):
-            if len(dirs) >= 30:
-                DATASET_PATH = root
-                break
-        print(f"Using existing dataset at: {DATASET_PATH}")
-    
-except ImportError:
-    print("Not running in Google Colab. Using local 'plantvillage/' directory.")
+        # Fallback if they manually downloaded a zip to /kaggle/working/
+        ZIP_PATH = os.path.join(KAGGLE_WORKING, 'plantvillage.zip')
+        LOCAL_DATA_PATH = os.path.join(KAGGLE_WORKING, 'plant_data')
+        
+        if os.path.exists(LOCAL_DATA_PATH):
+            for root, dirs, files in os.walk(LOCAL_DATA_PATH):
+                if len(dirs) >= 30:
+                    DATASET_PATH = root
+                    break
+        elif os.path.exists(ZIP_PATH):
+            print(f"Unzipping {ZIP_PATH} to local storage...")
+            with zipfile.ZipFile(ZIP_PATH, 'r') as zip_ref:
+                zip_ref.extractall(LOCAL_DATA_PATH)
+            
+            for root, dirs, files in os.walk(LOCAL_DATA_PATH):
+                if len(dirs) >= 30:
+                    DATASET_PATH = root
+                    break
+            
+            # Cleanup stray non-image files
+            valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp')
+            for root, dirs, files in os.walk(DATASET_PATH):
+                for file in files:
+                    if not file.lower().endswith(valid_extensions):
+                        os.remove(os.path.join(root, file))
+        else:
+            DATASET_PATH = KAGGLE_INPUT
+            print(f"Warning: Could not automatically detect dataset directory.")
+            
+else:
+    print("Not running in Kaggle. Using local 'plantvillage/' directory.")
     DATASET_PATH = 'plantvillage/'
+    OUTPUT_DIR = './plant_disease_outputs'
 
 # 2. Output Configuration
-OUTPUT_DIR = '/content/plant_disease_outputs'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 IMG_SIZE = (224, 224)
@@ -81,7 +83,7 @@ NUM_CLASSES = 38
 # 3. Data Augmentation — runs ON GPU as part of the training model's forward pass.
 #    NOT part of the inference/export model, so TFLite stays clean.
 #    Previously this ran on CPU via tf.data.map(), which starved the GPU
-#    (Colab T4 only has 2 CPU cores).
+#    (Colab instances often only have 2 CPU cores).
 data_augmentation = models.Sequential([
     layers.RandomFlip("horizontal_and_vertical"),
     layers.RandomRotation(0.2, fill_mode='constant', fill_value=0.0),
@@ -222,9 +224,8 @@ if __name__ == "__main__":
     print(f"Keras model saved to {keras_path}")
 
     # 10. Export to TFLite for Mobile Deployment (Saved to Drive)
-    #     The training model uses mixed_float16 which injects float16 ops
-    #     (e.g. Rescaling's tf.Mul) that TFLite cannot convert.
-    #     Solution: rebuild a clean float32 model and copy trained weights.
+    #     Rebuild a clean float32 model and copy trained weights
+    #     to ensure perfect compatibility with TFLite converter.
     print("Building float32 model for TFLite export...")
     tf.keras.mixed_precision.set_global_policy('float32')
     export_model = build_model(NUM_CLASSES)
