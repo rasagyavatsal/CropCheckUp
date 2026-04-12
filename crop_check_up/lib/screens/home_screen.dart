@@ -71,12 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
         return;
       }
 
-      final result = _classifier.classifyImage(processedImage);
+      final result = _classifier.classifyImage(processedImage.image);
       
       if (!mounted) return;
       
       if (result != null) {
-        DiagnosisSheet.show(context, result);
+        DiagnosisSheet.show(context, result, imageBytes: processedImage.bytes);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose from this image.')),

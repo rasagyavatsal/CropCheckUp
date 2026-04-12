@@ -110,9 +110,9 @@ class _CameraScreenState extends State<CameraScreen>
           throw Exception("Background removal failed.");
       }
 
-      final result = _classifier.classifyImage(processedFrame);
+      final result = _classifier.classifyImage(processedFrame.image);
       if (result != null && mounted) {
-        DiagnosisSheet.show(context, result);
+        DiagnosisSheet.show(context, result, imageBytes: processedFrame.bytes);
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose. Please try again.')),

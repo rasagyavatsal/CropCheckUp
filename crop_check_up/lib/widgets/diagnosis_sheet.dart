@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../models/diagnosis_result.dart';
@@ -10,22 +12,24 @@ import '../theme/app_theme.dart';
 /// health icon, and a button to navigate to treatment information.
 class DiagnosisSheet extends StatelessWidget {
   final DiagnosisResult result;
+  final Uint8List? imageBytes;
 
-  const DiagnosisSheet({super.key, required this.result});
+  const DiagnosisSheet({super.key, required this.result, this.imageBytes});
 
   // ---------------------------------------------------------------------------
   // Public helper to show as a modal sheet
   // ---------------------------------------------------------------------------
 
   /// Display the sheet over the current route.
-  static void show(BuildContext context, DiagnosisResult result) {
+  static void show(BuildContext context, DiagnosisResult result, {Uint8List? imageBytes}) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => DiagnosisSheet(result: result),
+      builder: (_) => DiagnosisSheet(result: result, imageBytes: imageBytes),
     );
   }
+
 
   // ---------------------------------------------------------------------------
   // Build
@@ -64,6 +68,27 @@ class DiagnosisSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+
+          // Segmented Image
+          if (imageBytes != null) ...[
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white24, width: 2),
+                color: Colors.black12,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.memory(
+                  imageBytes!,
+                  height: 140,
+                  width: 140,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
 
           // Status icon
           Icon(statusIcon, size: 56, color: statusColor),
