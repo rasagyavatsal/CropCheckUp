@@ -149,6 +149,22 @@ if __name__ == "__main__":
     print(f"Saved {len(class_names)} labels to {labels_path}")
     print(f"Label order: {class_names}")
 
+    # --- HANDLE CLASS IMBALANCE ---
+    # Calculate weights to balance the loss function. Minority classes get 
+    # higher weights so the model learns from them more effectively.
+    print("Calculating class weights to handle dataset imbalance...")
+    class_counts = []
+    for cls in class_names:
+        count = len([f for f in os.listdir(os.path.join(DATASET_PATH, cls)) 
+                     if f.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp'))])
+        class_counts.append(max(count, 1)) # Avoid division by zero
+    
+    total_samples = sum(class_counts)
+    num_classes = len(class_names)
+    class_weight_dict = {i: total_samples / (num_classes * count) for i, count in enumerate(class_counts)}
+    
+    print(f"Weight range: {min(class_weight_dict.values()):.2f} (majority) to {max(class_weight_dict.values()):.2f} (minority)")
+
     # --- HIGH-PERFORMANCE DATA PIPELINE ---
     # Augmentation is now inside the training model (runs on GPU),
     # so the data pipeline only needs to read and shuffle — CPU can easily keep up.
@@ -197,7 +213,8 @@ if __name__ == "__main__":
         train_ds,
         validation_data=val_ds,
         epochs=10,
-        callbacks=training_callbacks
+        callbacks=training_callbacks,
+        class_weight=class_weight_dict
     )
 
     # 8. Fine-Tuning (Unfreeze the base model)
@@ -215,7 +232,8 @@ if __name__ == "__main__":
         train_ds,
         validation_data=val_ds,
         epochs=10,
-        callbacks=training_callbacks
+        callbacks=training_callbacks,
+        class_weight=class_weight_dict
     )
 
     # 9. Save Final Keras Model to Drive
