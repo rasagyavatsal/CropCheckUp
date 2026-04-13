@@ -136,25 +136,58 @@ class DiagnosisResultScreen extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // Disease Info Sections
-                _DiseaseInfoSection(
-                  title: 'About',
-                  content: _getDescription(result),
-                  icon: Icons.info_outline_rounded,
-                ),
-                const SizedBox(height: 16),
-
-                _DiseaseInfoSection(
-                  title: 'Recommended Actions',
-                  items: _getRecommendations(result),
-                  icon: Icons.medical_services_rounded,
-                ),
-                const SizedBox(height: 16),
-
-                _DiseaseInfoSection(
-                  title: 'Prevention Tips',
-                  items: _getPreventionTips(result),
-                  icon: Icons.shield_rounded,
-                ),
+                if (result.isHealthy) ...[
+                  _DiseaseInfoSection(
+                    title: 'Status',
+                    content: 'The AI model determined this ${result.cropName} leaf is healthy with '
+                        '${result.confidencePercent}% confidence.',
+                    icon: Icons.info_outline_rounded,
+                  ),
+                  const SizedBox(height: 16),
+                  _DiseaseInfoSection(
+                    title: 'Maintenance Tips',
+                    items: const [
+                      'Maintain proper spacing between plants.',
+                      'Use drip irrigation rather than overhead watering.',
+                      'Rotate crops each season.',
+                      'Monitor periodically for early signs of disease.',
+                    ],
+                    icon: Icons.shield_rounded,
+                  ),
+                ] else ...[
+                  if (result.symptoms != null) ...[
+                    _DiseaseInfoSection(
+                      title: 'Symptoms',
+                      content: result.symptoms,
+                      icon: Icons.visibility_rounded,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (result.causes != null) ...[
+                    _DiseaseInfoSection(
+                      title: 'Causes',
+                      content: result.causes,
+                      icon: Icons.biotech_rounded,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (result.management != null) ...[
+                    _DiseaseInfoSection(
+                      title: 'Management & Treatment',
+                      content: result.management,
+                      icon: Icons.medical_services_rounded,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (result.symptoms == null && result.causes == null && result.management == null)
+                    _DiseaseInfoSection(
+                      title: 'About',
+                      content: '${result.diseaseName} was detected on the ${result.cropName} leaf with '
+                          '${result.confidencePercent}% confidence. Early treatment is critical to '
+                          'prevent further spread.',
+                      icon: Icons.info_outline_rounded,
+                    ),
+                ],
                 const SizedBox(height: 40),
 
                 // Done Button
@@ -173,52 +206,6 @@ class DiagnosisResultScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Content generators
-  // ---------------------------------------------------------------------------
-
-  static List<String> _getRecommendations(DiagnosisResult r) {
-    if (r.isHealthy) {
-      return [
-        'No action needed — your plant looks healthy!',
-        'Continue regular watering and fertilisation.',
-        'Monitor periodically for early signs of disease.',
-      ];
-    }
-    return [
-      'Remove and destroy affected leaves immediately.',
-      'Apply an appropriate fungicide or bactericide.',
-      'Isolate the plant to prevent spreading.',
-      'Consult a local agricultural office for specific advice.',
-    ];
-  }
-
-  static List<String> _getPreventionTips(DiagnosisResult r) {
-    if (r.isHealthy) {
-      return [
-        'Maintain proper spacing between plants.',
-        'Use drip irrigation rather than overhead watering.',
-        'Rotate crops each season.',
-      ];
-    }
-    return [
-      'Ensure good air circulation around plants.',
-      'Avoid overhead watering — use drip irrigation.',
-      'Practice crop rotation to break disease cycles.',
-      'Use disease‑resistant varieties where available.',
-    ];
-  }
-
-  static String _getDescription(DiagnosisResult r) {
-    if (r.isHealthy) {
-      return 'The AI model determined this ${r.cropName} leaf is healthy with '
-          '${r.confidencePercent}% confidence.';
-    }
-    return '${r.diseaseName} was detected on the ${r.cropName} leaf with '
-        '${r.confidencePercent}% confidence. Early treatment is critical to '
-        'prevent further spread.';
   }
 }
 

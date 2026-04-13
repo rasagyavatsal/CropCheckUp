@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image/image.dart' as img;
@@ -17,11 +18,13 @@ import '../models/diagnosis_result.dart';
 class PlantClassifier {
   static const String _modelAsset = 'assets/plant_disease_model.tflite';
   static const String _labelsAsset = 'assets/labels.txt';
+  static const String _diseaseInfoAsset = 'assets/disease_info.json';
   static const int _inputSize = 224;
   static const double _confidenceThreshold = 0.0;
 
   Interpreter? _interpreter;
   List<String> _labels = [];
+  Map<String, dynamic> _diseaseInfo = {};
 
   /// Whether [init] has completed successfully.
   bool get isReady => _interpreter != null && _labels.isNotEmpty;
@@ -38,6 +41,7 @@ class PlantClassifier {
 
     _interpreter = await Interpreter.fromAsset(_modelAsset);
     _labels = await _loadLabels();
+    _diseaseInfo = await _loadDiseaseInfo();
   }
 
   /// Classify a camera frame supplied as a decoded [img.Image].
@@ -89,6 +93,11 @@ class PlantClassifier {
         .map((line) => line.trim())
         .where((line) => line.isNotEmpty)
         .toList();
+  }
+
+  Future<Map<String, dynamic>> _loadDiseaseInfo() async {
+    final raw = await rootBundle.loadString(_diseaseInfoAsset);
+    return json.decode(raw) as Map<String, dynamic>;
   }
 
   /// Resize to 224×224 and convert to a `[1, 224, 224, 3]` tensor.
@@ -155,9 +164,15 @@ class PlantClassifier {
 
     if (maxScore < _confidenceThreshold) return null;
 
+    final String rawLabel = _labels[maxIndex];
+    final Map<String, dynamic>? info = _diseaseInfo[rawLabel] as Map<String, dynamic>?;
+
     return DiagnosisResult(
-      rawLabel: _labels[maxIndex],
+      rawLabel: rawLabel,
       confidence: maxScore,
+      symptoms: info?['symptoms'] as String?,
+      causes: info?['causes'] as String?,
+      management: info?['management'] as String?,
     );
   }
 }

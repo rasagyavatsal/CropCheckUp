@@ -10,9 +10,21 @@ class DiagnosisResult {
   /// Model confidence in the range `[0.0, 1.0]`.
   final double confidence;
 
+  /// Detailed symptoms of the disease (if applicable).
+  final String? symptoms;
+
+  /// Underlying cause or pathogen of the disease (if applicable).
+  final String? causes;
+
+  /// Recommended management and treatment steps (if applicable).
+  final String? management;
+
   const DiagnosisResult({
     required this.rawLabel,
     required this.confidence,
+    this.symptoms,
+    this.causes,
+    this.management,
   });
 
   // ---------------------------------------------------------------------------
@@ -70,8 +82,16 @@ class DiagnosisResult {
       identical(this, other) ||
       other is DiagnosisResult &&
           rawLabel == other.rawLabel &&
-          confidence == other.confidence;
+          confidence == other.confidence &&
+          symptoms == other.symptoms &&
+          causes == other.causes &&
+          management == other.management;
 
   @override
-  int get hashCode => rawLabel.hashCode ^ confidence.hashCode;
+  int get hashCode =>
+      rawLabel.hashCode ^
+      confidence.hashCode ^
+      symptoms.hashCode ^
+      causes.hashCode ^
+      management.hashCode;
 }

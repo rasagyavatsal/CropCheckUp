@@ -150,6 +150,31 @@ void main() {
       });
     });
 
+    group('optional info fields', () {
+      test('stores and returns symptoms, causes, and management', () {
+        const result = DiagnosisResult(
+          rawLabel: 'Tomato___Late_blight',
+          confidence: 0.95,
+          symptoms: 'Brown spots on leaves',
+          causes: 'Fungus',
+          management: 'Use fungicide',
+        );
+        expect(result.symptoms, 'Brown spots on leaves');
+        expect(result.causes, 'Fungus');
+        expect(result.management, 'Use fungicide');
+      });
+
+      test('fields are null when not provided', () {
+        const result = DiagnosisResult(
+          rawLabel: 'Tomato___Late_blight',
+          confidence: 0.95,
+        );
+        expect(result.symptoms, isNull);
+        expect(result.causes, isNull);
+        expect(result.management, isNull);
+      });
+    });
+
     group('equality', () {
       test('equal for same label and confidence', () {
         const a = DiagnosisResult(rawLabel: 'A___B', confidence: 0.5);
