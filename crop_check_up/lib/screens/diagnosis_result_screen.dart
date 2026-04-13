@@ -2,8 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 import '../models/diagnosis_result.dart';
 import '../theme/app_theme.dart';
+import '../widgets/header_background.dart';
 
 /// Full‑screen route that presents a [DiagnosisResult].
 ///
@@ -27,136 +30,147 @@ class DiagnosisResultScreen extends StatelessWidget {
         result.isHealthy ? Icons.check_circle_rounded : Icons.warning_rounded;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Diagnosis Result'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Segmented Image
-              if (imageBytes != null) ...[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      width: 4,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 140,
+            pinned: true,
+            stretch: true,
+            leading: const BackButton(color: Colors.white),
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(
+                'Diagnosis Result',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              background: HeaderBackground(
+                title: 'Diagnosis Result',
+                subtitle: result.isHealthy ? 'HEALTHY PLANT' : 'DISEASE DETECTED',
+                icon: statusIcon,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(24.0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Segmented Image
+                if (imageBytes != null) ...[
+                  Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          width: 4,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.memory(
-                      imageBytes!,
-                      height: 240,
-                      width: 240,
-                      fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Image.memory(
+                          imageBytes!,
+                          height: 240,
+                          width: 240,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+
+                // Status info
+                Column(
+                  children: [
+                    Icon(statusIcon, size: 64, color: statusColor),
+                    const SizedBox(height: 16),
+                    Text(
+                      result.diseaseName,
+                      style: GoogleFonts.inter(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: -0.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Crop: ${result.cropName}',
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                // Confidence card
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
+                  ),
+                  child: _ConfidenceBar(
+                    confidence: result.confidence,
+                    color: statusColor,
                   ),
                 ),
                 const SizedBox(height: 32),
-              ],
 
-              // Status icon
-              Icon(statusIcon, size: 80, color: statusColor),
-              const SizedBox(height: 16),
+                // Disease Info Sections
+                _DiseaseInfoSection(
+                  title: 'About',
+                  content: _getDescription(result),
+                  icon: Icons.info_outline_rounded,
+                ),
+                const SizedBox(height: 16),
 
-              // Primary label
-              Text(
-                result.diseaseName,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
+                _DiseaseInfoSection(
+                  title: 'Recommended Actions',
+                  items: _getRecommendations(result),
+                  icon: Icons.medical_services_rounded,
+                ),
+                const SizedBox(height: 16),
 
-              // Crop name subtitle
-              Text(
-                'Crop: ${result.cropName}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white70,
-                      letterSpacing: 0.5,
-                    ),
-              ),
-              const SizedBox(height: 32),
+                _DiseaseInfoSection(
+                  title: 'Prevention Tips',
+                  items: _getPreventionTips(result),
+                  icon: Icons.shield_rounded,
+                ),
+                const SizedBox(height: 40),
 
-              // Confidence card
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                // Done Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Done'),
                   ),
                 ),
-                child: _ConfidenceBar(
-                  confidence: result.confidence,
-                  color: statusColor,
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              // Disease Info Sections
-              _DiseaseInfoSection(
-                title: 'About',
-                content: _getDescription(result),
-                icon: Icons.info_outline_rounded,
-              ),
-              const SizedBox(height: 20),
-
-              _DiseaseInfoSection(
-                title: 'Recommended Actions',
-                items: _getRecommendations(result),
-                icon: Icons.medical_services_rounded,
-              ),
-              const SizedBox(height: 20),
-
-              _DiseaseInfoSection(
-                title: 'Prevention Tips',
-                items: _getPreventionTips(result),
-                icon: Icons.shield_rounded,
-              ),
-              const SizedBox(height: 40),
-
-              // Done Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.healthyGreen,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-            ],
+                const SizedBox(height: 32),
+              ]),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -242,12 +256,12 @@ class _DiseaseInfoSection extends StatelessWidget {
         const SizedBox(height: 12),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(16),
+            color: Theme.of(context).cardColor.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: Colors.white.withValues(alpha: 0.05),
             ),
           ),
           child: Column(
@@ -256,7 +270,7 @@ class _DiseaseInfoSection extends StatelessWidget {
               if (content != null)
                 Text(
                   content!,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     color: Colors.white70,
                     fontSize: 14,
                     height: 1.5,
@@ -274,7 +288,7 @@ class _DiseaseInfoSection extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item,
-                            style: const TextStyle(
+                            style: GoogleFonts.inter(
                               color: Colors.white70,
                               fontSize: 14,
                               height: 1.5,

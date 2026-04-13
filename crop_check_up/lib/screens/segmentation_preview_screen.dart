@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/app_theme.dart';
 
 /// Screen to preview the segmented image before inference.
@@ -59,17 +61,18 @@ class SegmentationPreviewScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Confirm Leaf Selection',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        'Confirm Specimen',
+                        style: GoogleFonts.inter(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
                             ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      const Text(
+                      Text(
                         'Is the background removal correct? Ensure only the plant leaf is clearly visible.',
-                        style: TextStyle(
+                        style: GoogleFonts.inter(
                           color: Colors.white70,
                           fontSize: 14,
                           height: 1.4,
@@ -88,7 +91,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(28),
+                          borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
                               color: AppTheme.healthyGreen.withValues(alpha: 0.25),
@@ -102,7 +105,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                           ),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(28),
+                          borderRadius: BorderRadius.circular(24),
                           child: Image.memory(
                             imageBytes,
                             fit: BoxFit.contain,
@@ -127,15 +130,18 @@ class SegmentationPreviewScreen extends StatelessWidget {
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(24),
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.refresh_rounded, size: 20),
-                              SizedBox(width: 8),
-                              Text('Retry'),
+                              const Icon(Icons.refresh_rounded, size: 20),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Retry',
+                                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                              ),
                             ],
                           ),
                         ),
@@ -152,15 +158,18 @@ class SegmentationPreviewScreen extends StatelessWidget {
                             elevation: 8,
                             shadowColor: AppTheme.healthyGreen.withValues(alpha: 0.4),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(24),
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.check_circle_outline_rounded, size: 20),
-                              SizedBox(width: 8),
-                              Text('Confirm'),
+                              const Icon(Icons.check_circle_outline_rounded, size: 20),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Confirm',
+                                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                              ),
                             ],
                           ),
                         ),

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../services/diagnosis_workflow_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/header_background.dart';
 import 'camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,16 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isInitialising) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: AppTheme.healthyGreen),
-              SizedBox(height: 16),
+              const CircularProgressIndicator(color: AppTheme.healthyGreen),
+              const SizedBox(height: 16),
               Text(
                 'Initialising AI models…',
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                style: GoogleFonts.inter(color: Colors.white70, fontSize: 16),
               ),
             ],
           ),
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   _initError!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white60),
+                  style: GoogleFonts.inter(color: Colors.white60),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -254,60 +255,7 @@ class _HomeAppBar extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        background: const _HeaderBackground(),
-      ),
-    );
-  }
-}
-
-class _HeaderBackground extends StatelessWidget {
-  const _HeaderBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1B5E20), AppTheme.healthyGreen],
-        ),
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned(
-            right: -10,
-            bottom: -10,
-            child: Icon(
-              Icons.eco_rounded,
-              size: 140,
-              color: Colors.white.withValues(alpha: 0.1),
-            ),
-          ),
-          Center(
-            child: Opacity(
-              opacity: 0.6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.eco_rounded, size: 32, color: Colors.white),
-                  const SizedBox(height: 4),
-                  Text(
-                    'PROTECT YOUR HARVEST',
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                  const SizedBox(height: 20), // Space for the title
-                ],
-              ),
-            ),
-          ),
-        ],
+        background: const HeaderBackground(title: 'CropCheckUp'),
       ),
     );
   }

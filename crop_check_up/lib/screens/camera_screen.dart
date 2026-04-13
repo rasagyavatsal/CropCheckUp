@@ -4,6 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 
+import 'package:google_fonts/google_fonts.dart';
+
 import '../services/background_removal_service.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
@@ -155,16 +157,16 @@ class _CameraScreenState extends State<CameraScreen>
   @override
   Widget build(BuildContext context) {
     if (_isInitialising) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: AppTheme.healthyGreen),
-              SizedBox(height: 16),
+              const CircularProgressIndicator(color: AppTheme.healthyGreen),
+              const SizedBox(height: 16),
               Text(
                 'Loading AI model…',
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                style: GoogleFonts.inter(color: Colors.white70, fontSize: 16),
               ),
             ],
           ),
@@ -190,7 +192,7 @@ class _CameraScreenState extends State<CameraScreen>
                 Text(
                   _initError!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white60),
+                  style: GoogleFonts.inter(color: Colors.white60),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -226,11 +228,12 @@ class _CameraScreenState extends State<CameraScreen>
                 // App title
                 Text(
                   'CropCheckUp',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+                  style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
                         color: Colors.white,
                         shadows: const [
-                          Shadow(blurRadius: 8, color: Colors.black87),
+                          Shadow(blurRadius: 12, color: Colors.black54),
                         ],
                       ),
                 ),
@@ -279,15 +282,16 @@ class _CameraScreenState extends State<CameraScreen>
 
   Widget _buildProcessingChip() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.black.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white10),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 14,
             height: 14,
             child: CircularProgressIndicator(
@@ -295,10 +299,14 @@ class _CameraScreenState extends State<CameraScreen>
               color: AppTheme.healthyGreen,
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 10),
           Text(
-            'Analyzing Image...',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
+            'Analyzing Specimen...',
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -307,14 +315,19 @@ class _CameraScreenState extends State<CameraScreen>
 
   Widget _buildReadyChip() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.black.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white10),
       ),
-      child: const Text(
+      child: Text(
         'Align leaf and tap to capture',
-        style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w500),
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -332,16 +345,21 @@ class _CircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.45),
-          shape: BoxShape.circle,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(22),
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.5),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white10),
+          ),
+          child: Icon(icon, color: Colors.white, size: 22),
         ),
-        child: Icon(icon, color: Colors.white, size: 22),
       ),
     );
   }
@@ -359,31 +377,48 @@ class _CaptureButton extends StatelessWidget {
       onTap: isProcessing ? null : onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        width: 72,
-        height: 72,
+        width: 80,
+        height: 80,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: isProcessing ? Colors.white38 : Colors.white,
+            color: isProcessing ? Colors.white24 : Colors.white,
             width: 4,
           ),
-          boxShadow: !isProcessing
-              ? [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                  ),
-                ]
-              : [],
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.healthyGreen.withValues(alpha: isProcessing ? 0 : 0.3),
+              blurRadius: 20,
+              spreadRadius: 2,
+            ),
+          ],
         ),
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(6),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 250),
-            width: 56,
-            height: 56,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isProcessing ? Colors.white24 : Colors.white,
+              gradient: isProcessing 
+                  ? null 
+                  : const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppTheme.healthyGreen, Color(0xFF1B5E20)],
+                    ),
+              color: isProcessing ? Colors.white24 : null,
+            ),
+            child: Center(
+              child: isProcessing
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white70,
+                      ),
+                    )
+                  : const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 32),
             ),
           ),
         ),
