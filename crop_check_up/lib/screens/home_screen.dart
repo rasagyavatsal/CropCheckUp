@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import '../services/background_removal_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
-import '../widgets/diagnosis_sheet.dart';
 import 'camera_screen.dart';
+import 'diagnosis_result_screen.dart';
 import 'segmentation_preview_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -92,7 +92,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted) return;
       
       if (result != null) {
-        DiagnosisSheet.show(context, result, imageBytes: resizedBytes);
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => DiagnosisResultScreen(
+              result: result,
+              imageBytes: resizedBytes,
+            ),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose from this image.')),

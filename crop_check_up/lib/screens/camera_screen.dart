@@ -9,14 +9,14 @@ import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
 import '../widgets/camera_overlay.dart';
-import '../widgets/diagnosis_sheet.dart';
+import 'diagnosis_result_screen.dart';
 import 'segmentation_preview_screen.dart';
 
 /// Live camera viewfinder for plant disease diagnosis.
 ///
 /// The screen shows the camera feed with a targeting overlay. When the user
 /// clicks the capture button, it grabs the latest decoded frame, runs the 
-/// classifier, and presents the [DiagnosisSheet] with the result.
+/// classifier, and presents the [DiagnosisResultScreen] with the result.
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
 
@@ -128,7 +128,14 @@ class _CameraScreenState extends State<CameraScreen>
 
       final result = _classifier.classifyImage(resizedImage);
       if (result != null && mounted) {
-        DiagnosisSheet.show(context, result, imageBytes: resizedBytes);
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => DiagnosisResultScreen(
+              result: result,
+              imageBytes: resizedBytes,
+            ),
+          ),
+        );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose. Please try again.')),
