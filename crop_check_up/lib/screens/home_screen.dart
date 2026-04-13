@@ -72,11 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
         return;
       }
 
+      // Resize to 224x224 before showing preview or model inference
+      final (resizedImage, resizedBytes) = await _classifier.resizeForModel(processedImage.image);
+
       // Show preview for user confirmation
       if (mounted) {
         final confirmed = await SegmentationPreviewScreen.show(
           context, 
-          processedImage.bytes,
+          resizedBytes, // Show resized version
         );
         
         if (confirmed != true) {
@@ -84,12 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      final result = _classifier.classifyImage(processedImage.image);
+      final result = _classifier.classifyImage(resizedImage);
       
       if (!mounted) return;
       
       if (result != null) {
-        DiagnosisSheet.show(context, result, imageBytes: processedImage.bytes);
+        DiagnosisSheet.show(context, result, imageBytes: resizedBytes);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose from this image.')),

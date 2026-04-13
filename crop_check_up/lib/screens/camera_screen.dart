@@ -111,11 +111,14 @@ class _CameraScreenState extends State<CameraScreen>
           throw Exception("Background removal failed.");
       }
 
+      // Resize to 224x224 before showing preview or model inference
+      final (resizedImage, resizedBytes) = await _classifier.resizeForModel(processedFrame.image);
+
       // Show preview for user confirmation
       if (mounted) {
         final confirmed = await SegmentationPreviewScreen.show(
           context, 
-          processedFrame.bytes,
+          resizedBytes, // Show resized version
         );
         
         if (confirmed != true) {
@@ -123,9 +126,9 @@ class _CameraScreenState extends State<CameraScreen>
         }
       }
 
-      final result = _classifier.classifyImage(processedFrame.image);
+      final result = _classifier.classifyImage(resizedImage);
       if (result != null && mounted) {
-        DiagnosisSheet.show(context, result, imageBytes: processedFrame.bytes);
+        DiagnosisSheet.show(context, result, imageBytes: resizedBytes);
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not confidently diagnose. Please try again.')),
