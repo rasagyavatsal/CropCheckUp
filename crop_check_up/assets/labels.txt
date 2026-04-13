@@ -15,7 +15,6 @@ Grape___Leaf_blight_(Isariopsis_Leaf_Spot)
 Grape___healthy
 Mango___Anthracnose
 Mango___Bacterial_Canker
-Mango___Cutting_Weevil
 Mango___Die_Back
 Mango___Gall_Midge
 Mango___Healthy
