@@ -126,7 +126,8 @@ if __name__ == "__main__":
         subset="training",
         seed=123,
         image_size=IMG_SIZE,
-        batch_size=BATCH_SIZE
+        batch_size=BATCH_SIZE,
+        crop_to_aspect_ratio=True
     )
 
     val_ds = tf.keras.utils.image_dataset_from_directory(
@@ -135,7 +136,8 @@ if __name__ == "__main__":
         subset="validation",
         seed=123,
         image_size=IMG_SIZE,
-        batch_size=BATCH_SIZE
+        batch_size=BATCH_SIZE,
+        crop_to_aspect_ratio=True
     )
 
     # --- SAVE AUTHORITATIVE LABEL ORDER ---

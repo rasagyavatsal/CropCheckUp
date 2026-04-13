@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -17,7 +18,7 @@ class PlantClassifier {
   static const String _modelAsset = 'assets/plant_disease_model.tflite';
   static const String _labelsAsset = 'assets/labels.txt';
   static const int _inputSize = 224;
-  static const double _confidenceThreshold = 0.75;
+  static const double _confidenceThreshold = 0.0;
 
   Interpreter? _interpreter;
   List<String> _labels = [];
@@ -46,9 +47,29 @@ class PlantClassifier {
   DiagnosisResult? classifyImage(img.Image image) {
     assert(isReady, 'PlantClassifier.init() must be called first');
 
+    // If image is already 224x224, we still run through _preprocessImage 
+    // to get the correctly formatted tensor.
     final input = _preprocessImage(image);
     final output = _runInference(input);
     return _interpretOutput(output);
+  }
+
+  /// Resizes the image to the model's required input size (224x224).
+  /// 
+  /// Returns the resized [img.Image] and its PNG bytes for display.
+  Future<(img.Image, Uint8List)> resizeForModel(img.Image image) async {
+    return compute(_resizeAndEncode, image);
+  }
+
+  static (img.Image, Uint8List) _resizeAndEncode(img.Image image) {
+    final resized = img.copyResizeCropSquare(
+      image,
+      size: _inputSize,
+      interpolation: img.Interpolation.linear,
+    );
+    
+    final bytes = Uint8List.fromList(img.encodePng(resized));
+    return (resized, bytes);
   }
 
   /// Release the interpreter resources.
@@ -76,12 +97,16 @@ class PlantClassifier {
   /// contains a built‑in `preprocess_input` Lambda layer that normalises
   /// to `[-1, 1]` internally, so no manual scaling is needed here.
   List<List<List<List<double>>>> _preprocessImage(img.Image image) {
-    final resized = img.copyResize(
-      image,
-      width: _inputSize,
-      height: _inputSize,
-      interpolation: img.Interpolation.linear,
-    );
+    final img.Image resized;
+    if (image.width == _inputSize && image.height == _inputSize) {
+      resized = image;
+    } else {
+      resized = img.copyResizeCropSquare(
+        image,
+        size: _inputSize,
+        interpolation: img.Interpolation.linear,
+      );
+    }
 
     return List.generate(
       1,
