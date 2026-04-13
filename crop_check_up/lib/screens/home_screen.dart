@@ -9,6 +9,7 @@ import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
 import '../widgets/diagnosis_sheet.dart';
 import 'camera_screen.dart';
+import 'segmentation_preview_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,6 +70,18 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         return;
+      }
+
+      // Show preview for user confirmation
+      if (mounted) {
+        final confirmed = await SegmentationPreviewScreen.show(
+          context, 
+          processedImage.bytes,
+        );
+        
+        if (confirmed != true) {
+          return; // User wanted to retry
+        }
       }
 
       final result = _classifier.classifyImage(processedImage.image);

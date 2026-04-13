@@ -78,7 +78,6 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 64   # Good GPU utilization; RAM issues were from cache/XLA, not batch size
-NUM_CLASSES = 38 
 
 # 3. Data Augmentation — runs ON GPU as part of the training model's forward pass.
 #    NOT part of the inference/export model, so TFLite stays clean.
@@ -92,8 +91,8 @@ data_augmentation = models.Sequential([
 ], name='augmentation')
 
 def build_model(num_classes):
-    # 4. Load Pretrained MobileNetV3 (Small)
-    base_model = tf.keras.applications.MobileNetV3Small(
+    # 4. Load Pretrained MobileNetV3 (Large)
+    base_model = tf.keras.applications.MobileNetV3Large(
         input_shape=(*IMG_SIZE, 3),
         include_top=False,
         weights='imagenet',
@@ -112,7 +111,7 @@ def build_model(num_classes):
         layers.Input(shape=(*IMG_SIZE, 3)),
         layers.Lambda(preprocess_input, name='mobilenet_preprocessing'),
         base_model,
-        layers.Dropout(0.2),
+        layers.Dropout(0.1),
         layers.Dense(num_classes, dtype='float32'),  # Force FP32 for numerically stable softmax
         layers.Activation('softmax', dtype='float32')
     ])
@@ -175,7 +174,9 @@ if __name__ == "__main__":
     # --- BUILD MODELS ---
     # `model` = clean inference model (for TFLite export, no augmentation)
     # `train_model` = wraps `model` with GPU-accelerated augmentation
-    model = build_model(NUM_CLASSES)
+    num_classes = len(class_names)
+    print(f"Building model for {num_classes} classes...")
+    model = build_model(num_classes)
 
     # Wrap with augmentation using Functional API — augmentation runs on GPU
     # during training, and `model` stays clean for export. Weights are SHARED.
@@ -212,7 +213,7 @@ if __name__ == "__main__":
     train_model.fit(
         train_ds,
         validation_data=val_ds,
-        epochs=10,
+        epochs=30,
         callbacks=training_callbacks,
         class_weight=class_weight_dict
     )
@@ -231,7 +232,7 @@ if __name__ == "__main__":
     train_model.fit(
         train_ds,
         validation_data=val_ds,
-        epochs=10,
+        epochs=30,
         callbacks=training_callbacks,
         class_weight=class_weight_dict
     )
@@ -246,7 +247,7 @@ if __name__ == "__main__":
     #     to ensure perfect compatibility with TFLite converter.
     print("Building float32 model for TFLite export...")
     tf.keras.mixed_precision.set_global_policy('float32')
-    export_model = build_model(NUM_CLASSES)
+    export_model = build_model(num_classes)
     export_model.set_weights(model.get_weights())
 
     converter = tf.lite.TFLiteConverter.from_keras_model(export_model)

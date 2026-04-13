@@ -10,6 +10,7 @@ import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
 import '../widgets/camera_overlay.dart';
 import '../widgets/diagnosis_sheet.dart';
+import 'segmentation_preview_screen.dart';
 
 /// Live camera viewfinder for plant disease diagnosis.
 ///
@@ -108,6 +109,18 @@ class _CameraScreenState extends State<CameraScreen>
       final processedFrame = await _bgRemover.processImageObj(frame);
       if (processedFrame == null) {
           throw Exception("Background removal failed.");
+      }
+
+      // Show preview for user confirmation
+      if (mounted) {
+        final confirmed = await SegmentationPreviewScreen.show(
+          context, 
+          processedFrame.bytes,
+        );
+        
+        if (confirmed != true) {
+          return; // User wanted to retry
+        }
       }
 
       final result = _classifier.classifyImage(processedFrame.image);
