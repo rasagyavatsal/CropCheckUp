@@ -3,16 +3,13 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import '../services/background_removal_service.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/copy/app_copy.dart';
 import '../services/camera_service.dart';
-import '../services/plant_classifier.dart';
 import '../ui/app_design_system.dart';
 import '../ui/tokens/motion_tokens.dart';
 import '../widgets/camera_overlay.dart';
-import 'diagnosis_result_screen.dart';
-import 'segmentation_preview_screen.dart';
+import '../ui/flow/diagnosis_flow_coordinator.dart';
 
 /// Live camera viewfinder for plant disease diagnosis.
 ///
@@ -29,8 +26,7 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen>
     with WidgetsBindingObserver {
   final _cameraService = CameraService();
-  final _classifier = PlantClassifier();
-  final _bgRemover = BackgroundRemovalService();
+  final _coordinator = DiagnosisFlowCoordinator();
 
   bool _isInitialising = true;
   String? _initError;
@@ -52,7 +48,7 @@ class _CameraScreenState extends State<CameraScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _cameraService.stop();
-    _classifier.dispose();
+    _coordinator.dispose();
     super.dispose();
   }
 
@@ -78,8 +74,7 @@ class _CameraScreenState extends State<CameraScreen>
 
     try {
       await Future.wait([
-        _classifier.init(),
-        _bgRemover.init(),
+        _coordinator.init(),
         _cameraService.start(),
       ]);
     } catch (e) {
@@ -107,46 +102,9 @@ class _CameraScreenState extends State<CameraScreen>
     }
 
     setState(() => _isDiagnosing = true);
-    try {
-      final processedFrame = await _bgRemover.processImageObj(frame);
-      if (processedFrame == null) {
-          throw Exception("Background removal failed.");
-      }
-
-      // Resize to 224x224 before showing preview or model inference
-      final (resizedImage, resizedBytes) = await _classifier.resizeForModel(processedFrame.image);
-
-      // Show preview for user confirmation
-      if (mounted) {
-        final confirmed = await SegmentationPreviewScreen.show(
-          context, 
-          resizedBytes, // Show resized version
-        );
-        
-        if (confirmed != true) {
-          return; // User wanted to retry
-        }
-      }
-
-      final result = _classifier.classifyImage(resizedImage);
-      if (result != null && mounted) {
-        Navigator.of(context).push(
-          AppRoute.standard<void>(
-            builder: (_) => DiagnosisResultScreen(
-              result: result,
-              imageBytes: resizedBytes,
-            ),
-          ),
-        );
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppCopy.camera.diagnosisFailed)),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isDiagnosing = false);
-      }
+    await _coordinator.startCameraDiagnosis(context, frame);
+    if (mounted) {
+      setState(() => _isDiagnosing = false);
     }
   }
 

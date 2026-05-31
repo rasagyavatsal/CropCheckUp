@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
-import '../services/diagnosis_workflow_service.dart';
+import '../ui/flow/diagnosis_flow_coordinator.dart';
 import '../ui/copy/app_copy.dart';
 
 import '../widgets/header_background.dart';
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _workflowService = DiagnosisWorkflowService();
+  final _coordinator = DiagnosisFlowCoordinator();
   
   bool _isInitialising = true;
   String? _initError;
@@ -34,7 +34,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await _workflowService.init();
+      // Background removal and classifier services can be implicitly initialized
+      // but to preserve the loading screen we can pre-warm them.
+      // We'll leave it as is, or we can just delay slightly if not needed.
+      // Wait, DiagnosisWorkflowService had an init() method which called services' init.
+      // I can let DiagnosisFlowCoordinator expose an init() or I can let services init lazily.
+      // The issue says: Coordinator uses existing background-removal and classifier services internally.
+      // I'll call them via the coordinator if needed, but the services are singletons.
+      // Actually, I'll add an init() to DiagnosisFlowCoordinator.
+      await _coordinator.init();
     } catch (e) {
       _initError = e.toString();
     } finally {
@@ -44,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _workflowService.dispose();
+    _coordinator.dispose();
     super.dispose();
   }
 
@@ -155,10 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icons.image_rounded,
             color: Theme.of(context).colorScheme.secondary,
             onTap: () async {
-              await _workflowService.pickAndDiagnose(
-                context,
-                onLoading: (loading) => setState(() => _isDiagnosing = loading),
-              );
+              setState(() => _isDiagnosing = true);
+              await _coordinator.startGalleryDiagnosis(context);
+              if (mounted) setState(() => _isDiagnosing = false);
             },
           ),
         ),
