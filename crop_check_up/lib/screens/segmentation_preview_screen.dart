@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
+import '../ui/tokens/app_tokens.dart';
 import '../theme/app_theme.dart';
 
 /// Screen to preview the segmented image before inference.
@@ -36,15 +37,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black,
-                    AppTheme.healthyGreen.withValues(alpha: 0.1),
-                    Colors.black,
-                  ],
-                ),
+                gradient: context.gradient.previewBackdrop,
               ),
             ),
           ),

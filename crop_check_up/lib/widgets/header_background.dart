@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
-import '../theme/app_theme.dart';
+import '../ui/tokens/app_tokens.dart';
 
 class HeaderBackground extends StatelessWidget {
   final String title;
@@ -17,12 +17,8 @@ class HeaderBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1B5E20), AppTheme.healthyGreen],
-        ),
+      decoration: BoxDecoration(
+        gradient: context.gradient.brandHeader,
       ),
       child: Stack(
         fit: StackFit.expand,

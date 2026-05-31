@@ -8,6 +8,7 @@ import '../ui/tokens/typography.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
+import '../ui/tokens/app_tokens.dart';
 import '../ui/tokens/motion_tokens.dart';
 import '../widgets/camera_overlay.dart';
 import 'diagnosis_result_screen.dart';
@@ -396,11 +397,7 @@ class _CaptureButton extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: isProcessing 
                   ? null 
-                  : const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppTheme.healthyGreen, Color(0xFF1B5E20)],
-                    ),
+                  : context.gradient.cameraOverlay,
               color: isProcessing ? Colors.white24 : null,
             ),
             child: Center(
