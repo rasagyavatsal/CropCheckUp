@@ -16,7 +16,7 @@ import 'package:image/image.dart' as img;
 ///
 /// All resolution negotiation, format conversion (platform‑specific YUV → RGB),
 /// lifecycle management and error recovery are hidden.
-class CameraService {
+class CameraSession {
   CameraController? _controller;
   img.Image? _latestFrame;
   bool _isFlashOn = false;
@@ -71,6 +71,16 @@ class CameraService {
     await _controller!.dispose();
     _controller = null;
     _latestFrame = null;
+  }
+
+  /// Pause the camera session.
+  Future<void> pause() async {
+    await stop();
+  }
+
+  /// Resume the camera session.
+  Future<void> resume() async {
+    await start();
   }
 
   /// Toggle the torch / flash LED.

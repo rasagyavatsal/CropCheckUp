@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/theme/theme_ext.dart';
@@ -10,7 +9,8 @@ import '../ui/tokens/spacing_tokens.dart';
 import '../ui/tokens/radius_tokens.dart';
 import '../ui/tokens/motion_tokens.dart';
 import '../ui/copy/app_copy.dart';
-import '../services/camera_service.dart';
+import '../services/camera_session.dart';
+import '../ui/components/camera/app_camera_viewfinder.dart';
 import '../ui/flow/diagnosis_flow_coordinator.dart';
 import '../ui/app_design_system.dart';
 import '../ui/components/layout/app_page_shell.dart';
@@ -24,9 +24,8 @@ class CameraScreen extends StatefulWidget {
   State<CameraScreen> createState() => _CameraScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen>
-    with WidgetsBindingObserver {
-  final _cameraService = CameraService();
+class _CameraScreenState extends State<CameraScreen> {
+  final _session = CameraSession();
   final _coordinator = DiagnosisFlowCoordinator();
 
   bool _isInitialising = true;
@@ -40,26 +39,14 @@ class _CameraScreenState extends State<CameraScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _bootstrap();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _cameraService.stop();
+    _session.stop();
     _coordinator.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!_cameraService.isRunning) return;
-    if (state == AppLifecycleState.inactive) {
-      _cameraService.stop();
-    } else if (state == AppLifecycleState.resumed) {
-      _bootstrap();
-    }
   }
 
   // ---------------------------------------------------------------------------
@@ -75,7 +62,7 @@ class _CameraScreenState extends State<CameraScreen>
     try {
       await Future.wait([
         _coordinator.init(),
-        _cameraService.start(),
+        _session.start(),
       ]);
     } catch (e) {
       _initError = e.toString();
@@ -91,7 +78,7 @@ class _CameraScreenState extends State<CameraScreen>
   Future<void> _captureAndDiagnose() async {
     if (_isDiagnosing) return;
 
-    final frame = _cameraService.captureFrame();
+    final frame = _session.captureFrame();
     if (frame == null) {
       if (mounted) {
         AppFeedback.showError(context, AppCopy.camera.captureFailed);
@@ -139,8 +126,10 @@ class _CameraScreenState extends State<CameraScreen>
         fit: StackFit.expand,
         children: [
           // Camera preview
-          if (_cameraService.controller != null)
-            CameraPreview(_cameraService.controller!),
+          AppCameraViewfinder(
+            session: _session,
+            onResume: _bootstrap,
+          ),
 
           // Overlay
           const CameraOverlay(),
@@ -176,12 +165,12 @@ class _CameraScreenState extends State<CameraScreen>
                       ),
                     ),
                     AppIconButton.translucent(
-                      icon: _cameraService.isFlashOn
+                      icon: _session.isFlashOn
                           ? Icons.flash_on_rounded
                           : Icons.flash_off_rounded,
                       tooltip: 'Toggle flash',
                       onPressed: () async {
-                        await _cameraService.toggleFlash();
+                        await _session.toggleFlash();
                         if (mounted) setState(() {});
                       },
                     ),
