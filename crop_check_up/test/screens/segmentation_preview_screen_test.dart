@@ -22,7 +22,7 @@ void main() {
       );
 
       // Check for title
-      expect(find.text('Confirm Leaf Selection'), findsOneWidget);
+      expect(find.text('Confirm Specimen'), findsOneWidget);
       
       // Check for buttons
       expect(find.widgetWithText(OutlinedButton, 'Retry'), findsOneWidget);
