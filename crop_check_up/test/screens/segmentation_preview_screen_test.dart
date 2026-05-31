@@ -27,10 +27,10 @@ void main() {
       expect(find.text('Confirm Specimen'), findsOneWidget);
       
       // Check for buttons
-      expect(find.widgetWithText(OutlinedButton, 'Retry'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Confirm'), findsOneWidget);
+      expect(find.text('Retry'), findsOneWidget);
+      expect(find.text('Confirm'), findsOneWidget);
       
-      // Check for Image.memory
+      // Check for Image inside Card
       expect(find.byType(Image), findsOneWidget);
     });
 

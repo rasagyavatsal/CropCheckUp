@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../ui/tokens/typography.dart';
 import '../ui/app_design_system.dart';
 import '../ui/copy/app_copy.dart';
+import '../ui/components/layout/layout.dart';
+import '../ui/components/cards/app_card.dart';
+import '../ui/tokens/typography.dart';
+import '../ui/theme/theme_ext.dart';
+import '../ui/tokens/spacing_tokens.dart';
 
 /// Screen to preview the segmented image before inference.
 /// 
@@ -28,148 +32,73 @@ class SegmentationPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Subtle gradient background
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: context.gradient.previewBackdrop,
+    const spacing = SpacingTokens();
+
+    return AppPageShell(
+      applySafeArea: true,
+      bottomNavigationBar: AppBottomActionBar(
+        child: Row(
+          children: [
+            Expanded(
+              child: AppButton.secondary(
+                label: AppCopy.preview.actionRetry,
+                onPressed: () => Navigator.pop(context, false),
+                icon: Icons.refresh_rounded,
               ),
             ),
-          ),
-          
-          AppSafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 32),
-                
-                // Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      Text(
-                        AppCopy.preview.title,
-                        style: context.typography.headline.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        AppCopy.preview.instruction,
-                        style: context.typography.label.copyWith(
-                          color: Colors.white70,
-                          height: 1.4,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                
-                // Image Preview
-                Expanded(
-                  child: Center(
-                    child: Hero(
-                      tag: 'segmentation_preview',
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
-                              blurRadius: 50,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                          border: Border.all(
-                            color: Colors.white10,
-                            width: 1,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.memory(
-                            imageBytes,
-                            fit: BoxFit.contain,
-                          ),
+            SizedBox(width: spacing.m),
+            Expanded(
+              child: AppButton.primary(
+                label: AppCopy.preview.actionConfirm,
+                onPressed: () => Navigator.pop(context, true),
+                icon: Icons.check_circle_outline_rounded,
+              ),
+            ),
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: spacing.l),
+        child: Column(
+          children: [
+            SizedBox(height: spacing.xl),
+            
+            // Header
+            Text(
+              AppCopy.preview.title,
+              style: context.typography.headline,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: spacing.s),
+            Text(
+              AppCopy.preview.instruction,
+              style: context.typography.body.copyWith(
+                color: context.appColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            
+            // Image Preview
+            Expanded(
+              child: Center(
+                child: Hero(
+                  tag: 'segmentation_preview',
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: spacing.xl),
+                    child: AppCard.image(
+                      image: Flexible(
+                        child: Image.memory(
+                          imageBytes,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
                 ),
-                
-                // Action Buttons
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-                  child: Row(
-                    children: [
-                      // Retry Button
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.white24),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.refresh_rounded, size: 20),
-                              const SizedBox(width: 8),
-                              Text(
-                                AppCopy.preview.actionRetry,
-                                style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      // Confirm Button
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            elevation: 8,
-                            shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.check_circle_outline_rounded, size: 20),
-                              const SizedBox(width: 8),
-                              Text(
-                                AppCopy.preview.actionConfirm,
-                                style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
