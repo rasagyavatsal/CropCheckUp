@@ -22,6 +22,17 @@ class PlantClassifier {
   static const int _inputSize = 224;
   static const double _confidenceThreshold = 0.0;
 
+  @visibleForTesting
+  static String get modelAssetPath => _modelAsset;
+  @visibleForTesting
+  static String get labelsAssetPath => _labelsAsset;
+  @visibleForTesting
+  static String get diseaseInfoAssetPath => _diseaseInfoAsset;
+  @visibleForTesting
+  static int get modelInputSize => _inputSize;
+  @visibleForTesting
+  static double get minimumConfidence => _confidenceThreshold;
+
   Interpreter? _interpreter;
   List<String> _labels = [];
   Map<String, dynamic> _diseaseInfo = {};
