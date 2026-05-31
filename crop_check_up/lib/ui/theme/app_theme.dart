@@ -98,6 +98,17 @@ class AppTheme {
           textStyle: typography.button,
         ),
       ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: tokens.brand,
+          foregroundColor: onPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius.xl),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+          textStyle: typography.button,
+        ),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: tokens.brand,
