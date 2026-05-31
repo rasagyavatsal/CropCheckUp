@@ -3,6 +3,7 @@ import '../ui/tokens/typography.dart';
 import '../services/diagnosis_workflow_service.dart';
 
 import '../widgets/header_background.dart';
+import '../ui/adaptive/app_adaptive.dart';
 import 'camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const CameraScreen()),
+                AppRoute.standard(builder: (_) => const CameraScreen()),
               );
             },
           ),

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../screens/diagnosis_result_screen.dart';
 import '../screens/segmentation_preview_screen.dart';
+import '../ui/adaptive/app_adaptive.dart';
 import 'background_removal_service.dart';
 import 'plant_classifier.dart';
 
@@ -81,7 +82,7 @@ class DiagnosisWorkflowService {
       
       if (result != null) {
         Navigator.of(context).push(
-          MaterialPageRoute<void>(
+          AppRoute.standard<void>(
             builder: (_) => DiagnosisResultScreen(
               result: result,
               imageBytes: resizedBytes,

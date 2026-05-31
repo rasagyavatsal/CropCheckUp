@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
-import '../ui/tokens/app_tokens.dart';
 import '../ui/app_design_system.dart';
 
 /// Screen to preview the segmented image before inference.
@@ -20,9 +19,8 @@ class SegmentationPreviewScreen extends StatelessWidget {
   static Future<bool?> show(BuildContext context, Uint8List imageBytes) {
     return Navigator.push<bool>(
       context,
-      MaterialPageRoute(
+      AppRoute.dialog(
         builder: (_) => SegmentationPreviewScreen(imageBytes: imageBytes),
-        fullscreenDialog: true,
       ),
     );
   }
@@ -42,7 +40,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
             ),
           ),
           
-          SafeArea(
+          AppSafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 32),

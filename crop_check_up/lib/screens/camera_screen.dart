@@ -8,7 +8,6 @@ import '../ui/tokens/typography.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../ui/app_design_system.dart';
-import '../ui/tokens/app_tokens.dart';
 import '../ui/tokens/motion_tokens.dart';
 import '../widgets/camera_overlay.dart';
 import 'diagnosis_result_screen.dart';
@@ -131,7 +130,7 @@ class _CameraScreenState extends State<CameraScreen>
       final result = _classifier.classifyImage(resizedImage);
       if (result != null && mounted) {
         Navigator.of(context).push(
-          MaterialPageRoute<void>(
+          AppRoute.standard<void>(
             builder: (_) => DiagnosisResultScreen(
               result: result,
               imageBytes: resizedBytes,
