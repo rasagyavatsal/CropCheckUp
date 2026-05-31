@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/ui/components/layout/app_page_shell.dart';
 import 'package:crop_check_up/ui/components/layout/app_scroll_wrapper.dart';
-import 'package:crop_check_up/ui/components/layout/app_safe_area.dart';
 
 void main() {
   group('AppPageShell', () {
@@ -17,7 +16,7 @@ void main() {
       );
 
       expect(find.byType(Scaffold), findsOneWidget);
-      expect(find.byType(AppSafeArea), findsOneWidget);
+      expect(find.byType(SafeArea), findsWidgets);
       expect(find.byKey(const Key('child')), findsOneWidget);
     });
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:crop_check_up/ui/components/layout/app_safe_area.dart';
 import 'package:crop_check_up/ui/components/layout/app_scroll_wrapper.dart';
 
 /// A shared page shell component that provides a consistent [Scaffold] layout.
@@ -58,7 +57,7 @@ class AppPageShell extends StatelessWidget {
     }
 
     if (applySafeArea) {
-      content = AppSafeArea(child: content);
+      content = SafeArea(child: content);
     }
 
     return Scaffold(

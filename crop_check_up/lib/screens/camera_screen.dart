@@ -139,7 +139,7 @@ class _CameraScreenState extends State<CameraScreen> {
             top: 0,
             left: 0,
             right: 0,
-            child: AppSafeArea(
+            child: SafeArea(
               bottom: false,
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -187,7 +187,7 @@ class _CameraScreenState extends State<CameraScreen> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: AppSafeArea(
+            child: SafeArea(
               top: false,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
