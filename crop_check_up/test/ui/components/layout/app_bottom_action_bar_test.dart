@@ -24,6 +24,8 @@ void main() {
       final safeArea = tester.widget<SafeArea>(safeAreaFinder);
       expect(safeArea.bottom, isTrue);
       expect(safeArea.top, isFalse);
+      expect(safeArea.left, isTrue);
+      expect(safeArea.right, isTrue);
     });
   });
 }

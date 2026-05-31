@@ -25,7 +25,7 @@ void main() {
             ],
           ),
           home: const Scaffold(
-            body: ResultPresentationView(result: result),
+            body: SingleChildScrollView(child: ResultPresentationView(result: result)),
           ),
         ),
       );
@@ -56,7 +56,7 @@ void main() {
             ],
           ),
           home: const Scaffold(
-            body: ResultPresentationView(result: result),
+            body: SingleChildScrollView(child: ResultPresentationView(result: result)),
           ),
         ),
       );

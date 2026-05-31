@@ -13,7 +13,7 @@ import '../services/camera_session.dart';
 import '../ui/components/camera/app_camera_viewfinder.dart';
 import '../ui/flow/diagnosis_flow_coordinator.dart';
 import '../ui/app_design_system.dart';
-import '../ui/components/layout/app_page_shell.dart';
+import '../ui/components/layout/layout.dart';
 import '../widgets/camera_overlay.dart';
 
 /// Live camera viewfinder for plant disease diagnosis.

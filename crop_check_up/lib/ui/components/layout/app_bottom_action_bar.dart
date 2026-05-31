@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_safe_area.dart';
 
 /// A bottom action bar component that avoids OS navigation bars and provides
 /// consistent spacing around action buttons.
@@ -14,10 +15,10 @@ class AppBottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return AppSafeArea(
       top: false,
-      left: false,
-      right: false,
+      left: true,
+      right: true,
       bottom: true,
       child: Padding(
         padding: padding,

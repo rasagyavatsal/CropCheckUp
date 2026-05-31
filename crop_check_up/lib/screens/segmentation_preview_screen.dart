@@ -34,7 +34,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const spacing = SpacingTokens();
 
-    return AppPageShell(
+    return AppPageShell.sliver(
       applySafeArea: true,
       bottomNavigationBar: AppBottomActionBar(
         child: Row(
@@ -57,53 +57,54 @@ class SegmentationPreviewScreen extends StatelessWidget {
           ],
         ),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: spacing.l),
-        child: Column(
-          children: [
-            SizedBox(height: spacing.xl),
-            
-            // Header
-            Text(
-              AppCopy.preview.title,
-              style: context.typography.headline,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: spacing.s),
-            Text(
-              AppCopy.preview.instruction,
-              style: context.typography.body.copyWith(
-                color: context.appColors.textSecondary,
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: spacing.l),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              SizedBox(height: spacing.xl),
+              // Header
+              Text(
+                AppCopy.preview.title,
+                style: context.typography.headline,
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            
-            // Image Preview
-            Expanded(
-              child: Center(
-                child: Hero(
-                  tag: 'segmentation_preview',
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: spacing.xl),
-                    child: AppCard.image(
-                      image: Flexible(
-                        child: Semantics(
-                          image: true,
-                          label: AppCopy.preview.semanticPreviewImage,
-                          child: Image.memory(
-                            imageBytes,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+              SizedBox(height: spacing.s),
+              Text(
+                AppCopy.preview.instruction,
+                style: context.typography.body.copyWith(
+                  color: context.appColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ]),
+          ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: spacing.l),
+          sliver: SliverFillRemaining(
+            hasScrollBody: false,
+            child: Hero(
+              tag: 'segmentation_preview',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: spacing.xl),
+                child: AppCard.image(
+                  image: Flexible(
+                    child: Semantics(
+                      image: true,
+                      label: AppCopy.preview.semanticPreviewImage,
+                      child: Image.memory(
+                        imageBytes,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
