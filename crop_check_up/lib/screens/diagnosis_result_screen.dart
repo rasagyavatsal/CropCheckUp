@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/diagnosis_result.dart';
 import '../ui/tokens/typography.dart';
-import '../theme/app_theme.dart';
+
 import '../widgets/header_background.dart';
 
 /// Full‑screen route that presents a [DiagnosisResult].
@@ -24,7 +24,7 @@ class DiagnosisResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusColor =
-        result.isHealthy ? AppTheme.healthyGreen : AppTheme.dangerRed;
+        result.isHealthy ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error;
     final statusIcon =
         result.isHealthy ? Icons.check_circle_rounded : Icons.warning_rounded;
 
@@ -225,7 +225,7 @@ class _DiseaseInfoSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: AppTheme.healthyGreen, size: 20),
+            Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               title,
@@ -265,8 +265,8 @@ class _DiseaseInfoSection extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('• ',
-                            style: TextStyle(color: AppTheme.healthyGreen)),
+                        Text('• ',
+                            style: TextStyle(color: Theme.of(context).colorScheme.primary)),
                         Expanded(
                           child: Text(
                             item,

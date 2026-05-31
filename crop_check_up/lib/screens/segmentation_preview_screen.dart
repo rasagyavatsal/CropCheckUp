@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/tokens/app_tokens.dart';
-import '../theme/app_theme.dart';
+import '../ui/app_design_system.dart';
 
 /// Screen to preview the segmented image before inference.
 /// 
@@ -84,7 +84,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.healthyGreen.withValues(alpha: 0.25),
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
                               blurRadius: 50,
                               spreadRadius: 2,
                             ),
@@ -142,11 +142,11 @@ class SegmentationPreviewScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: () => Navigator.pop(context, true),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.healthyGreen,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             elevation: 8,
-                            shadowColor: AppTheme.healthyGreen.withValues(alpha: 0.4),
+                            shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),

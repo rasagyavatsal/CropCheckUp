@@ -7,7 +7,7 @@ import '../services/background_removal_service.dart';
 import '../ui/tokens/typography.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
-import '../theme/app_theme.dart';
+import '../ui/app_design_system.dart';
 import '../ui/tokens/app_tokens.dart';
 import '../ui/tokens/motion_tokens.dart';
 import '../widgets/camera_overlay.dart';
@@ -162,7 +162,7 @@ class _CameraScreenState extends State<CameraScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(color: AppTheme.healthyGreen),
+              CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 16),
               Text(
                 'Loading AI model…',
@@ -182,7 +182,7 @@ class _CameraScreenState extends State<CameraScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, size: 64, color: AppTheme.dangerRed),
+                Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 16),
                 Text(
                   'Failed to initialise',
@@ -290,12 +290,12 @@ class _CameraScreenState extends State<CameraScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 14,
             height: 14,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: AppTheme.healthyGreen,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(width: 10),
@@ -383,7 +383,7 @@ class _CaptureButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.healthyGreen.withValues(alpha: isProcessing ? 0 : 0.3),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: isProcessing ? 0 : 0.3),
               blurRadius: 20,
               spreadRadius: 2,
             ),

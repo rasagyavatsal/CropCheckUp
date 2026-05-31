@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
 import '../services/diagnosis_workflow_service.dart';
-import '../theme/app_theme.dart';
+
 import '../widgets/header_background.dart';
 import 'camera_screen.dart';
 
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(color: AppTheme.healthyGreen),
+              CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 16),
               Text(
                 'Initialising AI models…',
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, size: 64, color: AppTheme.dangerRed),
+                Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 16),
                 Text(
                   'Failed to load models',
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: 'Camera',
             subtitle: 'Take a photo',
             icon: Icons.camera_alt_rounded,
-            color: AppTheme.healthyGreen,
+            color: Theme.of(context).colorScheme.primary,
             onTap: () {
               Navigator.push(
                 context,
@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: 'Upload',
             subtitle: 'From gallery',
             icon: Icons.image_rounded,
-            color: AppTheme.warningAmber,
+            color: Theme.of(context).colorScheme.secondary,
             onTap: () async {
               await _workflowService.pickAndDiagnose(
                 context,
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const CircularProgressIndicator(color: AppTheme.healthyGreen),
+                CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 24),
                 Text(
                   'Analyzing Specimen...',
@@ -354,7 +354,7 @@ class _TipTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(tip.$3, color: AppTheme.healthyGreen, size: 24),
+            Icon(tip.$3, color: Theme.of(context).colorScheme.primary, size: 24),
             const SizedBox(width: 16),
             Expanded(
               child: Column(

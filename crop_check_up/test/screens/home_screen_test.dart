@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:crop_check_up/screens/home_screen.dart';
-import 'package:crop_check_up/theme/app_theme.dart';
+import 'package:crop_check_up/ui/app_design_system.dart';
 
 void main() {
   group('HomeScreen Widgets', () {
@@ -10,7 +10,7 @@ void main() {
       // We only validate the outer shell here, as PlantClassifier loads TFLite models
       // which will fail outside of an emulator/device. It will present the error UI eventually.
       await tester.pumpWidget(MaterialApp(
-        theme: AppTheme.darkTheme,
+        theme: AppTheme.dark,
         home: const HomeScreen(),
       ));
       

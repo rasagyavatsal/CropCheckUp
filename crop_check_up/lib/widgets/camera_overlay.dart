@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../ui/tokens/typography.dart';
-import '../theme/app_theme.dart';
+
 
 /// Semi‑transparent overlay drawn on top of the camera preview.
 ///
@@ -35,7 +35,9 @@ class CameraOverlay extends StatelessWidget {
               width: boxSize,
               height: boxSize,
               child: CustomPaint(
-                painter: _CornerBracketPainter(),
+                painter: _CornerBracketPainter(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
             // Instructional text
@@ -89,16 +91,20 @@ class _OverlayPainter extends CustomPainter {
 
 /// Draws four rounded corner brackets to highlight the target region.
 class _CornerBracketPainter extends CustomPainter {
+  final Color color;
+
+  _CornerBracketPainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppTheme.healthyGreen
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
       ..strokeCap = StrokeCap.round;
 
     final glowPaint = Paint()
-      ..color = AppTheme.healthyGreen.withValues(alpha: 0.3)
+      ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8.0
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0)
