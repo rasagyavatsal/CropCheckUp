@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:crop_check_up/ui/tokens/semantic_colors.dart';
 
 /// Centralised design tokens for CropCheckUp.
 ///
@@ -27,6 +28,9 @@ class AppTheme {
   static ThemeData get darkTheme {
     final base = ThemeData.dark(useMaterial3: true);
     return base.copyWith(
+      extensions: <ThemeExtension<dynamic>>[
+        SemanticColors.dark,
+      ],
       colorScheme: ColorScheme.dark(
         primary: healthyGreen,
         secondary: warningAmber,
