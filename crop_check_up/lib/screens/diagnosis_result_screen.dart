@@ -2,9 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-
 import '../models/diagnosis_result.dart';
+import '../ui/tokens/typography.dart';
 import '../theme/app_theme.dart';
 import '../widgets/header_background.dart';
 
@@ -41,9 +40,8 @@ class DiagnosisResultScreen extends StatelessWidget {
               centerTitle: true,
               title: Text(
                 'Diagnosis Result',
-                style: GoogleFonts.inter(
+                style: context.typography.title.copyWith(
                   fontWeight: FontWeight.w800,
-                  fontSize: 20,
                   color: Colors.white,
                 ),
               ),
@@ -97,19 +95,17 @@ class DiagnosisResultScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       result.diseaseName,
-                      style: GoogleFonts.inter(
+                      style: context.typography.display.copyWith(
                         fontSize: 28,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
-                        letterSpacing: -0.5,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Crop: ${result.cropName}',
-                      style: GoogleFonts.inter(
-                        fontSize: 16,
+                      style: context.typography.body.copyWith(
                         color: Colors.white70,
                         fontWeight: FontWeight.w500,
                       ),
@@ -257,9 +253,8 @@ class _DiseaseInfoSection extends StatelessWidget {
               if (content != null)
                 Text(
                   content!,
-                  style: GoogleFonts.inter(
+                  style: context.typography.label.copyWith(
                     color: Colors.white70,
-                    fontSize: 14,
                     height: 1.5,
                   ),
                 ),
@@ -275,9 +270,8 @@ class _DiseaseInfoSection extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item,
-                            style: GoogleFonts.inter(
+                            style: context.typography.label.copyWith(
                               color: Colors.white70,
-                              fontSize: 14,
                               height: 1.5,
                             ),
                           ),

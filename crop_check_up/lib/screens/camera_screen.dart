@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-
-import 'package:google_fonts/google_fonts.dart';
-
 import '../services/background_removal_service.dart';
+import '../ui/tokens/typography.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
@@ -166,7 +164,7 @@ class _CameraScreenState extends State<CameraScreen>
               const SizedBox(height: 16),
               Text(
                 'Loading AI model…',
-                style: GoogleFonts.inter(color: Colors.white70, fontSize: 16),
+                style: context.typography.body.copyWith(color: Colors.white70),
               ),
             ],
           ),
@@ -192,7 +190,7 @@ class _CameraScreenState extends State<CameraScreen>
                 Text(
                   _initError!,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(color: Colors.white60),
+                  style: context.typography.body.copyWith(color: Colors.white60),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -228,10 +226,9 @@ class _CameraScreenState extends State<CameraScreen>
                 // App title
                 Text(
                   'CropCheckUp',
-                  style: GoogleFonts.inter(
+                  style: context.typography.title.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 18,
-                        color: Colors.white,
                         shadows: const [
                           Shadow(blurRadius: 12, color: Colors.black54),
                         ],
@@ -302,9 +299,8 @@ class _CameraScreenState extends State<CameraScreen>
           const SizedBox(width: 10),
           Text(
             'Analyzing Specimen...',
-            style: GoogleFonts.inter(
+            style: context.typography.caption.copyWith(
               color: Colors.white,
-              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -323,10 +319,8 @@ class _CameraScreenState extends State<CameraScreen>
       ),
       child: Text(
         'Align leaf and tap to capture',
-        style: GoogleFonts.inter(
+        style: context.typography.label.copyWith(
           color: Colors.white,
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
         ),
       ),
     );

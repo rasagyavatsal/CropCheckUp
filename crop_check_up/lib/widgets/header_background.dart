@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../ui/tokens/typography.dart';
 import '../theme/app_theme.dart';
 
 class HeaderBackground extends StatelessWidget {
@@ -46,7 +46,7 @@ class HeaderBackground extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle ?? 'PROTECT YOUR HARVEST',
-                    style: GoogleFonts.inter(
+                    style: context.typography.overline.copyWith(
                       color: Colors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,

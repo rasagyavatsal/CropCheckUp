@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import '../ui/tokens/typography.dart';
 import '../theme/app_theme.dart';
 
 /// Screen to preview the segmented image before inference.
@@ -62,9 +61,8 @@ class SegmentationPreviewScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Confirm Specimen',
-                        style: GoogleFonts.inter(
+                        style: context.typography.headline.copyWith(
                               color: Colors.white,
-                              fontSize: 24,
                               fontWeight: FontWeight.w800,
                             ),
                         textAlign: TextAlign.center,
@@ -72,9 +70,8 @@ class SegmentationPreviewScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         'Is the background removal correct? Ensure only the plant leaf is clearly visible.',
-                        style: GoogleFonts.inter(
+                        style: context.typography.label.copyWith(
                           color: Colors.white70,
-                          fontSize: 14,
                           height: 1.4,
                         ),
                         textAlign: TextAlign.center,
@@ -140,7 +137,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text(
                                 'Retry',
-                                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                                style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -168,7 +165,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text(
                                 'Confirm',
-                                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                                style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),

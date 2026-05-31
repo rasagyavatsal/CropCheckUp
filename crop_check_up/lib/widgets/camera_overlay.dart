@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-
+import '../ui/tokens/typography.dart';
 import '../theme/app_theme.dart';
 
 /// Semi‑transparent overlay drawn on top of the camera preview.
@@ -47,9 +46,8 @@ class CameraOverlay extends StatelessWidget {
               child: Text(
                 'Centre the leaf inside the frame',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: context.typography.body.copyWith(
                   color: Colors.white,
-                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   shadows: const [
                     Shadow(blurRadius: 12, color: Colors.black87),

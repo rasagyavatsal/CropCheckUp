@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:crop_check_up/ui/tokens/semantic_colors.dart';
+import 'package:crop_check_up/ui/tokens/typography.dart';
 
 /// Centralised design tokens for CropCheckUp.
 ///
@@ -27,9 +28,12 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     final base = ThemeData.dark(useMaterial3: true);
+    final typography = AppTypography.inter(color: Colors.white);
+    
     return base.copyWith(
       extensions: <ThemeExtension<dynamic>>[
         SemanticColors.dark,
+        typography,
       ],
       colorScheme: ColorScheme.dark(
         primary: healthyGreen,
@@ -47,11 +51,7 @@ class AppTheme {
         backgroundColor: _darkSurface,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.inter(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
+        titleTextStyle: typography.title,
       ),
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: _darkCard,
@@ -67,10 +67,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          textStyle: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: typography.button,
         ),
       ),
     );

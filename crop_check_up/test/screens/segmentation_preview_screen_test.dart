@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/screens/segmentation_preview_screen.dart';
+import 'package:crop_check_up/theme/app_theme.dart';
 
 void main() {
   group('SegmentationPreviewScreen', () {
@@ -17,6 +18,7 @@ void main() {
     testWidgets('renders image and action buttons', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme.darkTheme,
           home: SegmentationPreviewScreen(imageBytes: mockBytes),
         ),
       );
@@ -36,6 +38,7 @@ void main() {
       bool? result;
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme.darkTheme,
           home: Builder(
             builder: (context) => ElevatedButton(
               onPressed: () async {
@@ -60,6 +63,7 @@ void main() {
       bool? result;
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme.darkTheme,
           home: Builder(
             builder: (context) => ElevatedButton(
               onPressed: () async {

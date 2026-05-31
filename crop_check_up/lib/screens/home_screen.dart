@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import '../ui/tokens/typography.dart';
 import '../services/diagnosis_workflow_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/header_background.dart';
@@ -59,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               Text(
                 'Initialising AI models…',
-                style: GoogleFonts.inter(color: Colors.white70, fontSize: 16),
+                style: context.typography.body.copyWith(color: Colors.white70),
               ),
             ],
           ),
@@ -85,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   _initError!,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(color: Colors.white60),
+                  style: context.typography.body.copyWith(color: Colors.white60),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
@@ -212,17 +211,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 24),
                 Text(
                   'Analyzing Specimen...',
-                  style: GoogleFonts.inter(
+                  style: context.typography.title.copyWith(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Identifying patterns and diseases',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
+                  style: context.typography.label.copyWith(
                     color: Colors.white54,
                   ),
                   textAlign: TextAlign.center,
@@ -249,9 +246,8 @@ class _HomeAppBar extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'CropCheckUp',
-          style: GoogleFonts.inter(
+          style: context.typography.title.copyWith(
             fontWeight: FontWeight.w800,
-            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -321,14 +317,14 @@ class _ActionCard extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: context.typography.title.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
                 ),
               ),
               Text(
                 subtitle,
-                style: GoogleFonts.inter(
+                style: context.typography.label.copyWith(
                   color: Colors.white54,
                   fontSize: 13,
                 ),
@@ -366,14 +362,14 @@ class _TipTile extends StatelessWidget {
                 children: [
                   Text(
                     tip.$1,
-                    style: GoogleFonts.inter(
+                    style: context.typography.body.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                     ),
                   ),
                   Text(
                     tip.$2,
-                    style: GoogleFonts.inter(
+                    style: context.typography.label.copyWith(
                       color: Colors.white54,
                       fontSize: 13,
                     ),
