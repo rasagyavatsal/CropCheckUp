@@ -7,20 +7,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:crop_check_up/ui/flow/diagnosis_flow_coordinator.dart';
-import 'package:crop_check_up/services/background_removal_service.dart';
-import 'package:crop_check_up/services/plant_classifier.dart';
+import 'package:crop_check_up/services/diagnosis_workflow_service.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 import 'package:crop_check_up/ui/app_design_system.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
 
 class MockImagePicker extends Mock implements ImagePicker {}
-class MockBackgroundRemovalService extends Mock implements BackgroundRemovalService {}
-class MockPlantClassifier extends Mock implements PlantClassifier {}
+class MockDiagnosisWorkflowService extends Mock implements DiagnosisWorkflowService {}
 
 void main() {
   late MockImagePicker mockImagePicker;
-  late MockBackgroundRemovalService mockBgRemover;
-  late MockPlantClassifier mockClassifier;
+  late MockDiagnosisWorkflowService mockWorkflowService;
   late DiagnosisFlowCoordinator coordinator;
 
   setUpAll(() {
@@ -30,13 +27,11 @@ void main() {
 
   setUp(() {
     mockImagePicker = MockImagePicker();
-    mockBgRemover = MockBackgroundRemovalService();
-    mockClassifier = MockPlantClassifier();
+    mockWorkflowService = MockDiagnosisWorkflowService();
 
     coordinator = DiagnosisFlowCoordinator(
       imagePicker: mockImagePicker,
-      bgRemover: mockBgRemover,
-      classifier: mockClassifier,
+      workflowService: mockWorkflowService,
     );
   });
 
@@ -76,12 +71,12 @@ void main() {
       expect(result, DiagnosisOutcome.cancelled);
     });
 
-    testWidgets('startGalleryDiagnosis returns failed if background removal fails', (tester) async {
+    testWidgets('startGalleryDiagnosis returns failed if processing fails', (tester) async {
       when(() => mockImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 1024))
           .thenAnswer((_) async => XFile.fromData(Uint8List(0)));
           
-      when(() => mockBgRemover.processImageBytes(any()))
-          .thenAnswer((_) async => null);
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.failure('Error'));
       
       DiagnosisOutcome? result;
       await tester.pumpWidget(buildTestApp(
@@ -110,11 +105,9 @@ void main() {
           
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      when(() => mockBgRemover.processImageBytes(any()))
-          .thenAnswer((_) async => ProcessedImage(dummyImg, dummyBytes));
-
-      when(() => mockClassifier.resizeForModel(any()))
-          .thenAnswer((_) async => (dummyImg, dummyBytes));
+      
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
       
       DiagnosisOutcome? result;
       await tester.pumpWidget(buildTestApp(
@@ -146,13 +139,11 @@ void main() {
           
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      when(() => mockBgRemover.processImageBytes(any()))
-          .thenAnswer((_) async => ProcessedImage(dummyImg, dummyBytes));
+      
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
 
-      when(() => mockClassifier.resizeForModel(any()))
-          .thenAnswer((_) async => (dummyImg, dummyBytes));
-
-      when(() => mockClassifier.classifyImage(any()))
+      when(() => mockWorkflowService.classifyImage(any()))
           .thenReturn(DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
       
       DiagnosisOutcome? result;
@@ -182,13 +173,11 @@ void main() {
     testWidgets('startCameraDiagnosis returns success on confirm', (tester) async {
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      when(() => mockBgRemover.processImageObj(any()))
-          .thenAnswer((_) async => ProcessedImage(dummyImg, dummyBytes));
+      
+      when(() => mockWorkflowService.processImageObj(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
 
-      when(() => mockClassifier.resizeForModel(any()))
-          .thenAnswer((_) async => (dummyImg, dummyBytes));
-
-      when(() => mockClassifier.classifyImage(any()))
+      when(() => mockWorkflowService.classifyImage(any()))
           .thenReturn(DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
       
       DiagnosisOutcome? result;

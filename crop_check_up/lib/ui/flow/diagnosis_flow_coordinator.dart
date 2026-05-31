@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
-import 'package:crop_check_up/services/background_removal_service.dart';
-import 'package:crop_check_up/services/plant_classifier.dart';
+import 'package:crop_check_up/services/diagnosis_workflow_service.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 import 'package:crop_check_up/screens/segmentation_preview_screen.dart';
 import 'package:crop_check_up/screens/diagnosis_result_screen.dart';
@@ -20,28 +19,22 @@ enum DiagnosisOutcome {
 /// classification, error feedback, and navigation to results.
 class DiagnosisFlowCoordinator {
   final ImagePicker _imagePicker;
-  final BackgroundRemovalService _bgRemover;
-  final PlantClassifier _classifier;
+  final DiagnosisWorkflowService _workflowService;
 
   DiagnosisFlowCoordinator({
     ImagePicker? imagePicker,
-    BackgroundRemovalService? bgRemover,
-    PlantClassifier? classifier,
+    DiagnosisWorkflowService? workflowService,
   })  : _imagePicker = imagePicker ?? ImagePicker(),
-        _bgRemover = bgRemover ?? BackgroundRemovalService(),
-        _classifier = classifier ?? PlantClassifier();
+        _workflowService = workflowService ?? DiagnosisWorkflowService();
 
   /// Initialises required services for diagnosis.
   Future<void> init() async {
-    await Future.wait([
-      _bgRemover.init(),
-      _classifier.init(),
-    ]);
+    await _workflowService.init();
   }
 
   /// Disposes resources used by the services.
   void dispose() {
-    _classifier.dispose();
+    _workflowService.dispose();
   }
 
   /// Starts the diagnosis flow using an image picked from the gallery.
@@ -60,9 +53,9 @@ class DiagnosisFlowCoordinator {
 
     try {
       final bytes = await file.readAsBytes();
-      final processedImage = await _bgRemover.processImageBytes(bytes);
+      final processResult = await _workflowService.processImageBytes(bytes);
       if (!context.mounted) return DiagnosisOutcome.failed;
-      return _processAndDiagnose(context, processedImage);
+      return _processAndDiagnose(context, processResult);
     } catch (e) {
       if (context.mounted) {
         AppFeedback.showError(context, AppCopy.camera.diagnosisFailed);
@@ -74,9 +67,9 @@ class DiagnosisFlowCoordinator {
   /// Starts the diagnosis flow using a decoded camera frame.
   Future<DiagnosisOutcome> startCameraDiagnosis(BuildContext context, img.Image frame) async {
     try {
-      final processedImage = await _bgRemover.processImageObj(frame);
+      final processResult = await _workflowService.processImageObj(frame);
       if (!context.mounted) return DiagnosisOutcome.failed;
-      return _processAndDiagnose(context, processedImage);
+      return _processAndDiagnose(context, processResult);
     } catch (e) {
       if (context.mounted) {
         AppFeedback.showError(context, AppCopy.camera.diagnosisFailed);
@@ -85,8 +78,8 @@ class DiagnosisFlowCoordinator {
     }
   }
 
-  Future<DiagnosisOutcome> _processAndDiagnose(BuildContext context, ProcessedImage? processedImage) async {
-    if (processedImage == null) {
+  Future<DiagnosisOutcome> _processAndDiagnose(BuildContext context, WorkflowProcessResult processResult) async {
+    if (!processResult.isSuccess) {
       if (context.mounted) {
         AppFeedback.showError(context, AppCopy.camera.diagnosisFailed);
       }
@@ -95,15 +88,10 @@ class DiagnosisFlowCoordinator {
 
     if (!context.mounted) return DiagnosisOutcome.failed;
 
-    // Resize to model input dimensions (224x224).
-    final (resizedImage, resizedBytes) = await _classifier.resizeForModel(processedImage.image);
-
-    if (!context.mounted) return DiagnosisOutcome.failed;
-
     // Show preview for user confirmation before running inference.
     final confirmed = await SegmentationPreviewScreen.show(
       context, 
-      resizedBytes,
+      processResult.resizedBytes!,
     );
     
     if (confirmed != true) {
@@ -112,14 +100,14 @@ class DiagnosisFlowCoordinator {
 
     if (!context.mounted) return DiagnosisOutcome.failed;
 
-    final result = _classifier.classifyImage(resizedImage);
+    final result = _workflowService.classifyImage(processResult.resizedImage!);
     
     if (result != null) {
       Navigator.of(context).push(
         AppRoute.standard<void>(
           builder: (_) => DiagnosisResultScreen(
             result: result,
-            imageBytes: resizedBytes,
+            imageBytes: processResult.resizedBytes!,
           ),
         ),
       );
