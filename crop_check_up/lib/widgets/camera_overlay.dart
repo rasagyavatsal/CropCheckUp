@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../ui/tokens/typography.dart';
+import '../ui/tokens/shadow_tokens.dart';
 import '../ui/theme/camera_theme.dart';
 
 
@@ -59,9 +60,7 @@ class CameraOverlay extends StatelessWidget {
                 style: context.typography.body.copyWith(
                   color: cameraTheme.instructionTextColor,
                   fontWeight: FontWeight.w600,
-                  shadows: const [
-                    Shadow(blurRadius: 12, color: Colors.black87),
-                  ],
+                  shadows: ShadowTokens.high,
                 ),
               ),
             ),

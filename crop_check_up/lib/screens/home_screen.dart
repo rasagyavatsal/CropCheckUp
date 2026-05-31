@@ -7,6 +7,9 @@ import '../ui/components/layout/layout.dart';
 import '../ui/components/cards/app_card.dart';
 
 import '../ui/adaptive/app_adaptive.dart';
+import '../ui/tokens/spacing_tokens.dart';
+import '../ui/tokens/radius_tokens.dart';
+import '../ui/theme/theme_ext.dart';
 import 'camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -60,6 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const spacing = SpacingTokens();
+    const radius = RadiusTokens();
+
     if (_isInitialising) {
       return AppPageShell(
         child: AppLoadingState(message: AppCopy.home.initLoading),
@@ -83,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: 'CropCheckUp',
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(spacing.l),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   Text(
@@ -93,9 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: -0.5,
                         ),
                   ),
-                  const SizedBox(height: 16),
-                  _buildActionCards(context),
-                  const SizedBox(height: 32),
+                  SizedBox(height: spacing.m),
+                  _buildActionCards(context, spacing, radius),
+                  SizedBox(height: spacing.xl),
                   Text(
                     AppCopy.home.tipsTitle,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -103,10 +109,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: -0.5,
                         ),
                   ),
-                  const SizedBox(height: 16),
-                  _buildTipsList(context),
-                  const SizedBox(height: 40),
-                  _buildFooter(context),
+                  SizedBox(height: spacing.m),
+                  _buildTipsList(context, spacing),
+                  SizedBox(height: spacing.xxl),
+                  _buildFooter(context, spacing),
                 ]),
               ),
             ),
@@ -117,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActionCards(BuildContext context) {
+  Widget _buildActionCards(BuildContext context, SpacingTokens spacing, RadiusTokens radius) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
 
@@ -135,33 +141,31 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(spacing.sm),
                   decoration: BoxDecoration(
                     color: primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(radius.l),
                   ),
                   child: Icon(Icons.camera_alt_rounded, color: primaryColor, size: 28),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: spacing.m),
                 Text(
                   AppCopy.home.actionCameraTitle,
                   style: context.typography.title.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 18,
                   ),
                 ),
                 Text(
                   AppCopy.home.actionCameraSubtitle,
                   style: context.typography.label.copyWith(
-                    color: Colors.white54,
-                    fontSize: 13,
+                    color: context.appColors.mutedText,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: spacing.m),
         Expanded(
           child: AppCard.action(
             onTap: () async {
@@ -173,26 +177,24 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(spacing.sm),
                   decoration: BoxDecoration(
                     color: secondaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(radius.l),
                   ),
                   child: Icon(Icons.image_rounded, color: secondaryColor, size: 28),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: spacing.m),
                 Text(
                   AppCopy.home.actionUploadTitle,
                   style: context.typography.title.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 18,
                   ),
                 ),
                 Text(
                   AppCopy.home.actionUploadSubtitle,
                   style: context.typography.label.copyWith(
-                    color: Colors.white54,
-                    fontSize: 13,
+                    color: context.appColors.mutedText,
                   ),
                 ),
               ],
@@ -203,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTipsList(BuildContext context) {
+  Widget _buildTipsList(BuildContext context, SpacingTokens spacing) {
     final tips = [
       ('Good Lighting', 'Ensure the leaf is well-lit for better accuracy.', Icons.light_mode_rounded),
       ('Single Leaf', 'Focus on one leaf at a time for precise diagnosis.', Icons.filter_center_focus_rounded),
@@ -212,12 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: tips.map((tip) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.only(bottom: spacing.sm),
         child: AppCard.info(
           child: Row(
             children: [
               Icon(tip.$3, color: Theme.of(context).colorScheme.primary, size: 24),
-              const SizedBox(width: 16),
+              SizedBox(width: spacing.m),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,14 +228,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       tip.$1,
                       style: context.typography.body.copyWith(
                         fontWeight: FontWeight.w600,
-                        fontSize: 15,
                       ),
                     ),
                     Text(
                       tip.$2,
                       style: context.typography.label.copyWith(
-                        color: Colors.white54,
-                        fontSize: 13,
+                        color: context.appColors.mutedText,
                       ),
                     ),
                   ],
@@ -246,14 +246,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFooter(BuildContext context) {
+  Widget _buildFooter(BuildContext context, SpacingTokens spacing) {
     return Center(
       child: Opacity(
         opacity: 0.5,
         child: Column(
           children: [
             const Icon(Icons.eco_outlined, size: 24),
-            const SizedBox(height: 8),
+            SizedBox(height: spacing.s),
             Text(
               AppCopy.home.footerText,
               style: Theme.of(context).textTheme.bodySmall,

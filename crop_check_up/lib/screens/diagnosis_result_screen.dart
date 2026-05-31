@@ -36,7 +36,7 @@ class DiagnosisResultScreen extends StatelessWidget {
           subtitle: result.isHealthy ? AppCopy.result.statusHealthy : AppCopy.result.statusDisease,
           statusIcon: statusIcon,
           isHealthy: result.isHealthy,
-          leading: const BackButton(color: Colors.white),
+          leading: const BackButton(),
         ),
         SliverToBoxAdapter(
           child: ResultPresentationView(
