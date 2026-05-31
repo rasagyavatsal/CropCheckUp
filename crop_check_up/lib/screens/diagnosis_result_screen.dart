@@ -3,10 +3,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../models/diagnosis_result.dart';
-import '../ui/tokens/typography.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/diagnosis/result_presentation_view.dart';
-import '../widgets/header_background.dart';
+import '../ui/components/layout/app_page_shell.dart';
+import '../ui/components/layout/app_bottom_action_bar.dart';
+import '../ui/components/headers/app_headers.dart';
+import '../ui/components/buttons/app_button.dart';
 
 /// Full‑screen route that presents a [DiagnosisResult].
 ///
@@ -27,50 +29,30 @@ class DiagnosisResultScreen extends StatelessWidget {
     final statusIcon =
         result.isHealthy ? Icons.check_circle_rounded : Icons.warning_rounded;
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 140,
-            pinned: true,
-            stretch: true,
-            leading: const BackButton(color: Colors.white),
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                AppCopy.result.title,
-                style: context.typography.title.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                ),
-              ),
-              background: HeaderBackground(
-                title: AppCopy.result.title,
-                subtitle: result.isHealthy ? AppCopy.result.statusHealthy : AppCopy.result.statusDisease,
-                icon: statusIcon,
-              ),
-            ),
+    return AppPageShell.sliver(
+      slivers: [
+        AppStatusHeader(
+          title: AppCopy.result.title,
+          subtitle: result.isHealthy ? AppCopy.result.statusHealthy : AppCopy.result.statusDisease,
+          statusIcon: statusIcon,
+          isHealthy: result.isHealthy,
+          leading: const BackButton(color: Colors.white),
+        ),
+        SliverToBoxAdapter(
+          child: ResultPresentationView(
+            result: result,
+            imageBytes: imageBytes,
           ),
-          SliverToBoxAdapter(
-            child: ResultPresentationView(
-              result: result,
-              imageBytes: imageBytes,
-            ),
+        ),
+      ],
+      bottomNavigationBar: AppBottomActionBar(
+        child: SizedBox(
+          width: double.infinity,
+          child: AppButton.primary(
+            label: AppCopy.result.actionDone,
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-            sliver: SliverToBoxAdapter(
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(AppCopy.result.actionDone),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -123,11 +123,15 @@ class AppSliverHeader extends StatelessWidget {
 class AppBrandHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final Widget? leading;
+  final List<Widget>? actions;
 
   const AppBrandHeader({
     super.key,
     required this.title,
     this.subtitle,
+    this.leading,
+    this.actions,
   });
 
   @override
@@ -136,6 +140,8 @@ class AppBrandHeader extends StatelessWidget {
     return AppSliverHeader(
       title: title,
       subtitle: subtitle,
+      leading: leading,
+      actions: actions,
       backgroundGradient: gradients.brandHeader,
       expandedHeight: 180.0,
     );
@@ -147,6 +153,8 @@ class AppStatusHeader extends StatelessWidget {
   final String? subtitle;
   final IconData statusIcon;
   final bool isHealthy;
+  final Widget? leading;
+  final List<Widget>? actions;
 
   const AppStatusHeader({
     super.key,
@@ -154,6 +162,8 @@ class AppStatusHeader extends StatelessWidget {
     this.subtitle,
     required this.statusIcon,
     this.isHealthy = true,
+    this.leading,
+    this.actions,
   });
 
   @override
@@ -163,6 +173,8 @@ class AppStatusHeader extends StatelessWidget {
       title: title,
       subtitle: subtitle,
       icon: statusIcon,
+      leading: leading,
+      actions: actions,
       backgroundGradient: isHealthy ? gradients.healthyStatus : gradients.dangerStatus,
       expandedHeight: 240.0,
     );

@@ -4,6 +4,7 @@ import 'package:crop_check_up/models/diagnosis_result.dart';
 import 'package:crop_check_up/ui/components/diagnosis/result_summary_card.dart';
 import 'package:crop_check_up/ui/components/diagnosis/info_section.dart';
 import 'package:crop_check_up/ui/components/diagnosis/bullet_list.dart';
+import 'package:crop_check_up/ui/components/diagnosis/evidence_image_card.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 
 class ResultPresentationView extends StatelessWidget {
@@ -31,17 +32,7 @@ class ResultPresentationView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (imageBytes != null) ...[
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: Image.memory(
-                  imageBytes!,
-                  height: 240,
-                  width: 240,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            EvidenceImageCard(imageBytes: imageBytes!),
             const SizedBox(height: 32),
           ],
           ResultSummaryCard(result: result),
@@ -54,7 +45,7 @@ class ResultPresentationView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             InfoSection(
-              title: 'Maintenance Tips',
+              title: AppCopy.result.sectionHealthyTips,
               icon: Icons.shield_rounded,
               content: const BulletList(items: [
                 'Maintain proper spacing between plants.',

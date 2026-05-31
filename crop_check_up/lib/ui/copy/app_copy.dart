@@ -54,6 +54,7 @@ class ResultCopy {
   String get sectionCauses => 'Causes';
   String get sectionManagement => 'Management & Treatment';
   String get sectionAbout => 'About';
+  String get sectionHealthyTips => 'Maintenance Tips';
   String get actionDone => 'Done';
 
   String diagnosisConfidence(String cropName, String diseaseName, String confidence) {
