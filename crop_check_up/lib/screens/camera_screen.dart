@@ -8,6 +8,7 @@ import '../ui/tokens/typography.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../theme/app_theme.dart';
+import '../ui/tokens/motion_tokens.dart';
 import '../widgets/camera_overlay.dart';
 import 'diagnosis_result_screen.dart';
 import 'segmentation_preview_screen.dart';
@@ -370,7 +371,7 @@ class _CaptureButton extends StatelessWidget {
     return GestureDetector(
       onTap: isProcessing ? null : onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+        duration: MotionTokens.durationNormal,
         width: 80,
         height: 80,
         decoration: BoxDecoration(
@@ -390,7 +391,7 @@ class _CaptureButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(6),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
+            duration: MotionTokens.durationNormal,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: isProcessing 
