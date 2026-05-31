@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../ui/tokens/typography.dart';
+import '../ui/theme/camera_theme.dart';
 
 
 /// Semi‑transparent overlay drawn on top of the camera preview.
@@ -12,11 +13,13 @@ class CameraOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cameraTheme = Theme.of(context).extension<CameraTheme>()!;
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        final boxSize = constraints.maxWidth * 0.72;
+        final boxSize = constraints.maxWidth * cameraTheme.frameRatio;
         final left = (constraints.maxWidth - boxSize) / 2;
-        final top = (constraints.maxHeight - boxSize) / 2.5;
+        final top = (constraints.maxHeight - boxSize) / cameraTheme.framePosition;
 
         return Stack(
           children: [
@@ -25,6 +28,8 @@ class CameraOverlay extends StatelessWidget {
               child: CustomPaint(
                 painter: _OverlayPainter(
                   rect: Rect.fromLTWH(left, top, boxSize, boxSize),
+                  scrimColor: cameraTheme.scrim,
+                  cornerRadius: cameraTheme.cornerRadius,
                 ),
               ),
             ),
@@ -36,7 +41,10 @@ class CameraOverlay extends StatelessWidget {
               height: boxSize,
               child: CustomPaint(
                 painter: _CornerBracketPainter(
-                  color: Theme.of(context).colorScheme.primary,
+                  stroke: cameraTheme.stroke,
+                  glow: cameraTheme.glow,
+                  cornerLength: cameraTheme.cornerLength,
+                  cornerRadius: cameraTheme.cornerRadius, // or a derived inner radius, but we use cornerRadius to avoid magic numbers
                 ),
               ),
             ),
@@ -44,12 +52,12 @@ class CameraOverlay extends StatelessWidget {
             Positioned(
               left: 0,
               right: 0,
-              top: top + boxSize + 32,
+              top: top + boxSize + cameraTheme.instructionTextSpacing,
               child: Text(
                 'Centre the leaf inside the frame',
                 textAlign: TextAlign.center,
                 style: context.typography.body.copyWith(
-                  color: Colors.white,
+                  color: cameraTheme.instructionTextColor,
                   fontWeight: FontWeight.w600,
                   shadows: const [
                     Shadow(blurRadius: 12, color: Colors.black87),
@@ -71,50 +79,70 @@ class CameraOverlay extends StatelessWidget {
 /// Fills the entire canvas with a dark scrim, cutting out the target rectangle.
 class _OverlayPainter extends CustomPainter {
   final Rect rect;
-  _OverlayPainter({required this.rect});
+  final Color scrimColor;
+  final double cornerRadius;
+
+  _OverlayPainter({
+    required this.rect,
+    required this.scrimColor,
+    required this.cornerRadius,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withValues(alpha: 0.6);
+    final paint = Paint()..color = scrimColor;
     final outer = Path()..addRect(Offset.zero & size);
     final inner = Path()
       ..addRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(24)),
+        RRect.fromRectAndRadius(rect, Radius.circular(cornerRadius)),
       );
     final combined = Path.combine(PathOperation.difference, outer, inner);
     canvas.drawPath(combined, paint);
   }
 
   @override
-  bool shouldRepaint(_OverlayPainter old) => old.rect != rect;
+  bool shouldRepaint(_OverlayPainter old) =>
+      old.rect != rect ||
+      old.scrimColor != scrimColor ||
+      old.cornerRadius != cornerRadius;
 }
 
 /// Draws four rounded corner brackets to highlight the target region.
 class _CornerBracketPainter extends CustomPainter {
-  final Color color;
+  final BorderSide stroke;
+  final BoxShadow glow;
+  final double cornerLength;
+  final double cornerRadius;
 
-  _CornerBracketPainter({required this.color});
+  _CornerBracketPainter({
+    required this.stroke,
+    required this.glow,
+    required this.cornerLength,
+    required this.cornerRadius,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color
+      ..color = stroke.color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0
+      ..strokeWidth = stroke.width
       ..strokeCap = StrokeCap.round;
 
     final glowPaint = Paint()
-      ..color = color.withValues(alpha: 0.3)
+      ..color = glow.color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8.0
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0)
+      ..strokeWidth = glow.spreadRadius > 0 ? glow.spreadRadius : stroke.width * 2
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, glow.blurRadius)
       ..strokeCap = StrokeCap.round;
 
-    const len = 32.0;
-    const r = 16.0;
+    final len = cornerLength;
+    final r = cornerRadius;
 
     void drawCorner(Path path) {
-      canvas.drawPath(path, glowPaint);
+      if (glow.color.a > 0) {
+        canvas.drawPath(path, glowPaint);
+      }
       canvas.drawPath(path, paint);
     }
 
@@ -123,7 +151,7 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(0, len)
         ..lineTo(0, r)
-        ..arcToPoint(const Offset(r, 0), radius: const Radius.circular(r))
+        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, 0) : Offset.zero, radius: Radius.circular(r))
         ..lineTo(len, 0),
     );
     // Top‑right
@@ -131,7 +159,7 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(size.width - len, 0)
         ..lineTo(size.width - r, 0)
-        ..arcToPoint(Offset(size.width, r), radius: const Radius.circular(r))
+        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(size.width, r) : Offset(size.width, 0), radius: Radius.circular(r))
         ..lineTo(size.width, len),
     );
     // Bottom‑left
@@ -139,7 +167,7 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(0, size.height - len)
         ..lineTo(0, size.height - r)
-        ..arcToPoint(Offset(r, size.height), radius: const Radius.circular(r))
+        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, size.height) : Offset(0, size.height), radius: Radius.circular(r))
         ..lineTo(len, size.height),
     );
     // Bottom‑right
@@ -147,12 +175,16 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(size.width - len, size.height)
         ..lineTo(size.width - r, size.height)
-        ..arcToPoint(Offset(size.width, size.height - r),
-            radius: const Radius.circular(r))
+        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(size.width, size.height - r) : Offset(size.width, size.height),
+            radius: Radius.circular(r))
         ..lineTo(size.width, size.height - len),
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _CornerBracketPainter oldDelegate) =>
+      oldDelegate.stroke != stroke ||
+      oldDelegate.glow != glow ||
+      oldDelegate.cornerLength != cornerLength ||
+      oldDelegate.cornerRadius != cornerRadius;
 }
