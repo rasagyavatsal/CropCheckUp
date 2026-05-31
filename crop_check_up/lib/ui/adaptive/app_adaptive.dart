@@ -1,0 +1,3 @@
+class AppAdaptive {
+  const AppAdaptive();
+}

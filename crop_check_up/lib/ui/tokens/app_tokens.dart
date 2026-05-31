@@ -1,0 +1,3 @@
+class AppTokens {
+  const AppTokens();
+}
