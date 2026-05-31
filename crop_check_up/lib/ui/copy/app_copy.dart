@@ -1,11 +1,19 @@
 class AppCopy {
   AppCopy._();
 
+  static const SharedCopy shared = SharedCopy();
   static const HomeCopy home = HomeCopy();
   static const CameraCopy camera = CameraCopy();
   static const PreviewCopy preview = PreviewCopy();
   static const ResultCopy result = ResultCopy();
   static const FeedbackCopy feedback = FeedbackCopy();
+}
+
+class SharedCopy {
+  const SharedCopy();
+  
+  String get backAction => 'Back';
+  String get closeAction => 'Close';
 }
 
 class HomeCopy {
@@ -22,6 +30,10 @@ class HomeCopy {
   String get footerText => 'v1.0.0 • Powered by TensorFlow Lite';
   String get loadingOverlayTitle => 'Diagnosing plant health...';
   String get loadingOverlaySubtitle => 'Identifying patterns and diseases';
+  
+  // Semantics
+  String get semanticScanAction => 'Scan plant using camera';
+  String get semanticUploadAction => 'Upload image from gallery';
 }
 
 class CameraCopy {
@@ -31,6 +43,11 @@ class CameraCopy {
   String get captureReady => 'Align leaf and tap to capture';
   String get captureFailed => 'Failed to capture frame, please try again.';
   String get diagnosisFailed => 'Could not confidently diagnose. Please try again.';
+
+  // Semantics
+  String get semanticCaptureAction => 'Capture photo';
+  String get semanticFlashOn => 'Turn flash on';
+  String get semanticFlashOff => 'Turn flash off';
 }
 
 class PreviewCopy {
@@ -40,6 +57,9 @@ class PreviewCopy {
   String get instruction => 'Is the background removal correct? Ensure only the plant leaf is clearly visible.';
   String get actionRetry => 'Retry';
   String get actionConfirm => 'Confirm';
+
+  // Semantics
+  String get semanticPreviewImage => 'Segmented plant leaf preview';
 }
 
 class ResultCopy {
@@ -64,6 +84,9 @@ class ResultCopy {
   String healthyConfidence(String cropName, String confidence) {
     return 'The AI model determined this $cropName leaf is healthy with $confidence% confidence.';
   }
+
+  // Semantics
+  String get semanticEvidenceImage => 'Image used for diagnosis';
 }
 
 class FeedbackCopy {

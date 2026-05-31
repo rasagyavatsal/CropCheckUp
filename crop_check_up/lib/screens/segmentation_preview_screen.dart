@@ -87,9 +87,13 @@ class SegmentationPreviewScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: spacing.xl),
                     child: AppCard.image(
                       image: Flexible(
-                        child: Image.memory(
-                          imageBytes,
-                          fit: BoxFit.contain,
+                        child: Semantics(
+                          image: true,
+                          label: AppCopy.preview.semanticPreviewImage,
+                          child: Image.memory(
+                            imageBytes,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),

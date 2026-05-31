@@ -130,16 +130,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-          child: AppCard.action(
-            onTap: () {
-              Navigator.push(
-                context,
-                AppRoute.standard(builder: (_) => const CameraScreen()),
-              );
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: Semantics(
+            button: true,
+            label: AppCopy.home.semanticScanAction,
+            child: AppCard.action(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  AppRoute.standard(builder: (_) => const CameraScreen()),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 Container(
                   padding: EdgeInsets.all(spacing.sm),
                   decoration: BoxDecoration(
@@ -161,21 +164,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: context.appColors.mutedText,
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
         SizedBox(width: spacing.m),
         Expanded(
-          child: AppCard.action(
-            onTap: () async {
-              setState(() => _isDiagnosing = true);
-              await _coordinator.startGalleryDiagnosis(context);
-              if (mounted) setState(() => _isDiagnosing = false);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: Semantics(
+            button: true,
+            label: AppCopy.home.semanticUploadAction,
+            child: AppCard.action(
+              onTap: () async {
+                setState(() => _isDiagnosing = true);
+                await _coordinator.startGalleryDiagnosis(context);
+                if (mounted) setState(() => _isDiagnosing = false);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 Container(
                   padding: EdgeInsets.all(spacing.sm),
                   decoration: BoxDecoration(
@@ -200,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+        ),
         ),
       ],
     );

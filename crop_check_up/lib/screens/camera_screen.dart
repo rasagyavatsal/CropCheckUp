@@ -151,7 +151,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   children: [
                     AppIconButton.translucent(
                       icon: Icons.close_rounded,
-                      tooltip: 'Back',
+                      tooltip: AppCopy.shared.backAction,
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     Text(
@@ -168,7 +168,9 @@ class _CameraScreenState extends State<CameraScreen> {
                       icon: _session.isFlashOn
                           ? Icons.flash_on_rounded
                           : Icons.flash_off_rounded,
-                      tooltip: 'Toggle flash',
+                      tooltip: _session.isFlashOn
+                          ? AppCopy.camera.semanticFlashOff
+                          : AppCopy.camera.semanticFlashOn,
                       onPressed: () async {
                         await _session.toggleFlash();
                         if (mounted) setState(() {});
@@ -214,9 +216,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   // Capture control
                   Padding(
                     padding: EdgeInsets.only(bottom: spacing.xl),
-                    child: GestureDetector(
-                      onTap: _isDiagnosing ? null : _captureAndDiagnose,
-                      child: AnimatedContainer(
+                    child: Semantics(
+                      button: true,
+                      label: AppCopy.camera.semanticCaptureAction,
+                      child: GestureDetector(
+                        onTap: _isDiagnosing ? null : _captureAndDiagnose,
+                        child: AnimatedContainer(
                         duration: MotionTokens.durationNormal,
                         width: sizes.cameraCaptureSize,
                         height: sizes.cameraCaptureSize,
@@ -249,6 +254,7 @@ class _CameraScreenState extends State<CameraScreen> {
                             ),
                           ),
                         ),
+                      ),
                       ),
                     ),
                   ),
