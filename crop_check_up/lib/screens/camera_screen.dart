@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../services/background_removal_service.dart';
 import '../ui/tokens/typography.dart';
+import '../ui/copy/app_copy.dart';
 import '../services/camera_service.dart';
 import '../services/plant_classifier.dart';
 import '../ui/app_design_system.dart';
@@ -99,7 +100,7 @@ class _CameraScreenState extends State<CameraScreen>
     if (frame == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to capture frame, please try again.')),
+          SnackBar(content: Text(AppCopy.camera.captureFailed)),
         );
       }
       return;
@@ -139,7 +140,7 @@ class _CameraScreenState extends State<CameraScreen>
         );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not confidently diagnose. Please try again.')),
+          SnackBar(content: Text(AppCopy.camera.diagnosisFailed)),
         );
       }
     } finally {
@@ -164,7 +165,7 @@ class _CameraScreenState extends State<CameraScreen>
               CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 16),
               Text(
-                'Loading AI model…',
+                AppCopy.home.initLoading,
                 style: context.typography.body.copyWith(color: Colors.white70),
               ),
             ],
@@ -184,7 +185,7 @@ class _CameraScreenState extends State<CameraScreen>
                 Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to initialise',
+                  AppCopy.home.initErrorTitle,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -196,7 +197,7 @@ class _CameraScreenState extends State<CameraScreen>
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _bootstrap,
-                  child: const Text('Retry'),
+                  child: Text(AppCopy.feedback.retry),
                 ),
               ],
             ),
@@ -299,7 +300,7 @@ class _CameraScreenState extends State<CameraScreen>
           ),
           const SizedBox(width: 10),
           Text(
-            'Analyzing Specimen...',
+            AppCopy.home.loadingOverlayTitle,
             style: context.typography.caption.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -319,7 +320,7 @@ class _CameraScreenState extends State<CameraScreen>
         border: Border.all(color: Colors.white10),
       ),
       child: Text(
-        'Align leaf and tap to capture',
+        AppCopy.camera.captureReady,
         style: context.typography.label.copyWith(
           color: Colors.white,
         ),

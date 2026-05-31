@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/app_design_system.dart';
+import '../ui/copy/app_copy.dart';
 
 /// Screen to preview the segmented image before inference.
 /// 
@@ -51,7 +52,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Confirm Specimen',
+                        AppCopy.preview.title,
                         style: context.typography.headline.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -60,7 +61,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Is the background removal correct? Ensure only the plant leaf is clearly visible.',
+                        AppCopy.preview.instruction,
                         style: context.typography.label.copyWith(
                           color: Colors.white70,
                           height: 1.4,
@@ -127,7 +128,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                               const Icon(Icons.refresh_rounded, size: 20),
                               const SizedBox(width: 8),
                               Text(
-                                'Retry',
+                                AppCopy.preview.actionRetry,
                                 style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -155,7 +156,7 @@ class SegmentationPreviewScreen extends StatelessWidget {
                               const Icon(Icons.check_circle_outline_rounded, size: 20),
                               const SizedBox(width: 8),
                               Text(
-                                'Confirm',
+                                AppCopy.preview.actionConfirm,
                                 style: context.typography.button.copyWith(fontWeight: FontWeight.w600),
                               ),
                             ],

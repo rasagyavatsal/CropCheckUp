@@ -4,6 +4,7 @@ import 'package:crop_check_up/models/diagnosis_result.dart';
 import 'package:crop_check_up/ui/components/diagnosis/result_summary_card.dart';
 import 'package:crop_check_up/ui/components/diagnosis/info_section.dart';
 import 'package:crop_check_up/ui/components/diagnosis/bullet_list.dart';
+import 'package:crop_check_up/ui/copy/app_copy.dart';
 
 class ResultPresentationView extends StatelessWidget {
   final DiagnosisResult result;
@@ -47,9 +48,9 @@ class ResultPresentationView extends StatelessWidget {
           const SizedBox(height: 32),
           if (result.isHealthy) ...[
             InfoSection(
-              title: 'Status',
+              title: AppCopy.result.sectionStatus,
               icon: Icons.info_outline_rounded,
-              content: _buildContent('The AI model determined this ${result.cropName} leaf is healthy with ${result.confidencePercent}% confidence.'),
+              content: _buildContent(AppCopy.result.healthyConfidence(result.cropName, result.confidencePercent.toString())),
             ),
             const SizedBox(height: 24),
             InfoSection(
@@ -65,7 +66,7 @@ class ResultPresentationView extends StatelessWidget {
           ] else ...[
             if (result.symptoms != null) ...[
               InfoSection(
-                title: 'Symptoms',
+                title: AppCopy.result.sectionSymptoms,
                 icon: Icons.visibility_rounded,
                 content: _buildContent(result.symptoms!),
               ),
@@ -73,7 +74,7 @@ class ResultPresentationView extends StatelessWidget {
             ],
             if (result.causes != null) ...[
               InfoSection(
-                title: 'Causes',
+                title: AppCopy.result.sectionCauses,
                 icon: Icons.biotech_rounded,
                 content: _buildContent(result.causes!),
               ),
@@ -81,7 +82,7 @@ class ResultPresentationView extends StatelessWidget {
             ],
             if (result.management != null) ...[
               InfoSection(
-                title: 'Management & Treatment',
+                title: AppCopy.result.sectionManagement,
                 icon: Icons.medical_services_rounded,
                 content: _buildContent(result.management!),
               ),
@@ -89,9 +90,9 @@ class ResultPresentationView extends StatelessWidget {
             ],
             if (result.symptoms == null && result.causes == null && result.management == null)
               InfoSection(
-                title: 'About',
+                title: AppCopy.result.sectionAbout,
                 icon: Icons.info_outline_rounded,
-                content: _buildContent('${result.diseaseName} was detected on the ${result.cropName} leaf with ${result.confidencePercent}% confidence. Early treatment is critical to prevent further spread.'),
+                content: _buildContent(AppCopy.result.diagnosisConfidence(result.cropName, result.diseaseName, result.confidencePercent.toString())),
               ),
           ],
         ],

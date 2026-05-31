@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/diagnosis_result.dart';
 import '../ui/tokens/typography.dart';
+import '../ui/copy/app_copy.dart';
 import '../ui/components/diagnosis/result_presentation_view.dart';
 import '../widgets/header_background.dart';
 
@@ -37,15 +38,15 @@ class DiagnosisResultScreen extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                'Diagnosis Result',
+                AppCopy.result.title,
                 style: context.typography.title.copyWith(
                   fontWeight: FontWeight.w800,
                   color: Colors.white,
                 ),
               ),
               background: HeaderBackground(
-                title: 'Diagnosis Result',
-                subtitle: result.isHealthy ? 'HEALTHY PLANT' : 'DISEASE DETECTED',
+                title: AppCopy.result.title,
+                subtitle: result.isHealthy ? AppCopy.result.statusHealthy : AppCopy.result.statusDisease,
                 icon: statusIcon,
               ),
             ),
@@ -64,7 +65,7 @@ class DiagnosisResultScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Done'),
+                  child: Text(AppCopy.result.actionDone),
                 ),
               ),
             ),

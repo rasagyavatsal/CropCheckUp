@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../ui/tokens/typography.dart';
 import '../services/diagnosis_workflow_service.dart';
+import '../ui/copy/app_copy.dart';
 
 import '../widgets/header_background.dart';
 import '../ui/adaptive/app_adaptive.dart';
@@ -58,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 16),
               Text(
-                'Initialising AI models…',
+                AppCopy.home.initLoading,
                 style: context.typography.body.copyWith(color: Colors.white70),
               ),
             ],
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to load models',
+                  AppCopy.home.initErrorTitle,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _bootstrap,
-                  child: const Text('Retry'),
+                  child: Text(AppCopy.feedback.retry),
                 ),
               ],
             ),
@@ -109,11 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(20),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
-                    const _SectionHeader(title: 'Diagnose Plant'),
+                    _SectionHeader(title: AppCopy.home.diagnoseTitle),
                     const SizedBox(height: 16),
                     _buildActionCards(context),
                     const SizedBox(height: 32),
-                    const _SectionHeader(title: 'Tips for Best Results'),
+                    _SectionHeader(title: AppCopy.home.tipsTitle),
                     const SizedBox(height: 16),
                     _buildTipsList(),
                     const SizedBox(height: 40),
@@ -134,8 +135,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Expanded(
           child: _ActionCard(
-            title: 'Camera',
-            subtitle: 'Take a photo',
+            title: AppCopy.home.actionCameraTitle,
+            subtitle: AppCopy.home.actionCameraSubtitle,
             icon: Icons.camera_alt_rounded,
             color: Theme.of(context).colorScheme.primary,
             onTap: () {
@@ -149,8 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _ActionCard(
-            title: 'Upload',
-            subtitle: 'From gallery',
+            title: AppCopy.home.actionUploadTitle,
+            subtitle: AppCopy.home.actionUploadSubtitle,
             icon: Icons.image_rounded,
             color: Theme.of(context).colorScheme.secondary,
             onTap: () async {
@@ -186,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const Icon(Icons.eco_outlined, size: 24),
             const SizedBox(height: 8),
             Text(
-              'v1.0.0 • Powered by TensorFlow Lite',
+              AppCopy.home.footerText,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -211,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 24),
                 Text(
-                  'Analyzing Specimen...',
+                  AppCopy.home.loadingOverlayTitle,
                   style: context.typography.title.copyWith(
                     fontSize: 18,
                     color: Colors.white,
@@ -219,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Identifying patterns and diseases',
+                  AppCopy.home.loadingOverlaySubtitle,
                   style: context.typography.label.copyWith(
                     color: Colors.white54,
                   ),
