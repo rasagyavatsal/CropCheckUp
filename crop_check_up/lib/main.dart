@@ -12,14 +12,8 @@ void main() {
     DeviceOrientation.portraitUp,
   ]);
 
-  // Edge‑to‑edge system UI.
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-    ),
-  );
+  // Edge-to-edge system UI.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   runApp(const CropCheckUpApp());
 }
@@ -36,6 +30,7 @@ class CropCheckUpApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
+      scrollBehavior: const AppScrollBehavior(),
       home: const HomeScreen(),
     );
   }
