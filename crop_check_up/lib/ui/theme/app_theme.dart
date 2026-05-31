@@ -3,8 +3,11 @@ import 'package:crop_check_up/ui/tokens/semantic_colors.dart';
 import 'package:crop_check_up/ui/tokens/typography.dart';
 import 'package:crop_check_up/ui/tokens/radius_tokens.dart';
 import 'package:crop_check_up/ui/tokens/elevation_tokens.dart';
+import 'package:crop_check_up/ui/theme/camera_theme.dart';
+import 'package:crop_check_up/ui/theme/diagnosis_status_theme.dart';
 import 'package:crop_check_up/ui/tokens/spacing_tokens.dart';
 import 'package:crop_check_up/ui/tokens/gradient_tokens.dart';
+import 'package:crop_check_up/ui/theme/app_layout_theme.dart';
 
 class AppTheme {
   const AppTheme._();
@@ -30,6 +33,9 @@ class AppTheme {
     final typography = AppTypography.inter(color: tokens.textPrimary);
     final onPrimaryColor = brightness == Brightness.light ? tokens.raisedSurface : tokens.background;
     
+    const spacing = SpacingTokens();
+    const radius = RadiusTokens();
+    
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -37,6 +43,11 @@ class AppTheme {
         tokens,
         typography,
         brightness == Brightness.light ? GradientTokens.light : GradientTokens.dark,
+        const AppLayoutTheme(),
+        brightness == Brightness.light ? CameraTheme.light(tokens.cameraScrim) : CameraTheme.dark(tokens.cameraScrim),
+        brightness == Brightness.light 
+            ? DiagnosisStatusTheme.light(tokens.success, tokens.danger, tokens.warning, tokens.mutedText)
+            : DiagnosisStatusTheme.dark(tokens.success, tokens.danger, tokens.warning, tokens.mutedText),
       ],
       colorScheme: ColorScheme(
         brightness: brightness,
@@ -46,7 +57,7 @@ class AppTheme {
         onSecondary: tokens.textPrimary,
         error: tokens.danger,
         onError: onPrimaryColor,
-        surface: tokens.background,
+        surface: tokens.surface,
         onSurface: tokens.textPrimary,
       ),
       scaffoldBackgroundColor: tokens.background,
@@ -71,7 +82,7 @@ class AppTheme {
         color: tokens.raisedSurface,
         elevation: ElevationTokens.low,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(RadiusTokens.l),
+          borderRadius: BorderRadius.circular(radius.l),
         ),
         clipBehavior: Clip.antiAlias,
       ),
@@ -81,9 +92,9 @@ class AppTheme {
           foregroundColor: onPrimaryColor,
           elevation: ElevationTokens.low,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(RadiusTokens.xl),
+            borderRadius: BorderRadius.circular(radius.xl),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.l, vertical: SpacingTokens.m),
+          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
           textStyle: typography.button,
         ),
       ),
@@ -92,9 +103,9 @@ class AppTheme {
           foregroundColor: tokens.brand,
           side: BorderSide(color: tokens.strongBorder),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(RadiusTokens.xl),
+            borderRadius: BorderRadius.circular(radius.xl),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.l, vertical: SpacingTokens.m),
+          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
           textStyle: typography.button,
         ),
       ),
@@ -102,9 +113,9 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: tokens.brand,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(RadiusTokens.xl),
+            borderRadius: BorderRadius.circular(radius.xl),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.m, vertical: SpacingTokens.s),
+          padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
           textStyle: typography.button,
         ),
       ),
@@ -113,19 +124,19 @@ class AppTheme {
         contentTextStyle: typography.body.copyWith(color: tokens.background),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(RadiusTokens.m),
+          borderRadius: BorderRadius.circular(radius.m),
         ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: tokens.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(RadiusTokens.xl)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(radius.xl)),
         ),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: tokens.raisedSurface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(RadiusTokens.xl),
+          borderRadius: BorderRadius.circular(radius.xl),
         ),
         titleTextStyle: typography.title,
         contentTextStyle: typography.body,
