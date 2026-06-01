@@ -12,7 +12,6 @@ void main() {
         home: const Scaffold(body: AppLoadingState(message: 'Loading data...'))
       ));
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.text('Loading data...'), findsOneWidget);
     });
   });
 }

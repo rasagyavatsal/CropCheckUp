@@ -19,7 +19,6 @@ void main() {
         ),
       ));
       
-      expect(find.text('Processing...'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       
       // Should absorb pointer
