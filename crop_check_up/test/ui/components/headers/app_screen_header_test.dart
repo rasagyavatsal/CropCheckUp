@@ -20,7 +20,7 @@ void main() {
       await tester.pumpWidget(buildTestableWidget(
         AppScreenHeader(
           title: 'CropCheckUp',
-          titleIcon: Icons.eco_rounded,
+          brandMark: const Icon(Icons.eco_rounded),
           centerTitle: false,
           trailing: IconButton(
             icon: const Icon(Icons.dark_mode_rounded),

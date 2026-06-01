@@ -183,7 +183,7 @@ class AppStatusHeader extends StatelessWidget {
 
 class AppScreenHeader extends StatelessWidget {
   final String title;
-  final IconData? titleIcon;
+  final Widget? brandMark;
   final Widget? leading;
   final Widget? trailing;
   final bool centerTitle;
@@ -191,7 +191,7 @@ class AppScreenHeader extends StatelessWidget {
   const AppScreenHeader({
     super.key,
     required this.title,
-    this.titleIcon,
+    this.brandMark,
     this.leading,
     this.trailing,
     this.centerTitle = true,
@@ -205,8 +205,8 @@ class AppScreenHeader extends StatelessWidget {
     final titleWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (titleIcon != null) ...[
-          Icon(titleIcon, color: colors.brand, size: 28),
+        if (brandMark != null) ...[
+          brandMark!,
           const SizedBox(width: 8),
         ],
         Text(

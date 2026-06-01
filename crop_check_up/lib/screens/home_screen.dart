@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 AppScreenHeader(
                   title: 'CropCheckUp',
-                  titleIcon: Icons.eco_rounded,
+                  brandMark: const AppBrandMark(),
                   centerTitle: false,
                   trailing: _buildThemeToggle(context),
                 ),
