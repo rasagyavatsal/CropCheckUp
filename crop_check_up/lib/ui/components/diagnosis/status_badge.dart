@@ -37,8 +37,6 @@ class StatusBadge extends StatelessWidget {
                 text,
                 style: context.typography.label.copyWith(
                   color: color,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
                 ),
               ),
             ],

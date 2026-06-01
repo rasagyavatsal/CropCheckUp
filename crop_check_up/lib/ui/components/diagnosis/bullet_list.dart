@@ -26,10 +26,8 @@ class BulletList extends StatelessWidget {
             children: [
               Text(
                 '\u2022',
-                style: context.typography.body.copyWith(
-                  fontWeight: FontWeight.w900,
+                style: context.typography.title.copyWith(
                   color: colors.brand,
-                  fontSize: 18,
                 ),
               ),
               SizedBox(width: spacing.m),

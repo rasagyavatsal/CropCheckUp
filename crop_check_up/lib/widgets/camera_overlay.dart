@@ -59,7 +59,6 @@ class CameraOverlay extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: context.typography.body.copyWith(
                   color: cameraTheme.instructionTextColor,
-                  fontWeight: FontWeight.w600,
                   shadows: ShadowTokens.high,
                 ),
               ),

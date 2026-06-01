@@ -211,10 +211,8 @@ class AppScreenHeader extends StatelessWidget {
         ],
         Text(
           title,
-          style: typography.title.copyWith(
+          style: typography.headline.copyWith(
             color: colors.textPrimary,
-            fontWeight: FontWeight.w900,
-            fontSize: 22,
           ),
         ),
       ],

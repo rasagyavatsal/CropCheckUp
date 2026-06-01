@@ -33,14 +33,12 @@ class ConfidenceMeter extends StatelessWidget {
                   'Confidence Score',
                   style: context.typography.body.copyWith(
                     color: colors.mutedText,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   '$percentage%',
                   style: context.typography.title.copyWith(
                     color: color,
-                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],

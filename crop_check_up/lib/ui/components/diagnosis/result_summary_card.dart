@@ -29,9 +29,6 @@ class ResultSummaryCard extends StatelessWidget {
           Text(
             result.diseaseName,
             style: context.typography.headline.copyWith(
-              fontWeight: FontWeight.w900,
-              fontSize: 28,
-              letterSpacing: -0.5,
               color: colors.textPrimary,
             ),
             textAlign: TextAlign.center,
@@ -41,8 +38,6 @@ class ResultSummaryCard extends StatelessWidget {
             'Crop: ${result.cropName}',
             style: context.typography.body.copyWith(
               color: colors.mutedText,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
             ),
             textAlign: TextAlign.center,
           ),

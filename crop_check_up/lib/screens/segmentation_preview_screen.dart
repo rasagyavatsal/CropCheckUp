@@ -61,7 +61,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
                   AppCopy.preview.instruction,
                   style: context.typography.body.copyWith(
                     color: colors.mutedText,
-                    fontSize: 16,
                   ),
                   textAlign: TextAlign.center,
                 ),

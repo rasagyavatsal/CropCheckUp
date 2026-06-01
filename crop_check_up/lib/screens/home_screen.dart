@@ -94,11 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Welcome Text
                 Text(
                   'Diagnose Plant Health',
-                  style: context.typography.headline.copyWith(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 32,
-                    letterSpacing: -1.0,
-                  ),
+                  style: context.typography.display,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
@@ -106,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Select a leaf image to detect diseases instantly.',
                   style: context.typography.body.copyWith(
                     color: colors.mutedText,
-                    fontSize: 16,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -201,8 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Tips: Bright lighting • Clear background • Single leaf focus',
                           style: context.typography.caption.copyWith(
                             color: colors.textSecondary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -217,9 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   opacity: 0.5,
                   child: Text(
                     'v1.0.0',
-                    style: context.typography.caption.copyWith(
-                      fontSize: 10,
-                    ),
+                    style: context.typography.overline,
                     textAlign: TextAlign.center,
                   ),
                 ),

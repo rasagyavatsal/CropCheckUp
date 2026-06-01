@@ -38,8 +38,6 @@ class InfoSection extends StatelessWidget {
             Text(
               title,
               style: context.typography.title.copyWith(
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
                 color: colors.textPrimary,
               ),
             ),
