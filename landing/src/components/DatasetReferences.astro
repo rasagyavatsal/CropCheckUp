@@ -3,5 +3,95 @@
 <section id="dataset" class="section">
   <div class="container">
     <h2>Dataset References</h2>
+    
+    <div class="dataset-content">
+      <p>The model development workflow is documented in the Kaggle notebook. The dataset used for CropCheckUp experiments and training is available on Kaggle.</p>
+      
+      <div class="reference-links">
+        <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" target="_blank" rel="noopener noreferrer" class="resource-card">
+          <div class="card-content">
+            <h3>Kaggle Notebook</h3>
+            <p>Model development workflow and experimentation.</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+
+        <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" target="_blank" rel="noopener noreferrer" class="resource-card">
+          <div class="card-content">
+            <h3>CropCheckUp Dataset</h3>
+            <p>Image dataset used for CropCheckUp experiments and training.</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .dataset-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+  
+  .dataset-content > p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 800px;
+  }
+
+  .reference-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 768px) {
+    .reference-links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .resource-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-subtle-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-l);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+  }
+
+  .resource-card:hover, .resource-card:focus-visible {
+    background-color: var(--color-raised-surface);
+    border-color: var(--color-brand);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-content h3 {
+    margin: 0 0 var(--space-xs) 0;
+    font-size: var(--font-size-lg);
+    color: var(--color-brand);
+  }
+
+  .card-content p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .arrow {
+    font-size: var(--font-size-xl);
+    color: var(--color-brand);
+    transition: transform 0.2s ease;
+  }
+
+  .resource-card:hover .arrow, .resource-card:focus-visible .arrow {
+    transform: translateX(4px);
+  }
+</style>
