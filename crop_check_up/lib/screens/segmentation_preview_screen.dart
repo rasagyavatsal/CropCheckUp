@@ -38,7 +38,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
     const radius = RadiusTokens();
 
     final colors = context.appColors;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -111,49 +110,22 @@ class SegmentationPreviewScreen extends StatelessWidget {
                 Semantics(
                   button: true,
                   label: AppCopy.preview.actionConfirm,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        backgroundColor: colors.brand,
-                        foregroundColor: isDark ? colors.background : Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(radius.l),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context, true),
-                      icon: const Icon(Icons.check_circle_rounded, size: 24),
-                      label: Text(
-                        AppCopy.preview.actionConfirm,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                  child: AppButton.primary(
+                    isFullWidth: true,
+                    icon: Icons.check_circle_rounded,
+                    label: AppCopy.preview.actionConfirm,
+                    onPressed: () => Navigator.pop(context, true),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Semantics(
                   button: true,
                   label: AppCopy.preview.actionRetry,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        foregroundColor: colors.textPrimary,
-                        backgroundColor: colors.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(radius.l),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context, false),
-                      icon: const Icon(Icons.refresh_rounded, size: 24),
-                      label: Text(
-                        AppCopy.preview.actionRetry,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                  child: AppButton.secondary(
+                    isFullWidth: true,
+                    icon: Icons.refresh_rounded,
+                    label: AppCopy.preview.actionRetry,
+                    onPressed: () => Navigator.pop(context, false),
                   ),
                 ),
               ],

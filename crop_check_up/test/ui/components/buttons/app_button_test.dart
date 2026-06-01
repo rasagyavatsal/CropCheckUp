@@ -117,5 +117,21 @@ void main() {
       expect(find.byIcon(Icons.check), findsOneWidget);
       expect(find.text('With Icon'), findsOneWidget);
     });
+
+    testWidgets('expands to full width when isFullWidth is true', (tester) async {
+      await tester.pumpWidget(buildTestableWidget(AppButton.primary(
+        label: 'Full Width',
+        isFullWidth: true,
+        onPressed: () {},
+      )));
+      
+      final sizedBoxFinder = find.ancestor(
+        of: find.byType(ElevatedButton),
+        matching: find.byType(SizedBox),
+      ).first;
+      
+      final SizedBox sizedBox = tester.widget(sizedBoxFinder);
+      expect(sizedBox.width, double.infinity);
+    });
   });
 }

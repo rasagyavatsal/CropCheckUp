@@ -116,7 +116,6 @@ class _CameraScreenState extends State<CameraScreen> {
     const radius = RadiusTokens();
 
     final colors = context.appColors;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -186,34 +185,12 @@ class _CameraScreenState extends State<CameraScreen> {
                 Semantics(
                   button: true,
                   label: AppCopy.camera.semanticCaptureAction,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        backgroundColor: colors.brand,
-                        foregroundColor: isDark ? colors.background : Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(radius.l),
-                        ),
-                      ),
-                      onPressed: _isDiagnosing ? null : _captureAndDiagnose,
-                      icon: _isDiagnosing 
-                        ? SizedBox(
-                            width: 24, 
-                            height: 24, 
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5, 
-                              color: isDark ? colors.background : Colors.white,
-                            ),
-                          )
-                        : const Icon(Icons.camera_rounded, size: 24),
-                      label: Text(
-                        _isDiagnosing ? 'Analyzing...' : 'Capture Image',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                  child: AppButton.primary(
+                    isFullWidth: true,
+                    isLoading: _isDiagnosing,
+                    icon: Icons.camera_rounded,
+                    label: _isDiagnosing ? 'Analyzing...' : 'Capture Image',
+                    onPressed: _captureAndDiagnose,
                   ),
                 ),
               ],

@@ -11,6 +11,7 @@ class AppButton extends StatelessWidget {
   final AppButtonVariant _variant;
   final bool isLoading;
   final IconData? icon;
+  final bool isFullWidth;
 
   const AppButton.primary({
     super.key,
@@ -18,6 +19,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.primary;
 
   const AppButton.secondary({
@@ -26,6 +28,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.secondary;
 
   const AppButton.tonal({
@@ -34,6 +37,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.tonal;
 
   const AppButton.ghost({
@@ -42,6 +46,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.ghost;
 
   const AppButton.danger({
@@ -50,6 +55,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.danger;
 
   const AppButton.outlined({
@@ -58,6 +64,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.isFullWidth = false,
   }) : _variant = AppButtonVariant.outlined;
 
   @override
@@ -142,6 +149,7 @@ class AppButton extends StatelessWidget {
 
     return SizedBox(
       height: const SizeTokens().buttonHeight,
+      width: isFullWidth ? double.infinity : null,
       child: button,
     );
   }

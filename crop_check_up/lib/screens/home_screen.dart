@@ -73,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final colors = context.appColors;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -159,27 +158,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               Semantics(
                                 button: true,
                                 label: AppCopy.home.semanticScanAction,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: FilledButton.icon(
-                                    style: FilledButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      backgroundColor: colors.brand,
-                                      foregroundColor: isDark ? colors.background : Colors.white,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(radius.l),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        AppRoute.standard(builder: (_) => const CameraScreen()),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.photo_camera_rounded, size: 20),
-                                    label: const Text('Start Camera Scan'),
-                                  ),
+                                child: AppButton.primary(
+                                  isFullWidth: true,
+                                  icon: Icons.photo_camera_rounded,
+                                  label: 'Start Camera Scan',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      AppRoute.standard(builder: (_) => const CameraScreen()),
+                                    );
+                                  },
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -188,25 +176,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               Semantics(
                                 button: true,
                                 label: AppCopy.home.semanticUploadAction,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      foregroundColor: colors.textPrimary,
-                                      backgroundColor: colors.surface,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(radius.l),
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      setState(() => _isDiagnosing = true);
-                                      await _coordinator.startGalleryDiagnosis(context);
-                                      if (mounted) setState(() => _isDiagnosing = false);
-                                    },
-                                    icon: const Icon(Icons.image_rounded, size: 20),
-                                    label: const Text('Upload from Gallery'),
-                                  ),
+                                child: AppButton.secondary(
+                                  isFullWidth: true,
+                                  icon: Icons.image_rounded,
+                                  label: 'Upload from Gallery',
+                                  onPressed: () async {
+                                    setState(() => _isDiagnosing = true);
+                                    await _coordinator.startGalleryDiagnosis(context);
+                                    if (mounted) setState(() => _isDiagnosing = false);
+                                  },
                                 ),
                               ),
                             ],
