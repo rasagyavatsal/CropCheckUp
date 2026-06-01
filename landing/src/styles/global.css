@@ -74,9 +74,6 @@ body {
   padding: 0;
   min-height: 100vh;
   background-color: var(--color-bg-base);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.08), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(5, 150, 105, 0.08), transparent 25%);
   background-attachment: fixed;
 }
 
@@ -114,11 +111,8 @@ a:hover {
   text-shadow: 0 0 10px var(--color-brand-glow);
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.text-highlight {
+  color: var(--color-brand-primary);
 }
 
 .glass-panel {
@@ -147,7 +141,7 @@ a:hover {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+  background-color: var(--color-brand-primary);
   color: #fff;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
