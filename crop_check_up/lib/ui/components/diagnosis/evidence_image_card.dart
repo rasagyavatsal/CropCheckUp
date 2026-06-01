@@ -13,18 +13,10 @@ class EvidenceImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard.elevated(
-      padding: EdgeInsets.zero,
-      child: Semantics(
-        image: true,
-        label: AppCopy.result.semanticEvidenceImage,
-        child: Image.memory(
-          imageBytes,
-          height: 260,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ),
-      ),
+    return AppImagePanel(
+      imageBytes: imageBytes,
+      semanticLabel: AppCopy.result.semanticEvidenceImage,
+      height: 260,
     );
   }
 }

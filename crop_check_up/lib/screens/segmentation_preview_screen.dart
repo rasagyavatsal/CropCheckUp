@@ -71,21 +71,10 @@ class SegmentationPreviewScreen extends StatelessWidget {
                 Expanded(
                   child: SizedBox(
                     width: double.infinity,
-                    child: AppCard.panel(
-                      child: Hero(
-                        tag: 'segmentation_preview',
-                        child: Semantics(
-                          image: true,
-                          label: AppCopy.preview.semanticPreviewImage,
-                          child: Padding(
-                            padding: EdgeInsets.all(spacing.m),
-                            child: Image.memory(
-                              imageBytes,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
+                    child: AppImagePanel(
+                      imageBytes: imageBytes,
+                      semanticLabel: AppCopy.preview.semanticPreviewImage,
+                      heroTag: 'segmentation_preview',
                     ),
                   ),
                 ),

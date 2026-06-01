@@ -7,6 +7,7 @@ export 'feedback/app_error_state.dart';
 export 'feedback/app_empty_state.dart';
 export 'feedback/app_processing_overlay.dart';
 export 'feedback/app_feedback.dart';
+export 'images/app_image_panel.dart';
 
 class AppComponents {
   const AppComponents();
