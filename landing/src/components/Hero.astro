@@ -1,7 +1,45 @@
 ---
 ---
-<section id="hero" class="section">
-  <div class="container">
-    <h2>Hero Section</h2>
+<section id="hero" class="section hero">
+  <div class="container hero-content">
+    <h1 class="hero-title">CropCheckUp</h1>
+    <p class="hero-subtitle">AI-assisted crop leaf disease detection from camera or gallery images.</p>
+    <p class="hero-description">CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.</p>
+    <div class="hero-ctas">
+      <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn">View Kaggle Notebook</a>
+      <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" class="btn btn-outline">View Dataset</a>
+    </div>
   </div>
 </section>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: var(--space-xxl) 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+  .hero-title {
+    color: var(--color-brand);
+    margin-bottom: var(--space-s);
+  }
+  .hero-subtitle {
+    font-size: var(--font-size-2xl);
+    font-weight: 500;
+    margin-bottom: var(--space-m);
+    color: var(--color-text-primary);
+  }
+  .hero-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    max-width: 800px;
+    margin: 0 auto var(--space-xl) auto;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: var(--space-m);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

@@ -99,7 +99,11 @@ a:hover {
   opacity: 0.8;
 }
 
-button {
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-family-base);
   font-size: var(--font-size-base);
   font-weight: 500;
@@ -111,10 +115,24 @@ button {
   color: var(--color-raised-surface);
   cursor: pointer;
   transition: background-color 0.2s ease, opacity 0.2s ease;
+  text-decoration: none;
 }
 
-button:hover {
+button:hover,
+.btn:hover {
   opacity: 0.9;
+  color: var(--color-raised-surface);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--color-brand);
+  color: var(--color-brand);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-brand);
+  color: var(--color-raised-surface);
 }
 
 button:focus-visible {
