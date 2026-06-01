@@ -3,5 +3,168 @@
 <section id="model-output" class="section">
   <div class="container">
     <h2>Model Output</h2>
+    
+    <div class="grid-2-col">
+      <div class="explanation">
+        <p>The classifier returns the highest-scoring label from the model output.</p>
+        <p>Labels follow a crop and condition format such as <code>Crop___Disease</code> or <code>Crop___healthy</code>.</p>
+        <p>The app converts raw labels into readable crop and disease names.</p>
+        
+        <div class="note">
+          <p><strong>Note:</strong> The current label file contains 68 crop and condition labels.</p>
+        </div>
+      </div>
+
+      <div class="example-panel">
+        <h3>Example Diagnosis</h3>
+        
+        <div class="conversion-block">
+          <div class="label-box">
+            <span class="label-type">Raw label</span>
+            <code class="raw-label">Tomato___Late_blight</code>
+          </div>
+          <div class="arrow" aria-hidden="true">↓</div>
+          <div class="label-box success">
+            <span class="label-type">Displayed result</span>
+            <span class="display-label">Tomato - Late blight</span>
+          </div>
+        </div>
+
+        <div class="output-list-container">
+          <h4>Output Fields</h4>
+          <ul class="output-list">
+            <li>Crop name</li>
+            <li>Disease or healthy status</li>
+            <li>Confidence percentage</li>
+            <li>Symptoms</li>
+            <li>Possible causes</li>
+            <li>Management guidance</li>
+            <li>Processed leaf preview</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .explanation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .explanation p {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  code {
+    background-color: var(--color-surface);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.9em;
+    border: 1px solid var(--color-subtle-border);
+  }
+
+  .note {
+    margin-top: var(--space-l);
+    padding: var(--space-m);
+    background-color: var(--color-surface);
+    border-left: 4px solid var(--color-brand);
+    border-radius: var(--radius-md);
+  }
+
+  .example-panel {
+    background-color: var(--color-raised-surface);
+    border: 1px solid var(--color-subtle-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .example-panel h3 {
+    margin-top: 0;
+    font-size: var(--font-size-xl);
+  }
+
+  .conversion-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-s);
+    margin-bottom: var(--space-xl);
+    background-color: var(--color-background);
+    padding: var(--space-m);
+    border-radius: var(--radius-md);
+  }
+
+  .label-box {
+    width: 100%;
+    padding: var(--space-m);
+    border: 1px solid var(--color-subtle-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-raised-surface);
+    text-align: center;
+  }
+
+  .label-box.success {
+    border-color: var(--color-success);
+    background-color: var(--color-surface);
+  }
+
+  .label-type {
+    display: block;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted-text);
+    margin-bottom: var(--space-xs);
+  }
+
+  .raw-label {
+    color: var(--color-text-primary);
+    border: none;
+    background: transparent;
+  }
+
+  .display-label {
+    font-weight: 600;
+    color: var(--color-success);
+    font-size: var(--font-size-lg);
+  }
+
+  .arrow {
+    color: var(--color-muted-text);
+    font-size: var(--font-size-lg);
+  }
+
+  .output-list-container h4 {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-m);
+  }
+
+  .output-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .output-list li {
+    position: relative;
+    padding-left: var(--space-l);
+    color: var(--color-text-secondary);
+  }
+
+  .output-list li::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: var(--color-brand);
+  }
+</style>
