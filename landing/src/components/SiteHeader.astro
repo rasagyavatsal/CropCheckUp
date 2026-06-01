@@ -1,89 +1,124 @@
 ---
 ---
-<header class="site-header">
+<header class="site-header glass-panel">
   <div class="container header-container">
-    <div class="logo">CropCheckUp</div>
+    <div class="logo">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">Crop<span class="text-gradient">CheckUp</span></span>
+    </div>
     <nav class="main-nav">
-      <a href="#how-it-works">How It Works</a>
-      <a href="#pipeline">Pipeline</a>
-      <a href="#model-output">Model Output</a>
-      <a href="#dataset">Dataset</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#pipeline" class="nav-link">Pipeline</a>
+      <a href="#model-output" class="nav-link">Model Output</a>
+      <a href="#dataset" class="nav-link">Dataset</a>
     </nav>
-    <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="cta-button" target="_blank" rel="noopener noreferrer">Kaggle Notebook</a>
+    <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer">Kaggle Notebook</a>
   </div>
 </header>
 <style>
   .site-header {
     position: sticky;
-    top: 0;
+    top: 1rem;
     z-index: 100;
-    background-color: var(--color-background);
-    border-bottom: 1px solid var(--color-subtle-border);
+    margin: 1rem auto;
+    width: calc(100% - 2rem);
+    max-width: var(--section-width);
+    border-radius: var(--radius-full);
   }
+  
   .header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: 70px;
+    padding: 0 1.5rem;
   }
+
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
     font-weight: 700;
-    font-size: var(--font-size-lg);
-    color: var(--color-brand);
+    color: var(--color-text-primary);
   }
+
+  .logo-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+  }
+
   .main-nav {
     display: flex;
-    gap: var(--space-m);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    gap: 2rem;
+    align-items: center;
   }
-  .main-nav::-webkit-scrollbar {
-    display: none;
-  }
-  .main-nav a {
+
+  .nav-link {
+    font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
     font-weight: 500;
-    white-space: nowrap;
+    position: relative;
+    padding: 0.5rem 0;
   }
-  .main-nav a:hover {
-    color: var(--color-brand);
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-brand-primary);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--color-brand-primary);
   }
-  .cta-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-brand);
-    color: var(--color-raised-surface);
-    height: 36px;
-    padding: 0 var(--space-m);
-    border-radius: var(--radius-full);
-    font-weight: 500;
+
+  .nav-link:hover {
+    color: var(--color-text-primary);
+    text-shadow: none;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-cta {
+    padding: 0.5rem 1.25rem;
     font-size: var(--font-size-sm);
   }
-  .cta-button:hover {
-    background-color: var(--color-text-primary);
-    color: var(--color-raised-surface);
-    opacity: 1;
-  }
+
   @media (max-width: 768px) {
+    .site-header {
+      top: 0;
+      margin: 0;
+      width: 100%;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+    
     .header-container {
       flex-wrap: wrap;
       height: auto;
-      padding-top: var(--space-s);
-      padding-bottom: var(--space-s);
-      gap: var(--space-s);
+      padding: 1rem;
+      gap: 1rem;
     }
-    .logo {
-      flex: 1 1 auto;
-    }
-    .cta-button {
-      flex: 0 0 auto;
-    }
+    
     .main-nav {
       flex: 1 1 100%;
       order: 3;
-      padding-bottom: var(--space-xs);
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      gap: 1rem;
+      scrollbar-width: none;
+    }
+    
+    .main-nav::-webkit-scrollbar {
+      display: none;
     }
   }
 </style>

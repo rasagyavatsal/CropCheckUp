@@ -2,128 +2,162 @@
 type Step = {
   title: string;
   description: string;
+  icon: string;
 };
 
 const steps: Step[] = [
   {
     title: 'Capture or upload',
-    description: 'The user captures a live camera frame or selects an image from the gallery.'
+    description: 'The user captures a live camera frame or selects an image from the gallery.',
+    icon: '📷'
   },
   {
     title: 'Remove background',
-    description: 'The app isolates the leaf so the classifier focuses on the plant area.'
+    description: 'The app isolates the leaf so the classifier focuses on the plant area.',
+    icon: '🪄'
   },
   {
     title: 'Resize image',
-    description: 'The processed image is resized to 224 x 224 pixels.'
+    description: 'The processed image is resized to 224 x 224 pixels.',
+    icon: '📐'
   },
   {
     title: 'Run inference',
-    description: 'A TensorFlow Lite model predicts the most likely crop condition.'
+    description: 'A TensorFlow Lite model predicts the most likely crop condition.',
+    icon: '⚡'
   },
   {
     title: 'Show diagnosis',
-    description: 'The app displays crop name, condition, confidence, symptoms, causes, and management guidance.'
+    description: 'The app displays crop name, condition, confidence, symptoms, causes, and management guidance.',
+    icon: '📊'
   }
 ];
 ---
 
 <section id="how-it-works" class="section">
   <div class="container">
-    <h2 class="section-title text-center">How It Works</h2>
-    <p class="section-subtitle text-center">A simple, effective workflow for crop condition diagnosis.</p>
+    <div class="section-header text-center">
+      <h2>How It <span class="text-gradient">Works</span></h2>
+      <p class="section-subtitle">A simple, effective workflow for crop condition diagnosis.</p>
+    </div>
     
-    <div class="workflow-container">
-      <ol class="workflow-list">
-        {steps.map((step, index) => (
-          <li class="workflow-step">
-            <div class="step-number">{index + 1}</div>
-            <div class="step-content">
-              <h3 class="step-title">{step.title}</h3>
-              <p class="step-description">{step.description}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+    <div class="bento-grid">
+      {steps.map((step, index) => (
+        <div class={`bento-card glass-panel card-${index + 1}`}>
+          <div class="card-header">
+            <span class="step-icon">{step.icon}</span>
+            <span class="step-number">0{index + 1}</span>
+          </div>
+          <h3 class="step-title">{step.title}</h3>
+          <p class="step-description">{step.description}</p>
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
-  .section-title {
-    margin-bottom: var(--spacing-sm);
+  .section-header {
+    margin-bottom: var(--space-3xl);
   }
   
   .section-subtitle {
-    color: var(--color-text-muted);
-    margin-bottom: var(--spacing-xl);
-    font-size: 1.125rem;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  .workflow-container {
-    max-width: 800px;
+    font-size: var(--font-size-xl);
+    color: var(--color-text-secondary);
+    max-width: 600px;
     margin: 0 auto;
   }
 
-  .workflow-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-m);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(200px, auto);
+    }
+    
+    .card-1 { grid-column: span 3; }
+    .card-2 { grid-column: span 3; }
+    .card-3 { grid-column: span 2; }
+    .card-4 { grid-column: span 2; }
+    .card-5 { grid-column: span 2; }
+  }
+
+  .bento-card {
+    padding: var(--space-xl);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    position: relative;
   }
 
-  .workflow-step {
+  .bento-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.03), transparent);
+    z-index: 0;
+  }
+
+  .bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--color-border-hover);
+  }
+
+  .card-header {
     display: flex;
-    gap: var(--spacing-md);
-    background-color: var(--color-surface);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-l);
+    position: relative;
+    z-index: 1;
   }
 
-  .workflow-step:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .step-number {
+  .step-icon {
+    font-size: var(--font-size-2xl);
+    background: rgba(16, 185, 129, 0.1);
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    flex-shrink: 0;
-    background-color: var(--color-primary);
-    color: var(--color-background);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .step-number {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
     font-weight: 700;
-    font-size: 1.25rem;
-    border-radius: 50%;
+    color: var(--color-text-muted);
+    opacity: 0.3;
   }
 
   .step-title {
-    margin: 0 0 var(--spacing-xs) 0;
-    font-size: 1.25rem;
-    color: var(--color-text);
+    margin-bottom: var(--space-s);
+    font-size: var(--font-size-xl);
+    position: relative;
+    z-index: 1;
   }
 
   .step-description {
+    color: var(--color-text-secondary);
     margin: 0;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-  }
-
-  @media (max-width: 768px) {
-    .workflow-step {
-      flex-direction: column;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md);
-    }
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
   }
 </style>

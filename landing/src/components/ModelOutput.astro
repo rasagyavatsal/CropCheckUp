@@ -2,45 +2,66 @@
 ---
 <section id="model-output" class="section">
   <div class="container">
-    <h2>Model Output</h2>
+    <div class="section-header text-center">
+      <h2>Model <span class="text-gradient">Output</span></h2>
+      <p class="section-subtitle">Understanding the diagnosis results from the classifier.</p>
+    </div>
     
     <div class="grid-2-col">
-      <div class="explanation">
-        <p>The classifier returns the highest-scoring label from the model output.</p>
-        <p>Labels follow a crop and condition format such as <code>Crop___Disease</code> or <code>Crop___healthy</code>.</p>
-        <p>The app converts raw labels into readable crop and disease names.</p>
+      <div class="explanation-card glass-panel">
+        <div class="card-icon">🧠</div>
+        <h3>Intelligent Classification</h3>
+        <p>The classifier returns the highest-scoring label from the model output. Labels follow a specific format such as <code class="code-badge">Crop___Disease</code> or <code class="code-badge">Crop___healthy</code>.</p>
+        <p>The application seamlessly converts these raw technical labels into highly readable, user-friendly crop and disease names.</p>
         
-        <div class="note">
-          <p><strong>Note:</strong> The current label file contains 68 crop and condition labels.</p>
+        <div class="info-alert">
+          <span class="alert-icon">ℹ️</span>
+          <p><strong>Note:</strong> The current model is trained to recognize 68 distinct crop and condition combinations.</p>
         </div>
       </div>
 
-      <div class="example-panel">
+      <div class="example-panel glass-panel">
         <h3>Example Diagnosis</h3>
         
-        <div class="conversion-block">
-          <div class="label-box">
-            <span class="label-type">Raw label</span>
-            <code class="raw-label">Tomato___Late_blight</code>
+        <div class="conversion-visual">
+          <div class="label-box raw">
+            <span class="label-type">Raw Label</span>
+            <span class="label-value font-mono">Tomato___Late_blight</span>
           </div>
-          <div class="arrow" aria-hidden="true">↓</div>
-          <div class="label-box success">
-            <span class="label-type">Displayed result</span>
-            <span class="display-label">Tomato - Late blight</span>
+          
+          <div class="conversion-arrow">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+          
+          <div class="label-box processed">
+            <span class="label-type">Displayed Result</span>
+            <span class="label-value text-gradient font-bold">Tomato - Late blight</span>
           </div>
         </div>
 
-        <div class="output-list-container">
-          <h4>Output Fields</h4>
-          <ul class="output-list">
-            <li>Crop name</li>
-            <li>Disease or healthy status</li>
-            <li>Confidence percentage</li>
-            <li>Symptoms</li>
-            <li>Possible causes</li>
-            <li>Management guidance</li>
-            <li>Processed leaf preview</li>
-          </ul>
+        <div class="output-fields">
+          <h4>Output Information</h4>
+          <div class="fields-grid">
+            <div class="field-item">
+              <span class="check-icon">✓</span> Crop name
+            </div>
+            <div class="field-item">
+              <span class="check-icon">✓</span> Disease/healthy status
+            </div>
+            <div class="field-item">
+              <span class="check-icon">✓</span> Confidence score
+            </div>
+            <div class="field-item">
+              <span class="check-icon">✓</span> Identified symptoms
+            </div>
+            <div class="field-item">
+              <span class="check-icon">✓</span> Possible causes
+            </div>
+            <div class="field-item">
+              <span class="check-icon">✓</span> Management guidance
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -48,123 +69,176 @@
 </section>
 
 <style>
-  .explanation {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-m);
+  .section-header {
+    margin-bottom: var(--space-3xl);
   }
-
-  .explanation p {
-    margin: 0;
+  
+  .section-subtitle {
+    font-size: var(--font-size-xl);
     color: var(--color-text-secondary);
   }
 
-  code {
-    background-color: var(--color-surface);
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
-    font-family: monospace;
-    font-size: 0.9em;
-    border: 1px solid var(--color-subtle-border);
-  }
-
-  .note {
-    margin-top: var(--space-l);
-    padding: var(--space-m);
-    background-color: var(--color-surface);
-    border-left: 4px solid var(--color-brand);
-    border-radius: var(--radius-md);
-  }
-
-  .example-panel {
-    background-color: var(--color-raised-surface);
-    border: 1px solid var(--color-subtle-border);
-    border-radius: var(--radius-lg);
+  .explanation-card, .example-panel {
     padding: var(--space-xl);
-    box-shadow: var(--shadow-md);
-  }
-
-  .example-panel h3 {
-    margin-top: 0;
-    font-size: var(--font-size-xl);
-  }
-
-  .conversion-block {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--space-s);
-    margin-bottom: var(--space-xl);
-    background-color: var(--color-background);
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-m);
+  }
+
+  .explanation-card h3, .example-panel h3 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-m);
+  }
+
+  .explanation-card p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-m);
+    line-height: 1.7;
+  }
+
+  .code-badge {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-brand-primary);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .info-alert {
+    margin-top: auto;
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid #3b82f6;
     padding: var(--space-m);
-    border-radius: var(--radius-md);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    display: flex;
+    gap: var(--space-s);
+    align-items: flex-start;
+  }
+
+  .info-alert p {
+    margin: 0;
+    color: #93c5fd;
+    font-size: var(--font-size-sm);
+  }
+
+  .conversion-visual {
+    background: var(--color-bg-base);
+    border-radius: var(--radius-lg);
+    padding: var(--space-l);
+    margin-bottom: var(--space-xl);
+    border: 1px solid var(--color-border-subtle);
   }
 
   .label-box {
-    width: 100%;
     padding: var(--space-m);
-    border: 1px solid var(--color-subtle-border);
     border-radius: var(--radius-md);
-    background-color: var(--color-raised-surface);
     text-align: center;
+    position: relative;
   }
 
-  .label-box.success {
-    border-color: var(--color-success);
-    background-color: var(--color-surface);
+  .label-box.raw {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px dashed var(--color-border-subtle);
+  }
+
+  .label-box.processed {
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
   }
 
   .label-type {
     display: block;
     font-size: var(--font-size-xs);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-muted-text);
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
     margin-bottom: var(--space-xs);
   }
 
-  .raw-label {
+  .label-value {
+    font-size: var(--font-size-lg);
     color: var(--color-text-primary);
-    border: none;
-    background: transparent;
   }
 
-  .display-label {
-    font-weight: 600;
-    color: var(--color-success);
-    font-size: var(--font-size-lg);
+  .font-mono {
+    font-family: monospace;
   }
 
-  .arrow {
-    color: var(--color-muted-text);
-    font-size: var(--font-size-lg);
+  .font-bold {
+    font-weight: 700;
   }
 
-  .output-list-container h4 {
-    font-size: var(--font-size-base);
+  .conversion-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 40px;
+    justify-content: center;
+    position: relative;
+  }
+
+  .arrow-line {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--color-border-subtle), var(--color-brand-primary));
+  }
+
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--color-brand-primary);
+    position: absolute;
+    bottom: -4px;
+  }
+
+  .output-fields h4 {
     color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: var(--space-m);
   }
 
-  .output-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-s);
   }
 
-  .output-list li {
-    position: relative;
-    padding-left: var(--space-l);
-    color: var(--color-text-secondary);
+  @media (min-width: 480px) {
+    .fields-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
-  .output-list li::before {
-    content: "•";
-    position: absolute;
-    left: 8px;
-    color: var(--color-brand);
+  .field-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    padding: var(--space-s);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease;
+  }
+
+  .field-item:hover {
+    background: rgba(16, 185, 129, 0.05);
+    color: var(--color-text-primary);
+  }
+
+  .check-icon {
+    color: var(--color-brand-primary);
+    font-weight: bold;
   }
 </style>

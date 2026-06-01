@@ -1,99 +1,118 @@
 ---
 ---
-<div class="product-visual">
-  <div class="visual-header">
-    <img src="/logo.png" alt="CropCheckUp Logo" class="visual-logo" />
-    <span class="visual-title">Diagnosis Workflow</span>
-  </div>
-  <div class="workflow-steps">
-    <div class="step">
-      <span class="step-icon" aria-hidden="true">📸</span>
-      <span class="step-text">Input Image</span>
-    </div>
-    <div class="step-arrow" aria-hidden="true">↓</div>
-    <div class="step">
-      <span class="step-icon" aria-hidden="true">✂️</span>
-      <span class="step-text">Background Removed</span>
-    </div>
-    <div class="step-arrow" aria-hidden="true">↓</div>
-    <div class="step">
-      <span class="step-icon" aria-hidden="true">🧠</span>
-      <span class="step-text">Model Inference</span>
-    </div>
-    <div class="step-arrow" aria-hidden="true">↓</div>
-    <div class="step">
-      <span class="step-icon" aria-hidden="true">✅</span>
-      <span class="step-text">Diagnosis Result</span>
+<div class="mobile-frame glass-panel">
+  <div class="mobile-notch"></div>
+  <div class="video-container">
+    <!-- Replace src with your actual video path, e.g., src="/demo-video.mp4" -->
+    <video 
+      class="app-video"
+      autoplay 
+      loop 
+      muted 
+      playsinline 
+    >
+      <source src="" type="video/mp4" />
+    </video>
+    
+    <!-- This fallback text is visible when no video is loaded -->
+    <div class="video-fallback">
+      <span class="play-icon">▶</span>
+      <p>Video Placeholder</p>
+      <p class="small-text">Add your video file in the src attribute</p>
     </div>
   </div>
 </div>
 
 <style>
-  .product-visual {
-    background: var(--color-surface);
-    border: 1px solid var(--color-subtle-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-l);
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 400px;
+  .mobile-frame {
+    position: relative;
+    width: 300px;
+    height: 620px;
+    flex-shrink: 0;
     margin: 0 auto;
+    border-radius: 40px;
+    padding: 10px;
+    background: rgba(30, 41, 59, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 0 0 6px rgba(15, 23, 42, 0.8),
+      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+    z-index: 1;
+    transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .visual-header {
+
+  .mobile-frame:hover {
+    transform: perspective(1000px) rotateY(0) rotateX(0) translateY(-10px);
+  }
+
+  .mobile-notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 25px;
+    background: rgba(15, 23, 42, 1);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    z-index: 10;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    overflow: hidden;
+    background: var(--color-bg-base);
     display: flex;
     align-items: center;
-    gap: var(--space-s);
-    margin-bottom: var(--space-l);
-    width: 100%;
     justify-content: center;
   }
-  .visual-logo {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
+
+  .app-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.2) 100%);
+    position: relative;
+    z-index: 2;
   }
-  .visual-title {
-    font-weight: 600;
-    font-size: var(--font-size-lg);
-    color: var(--color-text-primary);
-  }
-  .workflow-steps {
+
+  /* When the video has no source, it might not render over the fallback. 
+     This ensures the fallback is visible beneath or over the blank video */
+  .video-fallback {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-s);
-    width: 100%;
-  }
-  .step {
-    display: flex;
-    align-items: center;
-    gap: var(--space-m);
-    background: var(--color-raised-surface);
-    padding: var(--space-m);
-    border-radius: var(--radius-md);
-    width: 100%;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-subtle-border);
-  }
-  .step-icon {
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--color-surface);
-    border-radius: var(--radius-full);
+    text-align: center;
+    padding: var(--space-m);
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    z-index: 1;
   }
-  .step-text {
+
+  .play-icon {
+    font-size: 3rem;
+    color: var(--color-brand-primary);
+    margin-bottom: var(--space-s);
+    opacity: 0.8;
+  }
+
+  .video-fallback p {
+    margin: 0;
     font-weight: 500;
     color: var(--color-text-primary);
   }
-  .step-arrow {
-    color: var(--color-text-secondary);
-    font-size: 1.25rem;
-    font-weight: bold;
+
+  .small-text {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted) !important;
+    margin-top: var(--space-xs) !important;
   }
 </style>

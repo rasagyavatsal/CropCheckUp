@@ -2,96 +2,161 @@
 ---
 <section id="dataset" class="section">
   <div class="container">
-    <h2>Dataset References</h2>
+    <div class="section-header text-center">
+      <h2>Resources & <span class="text-gradient">Datasets</span></h2>
+      <p class="section-subtitle">Explore the data and code powering CropCheckUp.</p>
+    </div>
     
-    <div class="dataset-content">
-      <p>The model development workflow is documented in the Kaggle notebook. The dataset used for CropCheckUp experiments and training is available on Kaggle.</p>
-      
-      <div class="reference-links">
-        <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" target="_blank" rel="noopener noreferrer" class="resource-card">
-          <div class="card-content">
-            <h3>Kaggle Notebook</h3>
-            <p>Model development workflow and experimentation.</p>
-          </div>
+    <div class="resources-grid">
+      <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+        <div class="card-bg-glow glow-blue"></div>
+        <div class="resource-icon">📓</div>
+        <div class="resource-content">
+          <h3>Kaggle Notebook</h3>
+          <p>Deep dive into the model development workflow, architecture decisions, and experimentation process.</p>
+        </div>
+        <div class="resource-action">
+          <span class="action-text">View Code</span>
           <span class="arrow">→</span>
-        </a>
+        </div>
+      </a>
 
-        <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" target="_blank" rel="noopener noreferrer" class="resource-card">
-          <div class="card-content">
-            <h3>CropCheckUp Dataset</h3>
-            <p>Image dataset used for CropCheckUp experiments and training.</p>
-          </div>
+      <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
+        <div class="card-bg-glow glow-green"></div>
+        <div class="resource-icon">📂</div>
+        <div class="resource-content">
+          <h3>CropCheckUp Dataset</h3>
+          <p>Access the comprehensive image dataset used for training and validating the crop disease classification model.</p>
+        </div>
+        <div class="resource-action">
+          <span class="action-text">Download Data</span>
           <span class="arrow">→</span>
-        </a>
-      </div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
 
 <style>
-  .dataset-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
+  .section-header {
+    margin-bottom: var(--space-3xl);
   }
   
-  .dataset-content > p {
+  .section-subtitle {
+    font-size: var(--font-size-xl);
     color: var(--color-text-secondary);
-    margin: 0;
-    max-width: 800px;
   }
 
-  .reference-links {
+  .resources-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-m);
+    gap: var(--space-l);
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   @media (min-width: 768px) {
-    .reference-links {
+    .resources-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
 
   .resource-card {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-subtle-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-l);
+    flex-direction: column;
+    padding: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-decoration: none;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .card-bg-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.2;
+    transition: opacity 0.4s ease;
+  }
+
+  .glow-blue {
+    background: #3b82f6;
+  }
+
+  .glow-green {
+    background: #10b981;
+  }
+
+  .resource-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .resource-card:hover .card-bg-glow {
+    opacity: 0.5;
+  }
+
+  .resource-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-m);
+    position: relative;
+    z-index: 1;
+  }
+
+  .resource-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    margin-bottom: var(--space-l);
+  }
+
+  .resource-content h3 {
+    font-size: var(--font-size-xl);
     color: var(--color-text-primary);
-    transition: all 0.2s ease;
+    margin-bottom: var(--space-s);
   }
 
-  .resource-card:hover, .resource-card:focus-visible {
-    background-color: var(--color-raised-surface);
-    border-color: var(--color-brand);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .card-content h3 {
-    margin: 0 0 var(--space-xs) 0;
-    font-size: var(--font-size-lg);
-    color: var(--color-brand);
-  }
-
-  .card-content p {
-    margin: 0;
-    font-size: var(--font-size-sm);
+  .resource-content p {
     color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .resource-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-m);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 1;
+  }
+
+  .action-text {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    transition: color 0.3s ease;
   }
 
   .arrow {
     font-size: var(--font-size-xl);
-    color: var(--color-brand);
-    transition: transform 0.2s ease;
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
   }
 
-  .resource-card:hover .arrow, .resource-card:focus-visible .arrow {
-    transform: translateX(4px);
+  .resource-card:hover .action-text {
+    color: var(--color-brand-primary);
+  }
+
+  .resource-card:hover .arrow {
+    color: var(--color-brand-primary);
+    transform: translateX(5px);
   }
 </style>
