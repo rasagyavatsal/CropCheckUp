@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 
 import '../ui/theme/theme_ext.dart';
 import '../ui/tokens/typography.dart';
-import '../ui/tokens/size_tokens.dart';
 import '../ui/tokens/spacing_tokens.dart';
 import '../ui/tokens/radius_tokens.dart';
-import '../ui/tokens/motion_tokens.dart';
 import '../ui/copy/app_copy.dart';
+import '../ui/components/app_components.dart';
 import '../services/camera_session.dart';
 import '../ui/components/camera/app_camera_viewfinder.dart';
 import '../ui/flow/diagnosis_flow_coordinator.dart';
-import '../ui/app_design_system.dart';
 import '../ui/components/layout/layout.dart';
 import '../widgets/camera_overlay.dart';
 
@@ -116,157 +114,146 @@ class _CameraScreenState extends State<CameraScreen> {
       );
     }
 
-    const sizes = SizeTokens();
     const spacing = SpacingTokens();
     const radius = RadiusTokens();
 
-    return Scaffold(
-      backgroundColor: context.appColors.background,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Camera preview
-          AppCameraViewfinder(
-            session: _session,
-            onResume: _bootstrap,
-          ),
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-          // Overlay
-          const CameraOverlay(),
-
-          // Top action bar
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: spacing.m,
-                  vertical: spacing.s,
-                ),
-                child: Row(
+    return Stack(
+      children: [
+        AppPageShell(
+          applySafeArea: true,
+          backgroundColor: colors.background,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Top action bar
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppIconButton.translucent(
-                      icon: Icons.close_rounded,
-                      tooltip: AppCopy.shared.backAction,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    Text(
-                      'CropCheckUp',
-                      style: context.typography.title.copyWith(
-                        color: context.appColors.textPrimary,
-                        fontWeight: FontWeight.w800,
-                        shadows: [
-                          context.cameraTokens.glow,
-                        ],
+                    // Back Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colors.raisedSurface,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.subtleBorder),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
+                        tooltip: AppCopy.shared.backAction,
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
-                    AppIconButton.translucent(
-                      icon: _session.isFlashOn
-                          ? Icons.flash_on_rounded
-                          : Icons.flash_off_rounded,
-                      tooltip: _session.isFlashOn
-                          ? AppCopy.camera.semanticFlashOff
-                          : AppCopy.camera.semanticFlashOn,
-                      onPressed: () async {
-                        await _session.toggleFlash();
-                        if (mounted) setState(() {});
-                      },
+                    // Title
+                    Text(
+                      'Scanner',
+                      style: context.typography.title.copyWith(
+                        color: colors.textPrimary,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 22,
+                      ),
+                    ),
+                    // Flash Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colors.raisedSurface,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.subtleBorder),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          _session.isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+                          color: _session.isFlashOn ? colors.brand : colors.textPrimary,
+                        ),
+                        tooltip: _session.isFlashOn
+                            ? AppCopy.camera.semanticFlashOff
+                            : AppCopy.camera.semanticFlashOn,
+                        onPressed: () async {
+                          await _session.toggleFlash();
+                          if (mounted) setState(() {});
+                        },
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-
-          // Action area
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Shared instruction chip
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: spacing.l,
-                      vertical: spacing.s,
-                    ),
+                SizedBox(height: spacing.l),
+                
+                // Camera Preview Area
+                Expanded(
+                  child: Container(
                     decoration: BoxDecoration(
-                      color: context.appColors.cameraScrim,
-                      borderRadius: BorderRadius.circular(radius.pill),
-                      border: Border.all(
-                        color: context.appColors.subtleBorder,
-                      ),
+                      color: colors.raisedSurface,
+                      borderRadius: BorderRadius.circular(radius.xl),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.textPrimary.withValues(alpha: 0.03),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      AppCopy.camera.captureReady,
-                      style: context.typography.label.copyWith(
-                        color: context.appColors.textPrimary,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(radius.xl),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          AppCameraViewfinder(
+                            session: _session,
+                            onResume: _bootstrap,
+                          ),
+                          const CameraOverlay(),
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(height: spacing.xl),
-                  // Capture control
-                  Padding(
-                    padding: EdgeInsets.only(bottom: spacing.xl),
-                    child: Semantics(
-                      button: true,
-                      label: AppCopy.camera.semanticCaptureAction,
-                      child: GestureDetector(
-                        onTap: _isDiagnosing ? null : _captureAndDiagnose,
-                        child: AnimatedContainer(
-                        duration: MotionTokens.durationNormal,
-                        width: sizes.cameraCaptureSize,
-                        height: sizes.cameraCaptureSize,
-                        decoration: context.cameraTokens.captureControlStyling,
-                        child: Padding(
-                          padding: EdgeInsets.all(spacing.s),
-                          child: AnimatedContainer(
-                            duration: MotionTokens.durationNormal,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _isDiagnosing
-                                  ? context.appColors.disabled
-                                  : context.appColors.brand,
-                            ),
-                            child: Center(
-                              child: _isDiagnosing
-                                  ? SizedBox(
-                                      width: sizes.iconMedium,
-                                      height: sizes.iconMedium,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 3,
-                                        color: context.appColors.raisedSurface,
-                                      ),
-                                    )
-                                  : Icon(
-                                      Icons.camera_alt_rounded,
-                                      color: context.appColors.raisedSurface,
-                                      size: sizes.iconLarge,
-                                    ),
-                            ),
-                          ),
+                ),
+                
+                SizedBox(height: spacing.l),
+                
+                // Bottom Actions
+                Semantics(
+                  button: true,
+                  label: AppCopy.camera.semanticCaptureAction,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        backgroundColor: colors.brand,
+                        foregroundColor: isDark ? colors.background : Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(radius.l),
                         ),
                       ),
+                      onPressed: _isDiagnosing ? null : _captureAndDiagnose,
+                      icon: _isDiagnosing 
+                        ? SizedBox(
+                            width: 24, 
+                            height: 24, 
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5, 
+                              color: isDark ? colors.background : Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.camera_rounded, size: 24),
+                      label: Text(
+                        _isDiagnosing ? 'Analyzing...' : 'Capture Image',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-
-          if (_isDiagnosing)
-            AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
-        ],
-      ),
+        ),
+        if (_isDiagnosing)
+          AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
+      ],
     );
   }
 }

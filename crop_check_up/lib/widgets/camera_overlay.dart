@@ -166,7 +166,7 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(0, size.height - len)
         ..lineTo(0, size.height - r)
-        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, size.height) : Offset(0, size.height), radius: Radius.circular(r))
+        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, size.height) : Offset(0, size.height), radius: Radius.circular(r), clockwise: false)
         ..lineTo(len, size.height),
     );
     // Bottom‑right
@@ -175,7 +175,7 @@ class _CornerBracketPainter extends CustomPainter {
         ..moveTo(size.width - len, size.height)
         ..lineTo(size.width - r, size.height)
         ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(size.width, size.height - r) : Offset(size.width, size.height),
-            radius: Radius.circular(r))
+            radius: Radius.circular(r), clockwise: false)
         ..lineTo(size.width, size.height - len),
     );
   }
