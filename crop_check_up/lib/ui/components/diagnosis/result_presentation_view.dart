@@ -7,6 +7,8 @@ import 'package:crop_check_up/ui/components/diagnosis/bullet_list.dart';
 import 'package:crop_check_up/ui/components/diagnosis/evidence_image_card.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 import 'package:crop_check_up/ui/tokens/spacing_tokens.dart';
+import 'package:crop_check_up/ui/theme/theme_ext.dart';
+import 'package:crop_check_up/ui/tokens/typography.dart';
 
 class ResultPresentationView extends StatelessWidget {
   final DiagnosisResult result;
@@ -18,11 +20,18 @@ class ResultPresentationView extends StatelessWidget {
     this.imageBytes,
   });
 
-  Widget _buildContent(String content) {
+  Widget _buildContent(BuildContext context, String content) {
     if (content.contains('\n')) {
       return BulletList(items: content.split('\n').where((s) => s.trim().isNotEmpty).toList());
     }
-    return Text(content);
+    final colors = context.appColors;
+    return Text(
+      content,
+      style: context.typography.body.copyWith(
+        color: colors.textSecondary,
+        height: 1.5,
+      ),
+    );
   }
 
   @override
@@ -42,7 +51,7 @@ class ResultPresentationView extends StatelessWidget {
           InfoSection(
             title: AppCopy.result.sectionStatus,
             icon: Icons.info_outline_rounded,
-            content: _buildContent(AppCopy.result.healthyConfidence(result.cropName, result.confidencePercent.toString())),
+            content: _buildContent(context, AppCopy.result.healthyConfidence(result.cropName, result.confidencePercent.toString())),
           ),
           SizedBox(height: spacing.xl),
           InfoSection(
@@ -60,7 +69,7 @@ class ResultPresentationView extends StatelessWidget {
             InfoSection(
               title: AppCopy.result.sectionSymptoms,
               icon: Icons.visibility_rounded,
-              content: _buildContent(result.symptoms!),
+              content: _buildContent(context, result.symptoms!),
             ),
             SizedBox(height: spacing.xl),
           ],
@@ -68,7 +77,7 @@ class ResultPresentationView extends StatelessWidget {
             InfoSection(
               title: AppCopy.result.sectionCauses,
               icon: Icons.biotech_rounded,
-              content: _buildContent(result.causes!),
+              content: _buildContent(context, result.causes!),
             ),
             SizedBox(height: spacing.xl),
           ],
@@ -76,7 +85,7 @@ class ResultPresentationView extends StatelessWidget {
             InfoSection(
               title: AppCopy.result.sectionManagement,
               icon: Icons.medical_services_rounded,
-              content: _buildContent(result.management!),
+              content: _buildContent(context, result.management!),
             ),
             SizedBox(height: spacing.xl),
           ],
@@ -84,7 +93,7 @@ class ResultPresentationView extends StatelessWidget {
             InfoSection(
               title: AppCopy.result.sectionAbout,
               icon: Icons.info_outline_rounded,
-              content: _buildContent(AppCopy.result.diagnosisConfidence(result.cropName, result.diseaseName, result.confidencePercent.toString())),
+              content: _buildContent(context, AppCopy.result.diagnosisConfidence(result.cropName, result.diseaseName, result.confidencePercent.toString())),
             ),
         ],
       ],

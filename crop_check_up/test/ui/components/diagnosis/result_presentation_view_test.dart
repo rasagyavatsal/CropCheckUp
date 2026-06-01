@@ -48,5 +48,25 @@ void main() {
       expect(find.text('Causes'), findsOneWidget);
       expect(find.text('Management & Treatment'), findsOneWidget);
     });
+    testWidgets('renders single-paragraph content with readable styling', (tester) async {
+      const result = DiagnosisResult(
+        rawLabel: 'Tomato___Late_blight',
+        confidence: 0.95,
+        symptoms: 'Single paragraph symptom.',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light,
+          home: const Scaffold(
+            body: SingleChildScrollView(child: ResultPresentationView(result: result)),
+          ),
+        ),
+      );
+
+      final textWidget = tester.widget<Text>(find.text('Single paragraph symptom.'));
+      expect(textWidget.style, isNotNull);
+      expect(textWidget.style!.height, 1.5);
+    });
   });
 }
