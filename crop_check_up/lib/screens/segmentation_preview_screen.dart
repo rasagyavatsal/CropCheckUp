@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+
 import '../ui/app_design_system.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/layout/layout.dart';
-import '../ui/components/cards/app_card.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/theme/theme_ext.dart';
 import '../ui/tokens/spacing_tokens.dart';
+import '../ui/tokens/radius_tokens.dart';
 
 /// Screen to preview the segmented image before inference.
 /// 
@@ -33,74 +34,151 @@ class SegmentationPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const spacing = SpacingTokens();
+    const radius = RadiusTokens();
 
-    return AppPageShell.sliver(
-      applySafeArea: true,
-      bottomNavigationBar: AppBottomActionBar(
-        child: Row(
-          children: [
-            Expanded(
-              child: AppButton.secondary(
-                label: AppCopy.preview.actionRetry,
-                onPressed: () => Navigator.pop(context, false),
-                icon: Icons.refresh_rounded,
-              ),
-            ),
-            SizedBox(width: spacing.m),
-            Expanded(
-              child: AppButton.primary(
-                label: AppCopy.preview.actionConfirm,
-                onPressed: () => Navigator.pop(context, true),
-                icon: Icons.check_circle_outline_rounded,
-              ),
-            ),
-          ],
-        ),
-      ),
-      slivers: [
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.l),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              SizedBox(height: spacing.xl),
-              // Header
-              Text(
-                AppCopy.preview.title,
-                style: context.typography.headline,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: spacing.s),
-              Text(
-                AppCopy.preview.instruction,
-                style: context.typography.body.copyWith(
-                  color: context.appColors.textSecondary,
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Stack(
+      children: [
+        AppPageShell(
+          applySafeArea: true,
+          backgroundColor: colors.background,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Top action bar
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Back/Retry Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colors.raisedSurface,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.subtleBorder),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
+                        tooltip: AppCopy.preview.actionRetry,
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
+                    ),
+                    // Title
+                    Text(
+                      AppCopy.preview.title,
+                      style: context.typography.title.copyWith(
+                        color: colors.textPrimary,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 22,
+                      ),
+                    ),
+                    // Placeholder for symmetry
+                    const SizedBox(width: 48),
+                  ],
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ]),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.l),
-          sliver: SliverFillRemaining(
-            hasScrollBody: false,
-            child: Hero(
-              tag: 'segmentation_preview',
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: spacing.xl),
-                child: AppCard.image(
-                  image: Flexible(
-                    child: Semantics(
-                      image: true,
-                      label: AppCopy.preview.semanticPreviewImage,
-                      child: Image.memory(
-                        imageBytes,
-                        fit: BoxFit.contain,
+                SizedBox(height: spacing.l),
+                
+                // Instruction Text
+                Text(
+                  AppCopy.preview.instruction,
+                  style: context.typography.body.copyWith(
+                    color: colors.mutedText,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: spacing.l),
+                
+                // Image Preview Area
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colors.raisedSurface,
+                      borderRadius: BorderRadius.circular(radius.xl),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.textPrimary.withValues(alpha: 0.03),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(radius.xl),
+                      child: Hero(
+                        tag: 'segmentation_preview',
+                        child: Semantics(
+                          image: true,
+                          label: AppCopy.preview.semanticPreviewImage,
+                          child: Padding(
+                            padding: EdgeInsets.all(spacing.m),
+                            child: Image.memory(
+                              imageBytes,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                
+                SizedBox(height: spacing.xl),
+                
+                // Bottom Actions
+                Semantics(
+                  button: true,
+                  label: AppCopy.preview.actionConfirm,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        backgroundColor: colors.brand,
+                        foregroundColor: isDark ? colors.background : Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(radius.l),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context, true),
+                      icon: const Icon(Icons.check_circle_rounded, size: 24),
+                      label: Text(
+                        AppCopy.preview.actionConfirm,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Semantics(
+                  button: true,
+                  label: AppCopy.preview.actionRetry,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        foregroundColor: colors.textPrimary,
+                        backgroundColor: colors.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(radius.l),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context, false),
+                      icon: const Icon(Icons.refresh_rounded, size: 24),
+                      label: Text(
+                        AppCopy.preview.actionRetry,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
