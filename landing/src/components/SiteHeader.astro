@@ -1,0 +1,89 @@
+---
+---
+<header class="site-header">
+  <div class="container header-container">
+    <div class="logo">CropCheckUp</div>
+    <nav class="main-nav">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#model-output">Model Output</a>
+      <a href="#dataset">Dataset</a>
+    </nav>
+    <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="cta-button" target="_blank" rel="noopener noreferrer">Kaggle Notebook</a>
+  </div>
+</header>
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-subtle-border);
+  }
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--color-brand);
+  }
+  .main-nav {
+    display: flex;
+    gap: var(--space-m);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .main-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .main-nav a {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .main-nav a:hover {
+    color: var(--color-brand);
+  }
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-brand);
+    color: var(--color-raised-surface);
+    height: 36px;
+    padding: 0 var(--space-m);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+  }
+  .cta-button:hover {
+    background-color: var(--color-text-primary);
+    color: var(--color-raised-surface);
+    opacity: 1;
+  }
+  @media (max-width: 768px) {
+    .header-container {
+      flex-wrap: wrap;
+      height: auto;
+      padding-top: var(--space-s);
+      padding-bottom: var(--space-s);
+      gap: var(--space-s);
+    }
+    .logo {
+      flex: 1 1 auto;
+    }
+    .cta-button {
+      flex: 0 0 auto;
+    }
+    .main-nav {
+      flex: 1 1 100%;
+      order: 3;
+      padding-bottom: var(--space-xs);
+    }
+  }
+</style>
