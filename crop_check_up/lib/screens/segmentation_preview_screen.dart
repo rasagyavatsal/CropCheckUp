@@ -7,7 +7,6 @@ import '../ui/components/layout/layout.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/theme/theme_ext.dart';
 import '../ui/tokens/spacing_tokens.dart';
-import '../ui/tokens/radius_tokens.dart';
 
 
 /// Screen to preview the segmented image before inference.
@@ -35,7 +34,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const spacing = SpacingTokens();
-    const radius = RadiusTokens();
 
     final colors = context.appColors;
 
@@ -71,21 +69,9 @@ class SegmentationPreviewScreen extends StatelessWidget {
                 
                 // Image Preview Area
                 Expanded(
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colors.raisedSurface,
-                      borderRadius: BorderRadius.circular(radius.xl),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.textPrimary.withValues(alpha: 0.03),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(radius.xl),
+                    child: AppCard.panel(
                       child: Hero(
                         tag: 'segmentation_preview',
                         child: Semantics(

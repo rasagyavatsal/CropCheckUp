@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../ui/theme/theme_ext.dart';
 
 import '../ui/tokens/spacing_tokens.dart';
-import '../ui/tokens/radius_tokens.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/app_components.dart';
 import '../services/camera_session.dart';
@@ -113,7 +112,6 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
     const spacing = SpacingTokens();
-    const radius = RadiusTokens();
 
     final colors = context.appColors;
 
@@ -151,23 +149,10 @@ class _CameraScreenState extends State<CameraScreen> {
                 
                 // Camera Preview Area
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colors.raisedSurface,
-                      borderRadius: BorderRadius.circular(radius.xl),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.textPrimary.withValues(alpha: 0.03),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(radius.xl),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
+                  child: AppCard.panel(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
                           AppCameraViewfinder(
                             session: _session,
                             onResume: _bootstrap,
@@ -175,7 +160,6 @@ class _CameraScreenState extends State<CameraScreen> {
                           const CameraOverlay(),
                         ],
                       ),
-                    ),
                   ),
                 ),
                 

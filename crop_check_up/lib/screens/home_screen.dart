@@ -113,21 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Spacer(flex: 1),
 
                 // Specimen Panel (without outlines)
-                Container(
+                SizedBox(
                   height: 320,
-                  decoration: BoxDecoration(
-                    color: colors.raisedSurface,
-                    borderRadius: BorderRadius.circular(radius.xl),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.textPrimary.withValues(alpha: 0.03),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(radius.xl),
+                  child: AppCard.panel(
                     child: Stack(
                       alignment: Alignment.center,
                       children: [

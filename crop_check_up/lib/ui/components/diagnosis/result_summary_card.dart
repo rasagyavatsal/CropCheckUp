@@ -3,9 +3,9 @@ import 'package:crop_check_up/models/diagnosis_result.dart';
 import 'package:crop_check_up/ui/components/diagnosis/confidence_meter.dart';
 import 'package:crop_check_up/ui/components/diagnosis/status_badge.dart';
 import 'package:crop_check_up/ui/theme/theme_ext.dart';
-import 'package:crop_check_up/ui/tokens/radius_tokens.dart';
 import 'package:crop_check_up/ui/tokens/spacing_tokens.dart';
 import 'package:crop_check_up/ui/tokens/typography.dart';
+import 'package:crop_check_up/ui/components/app_components.dart';
 
 class ResultSummaryCard extends StatelessWidget {
   final DiagnosisResult result;
@@ -18,22 +18,10 @@ class ResultSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    const radius = RadiusTokens();
     const spacing = SpacingTokens();
 
-    return Container(
+    return AppCard.panel(
       padding: EdgeInsets.all(spacing.xl),
-      decoration: BoxDecoration(
-        color: colors.raisedSurface,
-        borderRadius: BorderRadius.circular(radius.xl),
-        boxShadow: [
-          BoxShadow(
-            color: colors.textPrimary.withValues(alpha: 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
       child: Column(
         children: [
           StatusBadge(isHealthy: result.isHealthy),

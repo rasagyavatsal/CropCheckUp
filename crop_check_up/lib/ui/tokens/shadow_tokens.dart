@@ -26,4 +26,20 @@ class ShadowTokens {
       blurRadius: 16.0,
     ),
   ];
+
+  static List<BoxShadow> panel(Color textPrimary) => [
+        BoxShadow(
+          color: textPrimary.withValues(alpha: 0.03),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ];
+
+  static List<BoxShadow> elevated(Color textPrimary) => [
+        BoxShadow(
+          color: textPrimary.withValues(alpha: 0.05),
+          blurRadius: 24,
+          offset: const Offset(0, 12),
+        ),
+      ];
 }

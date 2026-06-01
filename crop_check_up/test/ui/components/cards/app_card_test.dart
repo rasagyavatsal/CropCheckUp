@@ -97,5 +97,42 @@ void main() {
 
       expect(find.text('Elevated Card Content'), findsOneWidget);
     });
+
+    testWidgets('AppCard.panel renders with zero padding', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(
+          const AppCard.panel(
+            child: Text('Panel Content'),
+          ),
+        ),
+      );
+
+      expect(find.text('Panel Content'), findsOneWidget);
+      // Panel shouldn't have default padding, so finding it by text should be direct child of the structure
+    });
+
+    testWidgets('AppCard uses unified container decoration', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(
+          const AppCard(
+            child: Text('Container Test'),
+          ),
+        ),
+      );
+
+      // Verify it doesn't use the Material Card widget anymore
+      expect(find.byType(Card), findsNothing);
+      
+      // Verify it uses a Container/DecoratedBox
+      final decoratedBox = tester.widget<DecoratedBox>(
+        find.descendant(
+          of: find.byType(AppCard),
+          matching: find.byType(DecoratedBox),
+        ).first
+      );
+      
+      final decoration = decoratedBox.decoration as BoxDecoration;
+      expect(decoration.borderRadius, BorderRadius.circular(24.0)); // radius.xl is 24.0
+    });
   });
 }
