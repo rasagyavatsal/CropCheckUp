@@ -43,7 +43,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
       children: [
         AppPageShell(
           applySafeArea: true,
-          backgroundColor: colors.background,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
             child: Column(

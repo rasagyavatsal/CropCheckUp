@@ -99,14 +99,12 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     if (_isInitialising) {
       return AppPageShell(
-        backgroundColor: context.appColors.background,
         child: AppLoadingState(message: AppCopy.home.initLoading),
       );
     }
 
     if (_initError != null) {
       return AppPageShell(
-        backgroundColor: context.appColors.background,
         child: AppErrorState(
           message: _initError ?? AppCopy.home.initErrorTitle,
           onRetry: _bootstrap,
@@ -124,7 +122,6 @@ class _CameraScreenState extends State<CameraScreen> {
       children: [
         AppPageShell(
           applySafeArea: true,
-          backgroundColor: colors.background,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
             child: Column(

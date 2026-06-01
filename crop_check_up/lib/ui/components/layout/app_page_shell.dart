@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:crop_check_up/ui/components/layout/app_scroll_wrapper.dart';
+import 'package:crop_check_up/ui/theme/theme_ext.dart';
 
 /// A shared page shell component that provides a consistent [Scaffold] layout.
 class AppPageShell extends StatelessWidget {
@@ -61,7 +62,7 @@ class AppPageShell extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
+      backgroundColor: backgroundColor ?? context.appColors.background,
       appBar: appBar,
       body: content,
       bottomNavigationBar: bottomNavigationBar,

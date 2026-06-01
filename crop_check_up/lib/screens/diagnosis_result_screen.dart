@@ -33,7 +33,6 @@ class DiagnosisResultScreen extends StatelessWidget {
       children: [
         AppPageShell(
           applySafeArea: true,
-          backgroundColor: colors.background,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
