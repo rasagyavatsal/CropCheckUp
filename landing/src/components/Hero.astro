@@ -1,24 +1,45 @@
 ---
+import ProductVisual from './ProductVisual.astro';
 ---
 <section id="hero" class="section hero">
   <div class="container hero-content">
-    <h1 class="hero-title">CropCheckUp</h1>
-    <p class="hero-subtitle">AI-assisted crop leaf disease detection from camera or gallery images.</p>
-    <p class="hero-description">CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.</p>
-    <div class="hero-ctas">
-      <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn">View Kaggle Notebook</a>
-      <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" class="btn btn-outline">View Dataset</a>
+    <div class="hero-text">
+      <h1 class="hero-title">CropCheckUp</h1>
+      <p class="hero-subtitle">AI-assisted crop leaf disease detection from camera or gallery images.</p>
+      <p class="hero-description">CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.</p>
+      <div class="hero-ctas">
+        <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn">View Kaggle Notebook</a>
+        <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" class="btn btn-outline">View Dataset</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <ProductVisual />
     </div>
   </div>
 </section>
 
 <style>
   .hero {
-    text-align: center;
     padding: var(--space-xxl) 0;
     min-height: 80vh;
     display: flex;
     align-items: center;
+  }
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .hero-content {
+      grid-template-columns: 1fr 1fr;
+      text-align: left;
+    }
+    .hero-ctas {
+      justify-content: flex-start;
+    }
   }
   .hero-title {
     color: var(--color-brand);
@@ -34,12 +55,17 @@
     font-size: var(--font-size-lg);
     color: var(--color-text-secondary);
     max-width: 800px;
-    margin: 0 auto var(--space-xl) auto;
+    margin-bottom: var(--space-xl);
   }
   .hero-ctas {
     display: flex;
     gap: var(--space-m);
     justify-content: center;
     flex-wrap: wrap;
+  }
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 </style>

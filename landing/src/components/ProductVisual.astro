@@ -1,0 +1,99 @@
+---
+---
+<div class="product-visual">
+  <div class="visual-header">
+    <img src="/logo.png" alt="CropCheckUp Logo" class="visual-logo" />
+    <span class="visual-title">Diagnosis Workflow</span>
+  </div>
+  <div class="workflow-steps">
+    <div class="step">
+      <span class="step-icon" aria-hidden="true">📸</span>
+      <span class="step-text">Input Image</span>
+    </div>
+    <div class="step-arrow" aria-hidden="true">↓</div>
+    <div class="step">
+      <span class="step-icon" aria-hidden="true">✂️</span>
+      <span class="step-text">Background Removed</span>
+    </div>
+    <div class="step-arrow" aria-hidden="true">↓</div>
+    <div class="step">
+      <span class="step-icon" aria-hidden="true">🧠</span>
+      <span class="step-text">Model Inference</span>
+    </div>
+    <div class="step-arrow" aria-hidden="true">↓</div>
+    <div class="step">
+      <span class="step-icon" aria-hidden="true">✅</span>
+      <span class="step-text">Diagnosis Result</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-visual {
+    background: var(--color-surface);
+    border: 1px solid var(--color-subtle-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-l);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .visual-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin-bottom: var(--space-l);
+    width: 100%;
+    justify-content: center;
+  }
+  .visual-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+  .visual-title {
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-primary);
+  }
+  .workflow-steps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-s);
+    width: 100%;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    background: var(--color-raised-surface);
+    padding: var(--space-m);
+    border-radius: var(--radius-md);
+    width: 100%;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-subtle-border);
+  }
+  .step-icon {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-surface);
+    border-radius: var(--radius-full);
+  }
+  .step-text {
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+  .step-arrow {
+    color: var(--color-text-secondary);
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+</style>

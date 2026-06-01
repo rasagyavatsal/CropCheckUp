@@ -25,3 +25,18 @@ test('Hero section contains CTA links', async ({ page }) => {
   await expect(datasetLink).toBeVisible();
   await expect(datasetLink).toHaveAttribute('href', 'https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset');
 });
+
+test('Hero section contains ProductVisual showing the workflow', async ({ page }) => {
+  await page.goto('/');
+  
+  const visual = page.locator('.product-visual');
+  await expect(visual).toBeVisible();
+  
+  await expect(visual.locator('text=Input Image')).toBeVisible();
+  await expect(visual.locator('text=Background Removed')).toBeVisible();
+  await expect(visual.locator('text=Model Inference')).toBeVisible();
+  await expect(visual.locator('text=Diagnosis Result')).toBeVisible();
+
+  const logo = visual.locator('img[alt="CropCheckUp Logo"]');
+  await expect(logo).toBeVisible();
+});
