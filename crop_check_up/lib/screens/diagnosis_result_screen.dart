@@ -6,9 +6,9 @@ import '../models/diagnosis_result.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/diagnosis/result_presentation_view.dart';
 import '../ui/components/layout/app_page_shell.dart';
-import '../ui/components/layout/app_bottom_action_bar.dart';
-import '../ui/components/headers/app_headers.dart';
-import '../ui/components/buttons/app_button.dart';
+import '../ui/tokens/spacing_tokens.dart';
+import '../ui/tokens/typography.dart';
+import '../ui/theme/theme_ext.dart';
 
 /// Full‑screen route that presents a [DiagnosisResult].
 ///
@@ -26,34 +26,65 @@ class DiagnosisResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusIcon =
-        result.isHealthy ? Icons.check_circle_rounded : Icons.warning_rounded;
+    const spacing = SpacingTokens();
+    final colors = context.appColors;
 
-    return AppPageShell.sliver(
-      slivers: [
-        AppStatusHeader(
-          title: AppCopy.result.title,
-          subtitle: result.isHealthy ? AppCopy.result.statusHealthy : AppCopy.result.statusDisease,
-          statusIcon: statusIcon,
-          isHealthy: result.isHealthy,
-          leading: const BackButton(),
-        ),
-        SliverToBoxAdapter(
-          child: ResultPresentationView(
-            result: result,
-            imageBytes: imageBytes,
+    return Stack(
+      children: [
+        AppPageShell(
+          applySafeArea: true,
+          backgroundColor: colors.background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Minimal Header
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Back Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colors.raisedSurface,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.subtleBorder),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
+                        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    // Title
+                    Text(
+                      AppCopy.result.title,
+                      style: context.typography.title.copyWith(
+                        color: colors.textPrimary,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 22,
+                      ),
+                    ),
+                    // Placeholder for symmetry
+                    const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+              
+              // Scrollable Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(spacing.l, spacing.m, spacing.l, spacing.xxl),
+                  child: ResultPresentationView(
+                    result: result,
+                    imageBytes: imageBytes,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
-      bottomNavigationBar: AppBottomActionBar(
-        child: SizedBox(
-          width: double.infinity,
-          child: AppButton.primary(
-            label: AppCopy.result.actionDone,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-      ),
     );
   }
 }

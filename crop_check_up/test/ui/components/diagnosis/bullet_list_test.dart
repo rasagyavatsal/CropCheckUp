@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/ui/components/diagnosis/bullet_list.dart';
+import 'package:crop_check_up/ui/theme/app_theme.dart';
 
 void main() {
   group('BulletList', () {
@@ -9,6 +10,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme.light,
           home: Scaffold(
             body: BulletList(items: items),
           ),

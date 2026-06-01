@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
 import 'package:crop_check_up/ui/components/diagnosis/confidence_meter.dart';
 import 'package:crop_check_up/ui/components/diagnosis/status_badge.dart';
-import 'package:crop_check_up/ui/components/cards/app_card.dart';
+import 'package:crop_check_up/ui/theme/theme_ext.dart';
+import 'package:crop_check_up/ui/tokens/radius_tokens.dart';
+import 'package:crop_check_up/ui/tokens/spacing_tokens.dart';
+import 'package:crop_check_up/ui/tokens/typography.dart';
 
 class ResultSummaryCard extends StatelessWidget {
   final DiagnosisResult result;
@@ -14,28 +17,48 @@ class ResultSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
+    final colors = context.appColors;
+    const radius = RadiusTokens();
+    const spacing = SpacingTokens();
+
+    return Container(
+      padding: EdgeInsets.all(spacing.xl),
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        borderRadius: BorderRadius.circular(radius.xl),
+        boxShadow: [
+          BoxShadow(
+            color: colors.textPrimary.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           StatusBadge(isHealthy: result.isHealthy),
-          const SizedBox(height: 16),
+          SizedBox(height: spacing.l),
           Text(
             result.diseaseName,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
+            style: context.typography.headline.copyWith(
+              fontWeight: FontWeight.w900,
+              fontSize: 28,
+              letterSpacing: -0.5,
+              color: colors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: spacing.s),
           Text(
             'Crop: ${result.cropName}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w500,
+            style: context.typography.body.copyWith(
+              color: colors.mutedText,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: spacing.xl),
           ConfidenceMeter(confidence: result.confidence),
         ],
       ),

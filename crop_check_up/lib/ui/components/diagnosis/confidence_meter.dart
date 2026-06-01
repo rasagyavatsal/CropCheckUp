@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:crop_check_up/ui/theme/theme_ext.dart';
+import 'package:crop_check_up/ui/tokens/typography.dart';
 
 class ConfidenceMeter extends StatelessWidget {
   final double confidence;
@@ -12,11 +13,11 @@ class ConfidenceMeter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int percentage = (confidence * 100).round();
-    final statusTheme = context.diagnosisStatus;
+    final colors = context.appColors;
     
     final color = percentage >= 80 
-      ? statusTheme.healthyColor 
-      : (percentage >= 50 ? statusTheme.warningColor : statusTheme.dangerColor);
+      ? colors.success 
+      : (percentage >= 50 ? colors.warning : colors.danger);
     
     return Semantics(
       label: 'Diagnosis confidence score: $percentage%',
@@ -30,17 +31,17 @@ class ConfidenceMeter extends StatelessWidget {
               children: [
                 Text(
                   'Confidence Score',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  style: context.typography.body.copyWith(
+                    color: colors.mutedText,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Text(
                   '$percentage%',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  style: context.typography.title.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ],
             ),
@@ -50,7 +51,7 @@ class ConfidenceMeter extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: confidence,
                 minHeight: 12,
-                backgroundColor: Colors.white12,
+                backgroundColor: colors.subtleBorder,
                 valueColor: AlwaysStoppedAnimation(color),
               ),
             ),

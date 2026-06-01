@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:crop_check_up/ui/theme/theme_ext.dart';
+import 'package:crop_check_up/ui/tokens/radius_tokens.dart';
+import 'package:crop_check_up/ui/tokens/spacing_tokens.dart';
+import 'package:crop_check_up/ui/tokens/typography.dart';
 
 class InfoSection extends StatelessWidget {
   final String title;
@@ -14,6 +18,10 @@ class InfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+    const radius = RadiusTokens();
+    const spacing = SpacingTokens();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,28 +30,30 @@ class InfoSection extends StatelessWidget {
             if (icon != null) ...[
               Icon(
                 icon,
-                size: 20,
-                color: Theme.of(context).colorScheme.primary,
+                size: 24,
+                color: colors.brand,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: spacing.m),
             ],
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+              style: context.typography.title.copyWith(
+                fontWeight: FontWeight.w800,
+                fontSize: 20,
+                color: colors.textPrimary,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.m),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(spacing.l),
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(24),
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(radius.l),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: colors.subtleBorder,
             ),
           ),
           child: content,
@@ -52,4 +62,3 @@ class InfoSection extends StatelessWidget {
     );
   }
 }
-

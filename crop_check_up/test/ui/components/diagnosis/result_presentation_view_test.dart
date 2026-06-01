@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/ui/components/diagnosis/result_presentation_view.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
-import 'package:crop_check_up/ui/theme/diagnosis_status_theme.dart';
+import 'package:crop_check_up/ui/theme/app_theme.dart';
 
 void main() {
   group('ResultPresentationView', () {
@@ -14,16 +14,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(
-            extensions: const [
-              DiagnosisStatusTheme(
-                healthyColor: Colors.green,
-                dangerColor: Colors.red,
-                warningColor: Colors.orange,
-                neutralColor: Colors.grey,
-              )
-            ],
-          ),
+          theme: AppTheme.light,
           home: const Scaffold(
             body: SingleChildScrollView(child: ResultPresentationView(result: result)),
           ),
@@ -45,16 +36,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(
-            extensions: const [
-              DiagnosisStatusTheme(
-                healthyColor: Colors.green,
-                dangerColor: Colors.red,
-                warningColor: Colors.orange,
-                neutralColor: Colors.grey,
-              )
-            ],
-          ),
+          theme: AppTheme.light,
           home: const Scaffold(
             body: SingleChildScrollView(child: ResultPresentationView(result: result)),
           ),
