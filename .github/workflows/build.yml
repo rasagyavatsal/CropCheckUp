@@ -14,9 +14,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Flutter
-        uses: subosito/flutter-action@48caab11c965c07cb75be2e8cf8fc3c7ad51f5b1 # v2.16.0
+        uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1 # v2.16.0
         with:
-          flutter-version: '3.19.0'  # Specify your desired Flutter version
+          flutter-version: '3.41.6'
           channel: 'stable'
       - name: Build
         run: |
