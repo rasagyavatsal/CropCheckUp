@@ -12,14 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      # The analysis requires to retrieve dependencies and build successfully
+          fetch-depth: 0
+      - name: Set up Flutter
+        uses: subosito/flutter-action@48caab11c965c07cb75be2e8cf8fc3c7ad51f5b1 # v2.16.0
+        with:
+          flutter-version: '3.19.0'  # Specify your desired Flutter version
+          channel: 'stable'
       - name: Build
         run: |
-            flutter pub get
-            flutter analyze
-            flutter test
-            flutter build web
+          flutter pub get
+          flutter analyze
+          flutter test
+          flutter build web
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
