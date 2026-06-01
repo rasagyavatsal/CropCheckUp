@@ -9,6 +9,7 @@ import '../ui/theme/theme_ext.dart';
 import '../ui/tokens/spacing_tokens.dart';
 import '../ui/tokens/radius_tokens.dart';
 
+
 /// Screen to preview the segmented image before inference.
 /// 
 /// This allows the user to verify if the background removal was successful 
@@ -48,35 +49,13 @@ class SegmentationPreviewScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Top action bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Back/Retry Button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: colors.raisedSurface,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: colors.subtleBorder),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-                        tooltip: AppCopy.preview.actionRetry,
-                        onPressed: () => Navigator.pop(context, false),
-                      ),
-                    ),
-                    // Title
-                    Text(
-                      AppCopy.preview.title,
-                      style: context.typography.title.copyWith(
-                        color: colors.textPrimary,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 22,
-                      ),
-                    ),
-                    // Placeholder for symmetry
-                    const SizedBox(width: 48),
-                  ],
+                AppScreenHeader(
+                  title: AppCopy.preview.title,
+                  leading: AppHeaderAction(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    tooltip: AppCopy.preview.actionRetry,
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
                 ),
                 SizedBox(height: spacing.l),
                 

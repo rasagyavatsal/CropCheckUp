@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../ui/theme/theme_ext.dart';
-import '../ui/tokens/typography.dart';
+
 import '../ui/tokens/spacing_tokens.dart';
 import '../ui/tokens/radius_tokens.dart';
 import '../ui/copy/app_copy.dart';
@@ -127,54 +127,26 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Top action bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Back Button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: colors.raisedSurface,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: colors.subtleBorder),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-                        tooltip: AppCopy.shared.backAction,
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
+                AppScreenHeader(
+                  title: 'Scanner',
+                  leading: AppHeaderAction(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    tooltip: AppCopy.shared.backAction,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  trailing: AppHeaderAction(
+                    icon: Icon(
+                      _session.isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+                      color: _session.isFlashOn ? colors.brand : colors.textPrimary,
                     ),
-                    // Title
-                    Text(
-                      'Scanner',
-                      style: context.typography.title.copyWith(
-                        color: colors.textPrimary,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 22,
-                      ),
-                    ),
-                    // Flash Button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: colors.raisedSurface,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: colors.subtleBorder),
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          _session.isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-                          color: _session.isFlashOn ? colors.brand : colors.textPrimary,
-                        ),
-                        tooltip: _session.isFlashOn
-                            ? AppCopy.camera.semanticFlashOff
-                            : AppCopy.camera.semanticFlashOn,
-                        onPressed: () async {
-                          await _session.toggleFlash();
-                          if (mounted) setState(() {});
-                        },
-                      ),
-                    ),
-                  ],
+                    tooltip: _session.isFlashOn
+                        ? AppCopy.camera.semanticFlashOff
+                        : AppCopy.camera.semanticFlashOn,
+                    onPressed: () async {
+                      await _session.toggleFlash();
+                      if (mounted) setState(() {});
+                    },
+                  ),
                 ),
                 SizedBox(height: spacing.l),
                 

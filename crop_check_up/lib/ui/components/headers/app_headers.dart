@@ -180,3 +180,95 @@ class AppStatusHeader extends StatelessWidget {
     );
   }
 }
+
+class AppScreenHeader extends StatelessWidget {
+  final String title;
+  final IconData? titleIcon;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool centerTitle;
+
+  const AppScreenHeader({
+    super.key,
+    required this.title,
+    this.titleIcon,
+    this.leading,
+    this.trailing,
+    this.centerTitle = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final typography = context.typography;
+
+    final titleWidget = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (titleIcon != null) ...[
+          Icon(titleIcon, color: colors.brand, size: 28),
+          const SizedBox(width: 8),
+        ],
+        Text(
+          title,
+          style: typography.title.copyWith(
+            color: colors.textPrimary,
+            fontWeight: FontWeight.w900,
+            fontSize: 22,
+          ),
+        ),
+      ],
+    );
+
+    if (!centerTitle) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if (leading != null) leading!,
+          if (leading == null) titleWidget else Expanded(child: titleWidget),
+          if (trailing != null) trailing!,
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (leading != null) leading! else const SizedBox(width: 48),
+        titleWidget,
+        if (trailing != null) trailing! else const SizedBox(width: 48),
+      ],
+    );
+  }
+}
+
+class AppHeaderAction extends StatelessWidget {
+  final Widget icon;
+  final VoidCallback onPressed;
+  final String? tooltip;
+
+  const AppHeaderAction({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+    this.tooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        shape: BoxShape.circle,
+        border: Border.all(color: colors.subtleBorder),
+      ),
+      child: IconButton(
+        icon: icon,
+        tooltip: tooltip,
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+

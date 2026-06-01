@@ -84,26 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Minimal Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.eco_rounded, color: colors.brand, size: 28),
-                        const SizedBox(width: 8),
-                        Text(
-                          'CropCheckUp',
-                          style: context.typography.title.copyWith(
-                            color: colors.textPrimary,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 22,
-                          ),
-                        ),
-                      ],
-                    ),
-                    _buildThemeToggle(context),
-                  ],
+                AppScreenHeader(
+                  title: 'CropCheckUp',
+                  titleIcon: Icons.eco_rounded,
+                  centerTitle: false,
+                  trailing: _buildThemeToggle(context),
                 ),
                 const Spacer(flex: 1),
                 
@@ -282,34 +267,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildThemeToggle(BuildContext context) {
-    final colors = context.appColors;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.raisedSurface,
-        shape: BoxShape.circle,
-        border: Border.all(color: colors.subtleBorder),
-      ),
-      child: ValueListenableBuilder<ThemeMode>(
-        valueListenable: AppTheme.themeModeNotifier,
-        builder: (context, mode, _) {
-          final isCurrentlyDark = mode == ThemeMode.dark ||
-              (mode == ThemeMode.system &&
-                  MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-          
-          return IconButton(
-            icon: Icon(
-              isCurrentlyDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-              color: colors.brand,
-            ),
-            tooltip: isCurrentlyDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-            onPressed: () {
-              AppTheme.themeModeNotifier.value =
-                  isCurrentlyDark ? ThemeMode.light : ThemeMode.dark;
-            },
-          );
-        },
-      ),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppTheme.themeModeNotifier,
+      builder: (context, mode, _) {
+        final isCurrentlyDark = mode == ThemeMode.dark ||
+            (mode == ThemeMode.system &&
+                MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+        
+        return AppHeaderAction(
+          icon: Icon(
+            isCurrentlyDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+            color: context.appColors.brand,
+          ),
+          tooltip: isCurrentlyDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+          onPressed: () {
+            AppTheme.themeModeNotifier.value =
+                isCurrentlyDark ? ThemeMode.light : ThemeMode.dark;
+          },
+        );
+      },
     );
   }
 }
