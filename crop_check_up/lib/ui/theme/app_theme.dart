@@ -12,6 +12,8 @@ import 'package:crop_check_up/ui/theme/app_layout_theme.dart';
 class AppTheme {
   const AppTheme._();
 
+  static final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
+
   static ThemeData get light {
     return _buildTheme(
       brightness: Brightness.light,

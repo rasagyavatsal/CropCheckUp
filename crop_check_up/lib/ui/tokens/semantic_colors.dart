@@ -118,20 +118,20 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   );
 
   static const SemanticColors dark = SemanticColors(
-    brand: Color(0xFF5DF2B5),
-    background: Color(0xFF191C1A),
-    surface: Color(0xFF0A3926),
-    raisedSurface: Color(0xFF1A4936),
-    textPrimary: Color(0xFFE1E3DF),
-    textSecondary: Color(0xFFBFC9C2),
-    mutedText: Color(0xFF8A938C),
-    subtleBorder: Color(0xFF404943),
-    strongBorder: Color(0xFF8A938C),
-    success: Color(0xFF5DF2B5),
+    brand: Color(0xFF006C4C),
+    background: Color(0xFF000000), // OLED pure black background
+    surface: Color(0xFF121212),    // Very dark gray surface
+    raisedSurface: Color(0xFF1E1E1E), // Slightly lighter gray for cards/elevated layers
+    textPrimary: Color(0xFFF5F5F5),
+    textSecondary: Color(0xFFC0C0C0),
+    mutedText: Color(0xFF7A7A7A),
+    subtleBorder: Color(0xFF282828),
+    strongBorder: Color(0xFF505050),
+    success: Color(0xFF006C4C),
     warning: Color(0xFFFFB300),
     danger: Color(0xFFFFB4AB),
     cameraScrim: Color(0x99000000),
     overlay: Color(0x33000000),
-    disabled: Color(0x61E1E3DF),
+    disabled: Color(0x61F5F5F5),
   );
 }

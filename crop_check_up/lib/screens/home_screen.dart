@@ -4,12 +4,11 @@ import '../ui/flow/diagnosis_flow_coordinator.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/app_components.dart';
 import '../ui/components/layout/layout.dart';
-import '../ui/components/cards/app_card.dart';
-
 import '../ui/adaptive/app_adaptive.dart';
 import '../ui/tokens/spacing_tokens.dart';
 import '../ui/tokens/radius_tokens.dart';
 import '../ui/theme/theme_ext.dart';
+import '../ui/theme/app_theme.dart';
 import 'camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,14 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      // Background removal and classifier services can be implicitly initialized
-      // but to preserve the loading screen we can pre-warm them.
-      // We'll leave it as is, or we can just delay slightly if not needed.
-      // Wait, DiagnosisWorkflowService had an init() method which called services' init.
-      // I can let DiagnosisFlowCoordinator expose an init() or I can let services init lazily.
-      // The issue says: Coordinator uses existing background-removal and classifier services internally.
-      // I'll call them via the coordinator if needed, but the services are singletons.
-      // Actually, I'll add an init() to DiagnosisFlowCoordinator.
       await _coordinator.init();
     } catch (e) {
       _initError = e.toString();
@@ -81,195 +72,244 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    final colors = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
-        AppPageShell.sliver(
-          slivers: [
-            const AppBrandHeader(
-              title: 'CropCheckUp',
-            ),
-            SliverPadding(
-              padding: EdgeInsets.all(spacing.l),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  Text(
-                    AppCopy.home.diagnoseTitle,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
+        AppPageShell(
+          applySafeArea: true,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Minimal Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.eco_rounded, color: colors.brand, size: 28),
+                        const SizedBox(width: 8),
+                        Text(
+                          'CropCheckUp',
+                          style: context.typography.title.copyWith(
+                            color: colors.textPrimary,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 22,
+                          ),
                         ),
+                      ],
+                    ),
+                    _buildThemeToggle(context),
+                  ],
+                ),
+                const Spacer(flex: 1),
+                
+                // Welcome Text
+                Text(
+                  'Diagnose Plant Health',
+                  style: context.typography.headline.copyWith(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 32,
+                    letterSpacing: -1.0,
                   ),
-                  SizedBox(height: spacing.m),
-                  _buildActionCards(context, spacing, radius),
-                  SizedBox(height: spacing.xl),
-                  Text(
-                    AppCopy.home.tipsTitle,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
-                        ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Select a leaf image to detect diseases instantly.',
+                  style: context.typography.body.copyWith(
+                    color: colors.mutedText,
+                    fontSize: 16,
                   ),
-                  SizedBox(height: spacing.m),
-                  _buildTipsList(context, spacing),
-                  SizedBox(height: spacing.xxl),
-                  _buildFooter(context, spacing),
-                ]),
-              ),
-            ),
-          ],
-        ),
-        if (_isDiagnosing) AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
-      ],
-    );
-  }
+                  textAlign: TextAlign.center,
+                ),
+                const Spacer(flex: 1),
 
-  Widget _buildActionCards(BuildContext context, SpacingTokens spacing, RadiusTokens radius) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final secondaryColor = Theme.of(context).colorScheme.secondary;
-
-    return Row(
-      children: [
-        Expanded(
-          child: Semantics(
-            button: true,
-            label: AppCopy.home.semanticScanAction,
-            child: AppCard.action(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  AppRoute.standard(builder: (_) => const CameraScreen()),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                // Specimen Panel (without outlines)
                 Container(
-                  padding: EdgeInsets.all(spacing.sm),
+                  height: 320,
                   decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.1),
+                    color: colors.raisedSurface,
+                    borderRadius: BorderRadius.circular(radius.xl),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.textPrimary.withValues(alpha: 0.03),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(radius.xl),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Subtle center leaf halo
+                        Positioned(
+                          child: Container(
+                            width: 140,
+                            height: 140,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colors.brand.withValues(alpha: 0.03),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(spacing.l),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.camera_alt_rounded,
+                                size: 64,
+                                color: colors.brand.withValues(alpha: 0.8),
+                              ),
+                              const SizedBox(height: 28),
+                              
+                              // Camera Scan Button (no outline)
+                              Semantics(
+                                button: true,
+                                label: AppCopy.home.semanticScanAction,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: FilledButton.icon(
+                                    style: FilledButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      backgroundColor: colors.brand,
+                                      foregroundColor: isDark ? colors.background : Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(radius.l),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        AppRoute.standard(builder: (_) => const CameraScreen()),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.photo_camera_rounded, size: 20),
+                                    label: const Text('Start Camera Scan'),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              
+                              // Gallery Upload Button (no outline)
+                              Semantics(
+                                button: true,
+                                label: AppCopy.home.semanticUploadAction,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      foregroundColor: colors.textPrimary,
+                                      backgroundColor: colors.surface,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(radius.l),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      setState(() => _isDiagnosing = true);
+                                      await _coordinator.startGalleryDiagnosis(context);
+                                      if (mounted) setState(() => _isDiagnosing = false);
+                                    },
+                                    icon: const Icon(Icons.image_rounded, size: 20),
+                                    label: const Text('Upload from Gallery'),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(flex: 1),
+
+                // Tiny Concise Tips Banner
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: colors.surface,
                     borderRadius: BorderRadius.circular(radius.l),
                   ),
-                  child: Icon(Icons.camera_alt_rounded, color: primaryColor, size: 28),
-                ),
-                SizedBox(height: spacing.m),
-                Text(
-                  AppCopy.home.actionCameraTitle,
-                  style: context.typography.title.copyWith(
-                    fontWeight: FontWeight.w700,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.info_outline_rounded, size: 16, color: colors.brand),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Tips: Bright lighting • Clear background • Single leaf focus',
+                          style: context.typography.caption.copyWith(
+                            color: colors.textSecondary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  AppCopy.home.actionCameraSubtitle,
-                  style: context.typography.label.copyWith(
-                    color: context.appColors.mutedText,
-                  ),
-                ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: spacing.m),
-        Expanded(
-          child: Semantics(
-            button: true,
-            label: AppCopy.home.semanticUploadAction,
-            child: AppCard.action(
-              onTap: () async {
-                setState(() => _isDiagnosing = true);
-                await _coordinator.startGalleryDiagnosis(context);
-                if (mounted) setState(() => _isDiagnosing = false);
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Container(
-                  padding: EdgeInsets.all(spacing.sm),
-                  decoration: BoxDecoration(
-                    color: secondaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(radius.l),
-                  ),
-                  child: Icon(Icons.image_rounded, color: secondaryColor, size: 28),
-                ),
-                SizedBox(height: spacing.m),
-                Text(
-                  AppCopy.home.actionUploadTitle,
-                  style: context.typography.title.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  AppCopy.home.actionUploadSubtitle,
-                  style: context.typography.label.copyWith(
-                    color: context.appColors.mutedText,
+                const Spacer(flex: 1),
+
+                // Subtle copyright/version info
+                Opacity(
+                  opacity: 0.5,
+                  child: Text(
+                    'v1.0.0',
+                    style: context.typography.caption.copyWith(
+                      fontSize: 10,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        ),
+        if (_isDiagnosing) AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
       ],
     );
   }
 
-  Widget _buildTipsList(BuildContext context, SpacingTokens spacing) {
-    final tips = [
-      ('Good Lighting', 'Ensure the leaf is well-lit for better accuracy.', Icons.light_mode_rounded),
-      ('Single Leaf', 'Focus on one leaf at a time for precise diagnosis.', Icons.filter_center_focus_rounded),
-      ('Clear Background', 'A plain background helps the AI segment the plant.', Icons.layers_clear_rounded),
-    ];
+  Widget _buildThemeToggle(BuildContext context) {
+    final colors = context.appColors;
 
-    return Column(
-      children: tips.map((tip) => Padding(
-        padding: EdgeInsets.only(bottom: spacing.sm),
-        child: AppCard.info(
-          child: Row(
-            children: [
-              Icon(tip.$3, color: Theme.of(context).colorScheme.primary, size: 24),
-              SizedBox(width: spacing.m),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tip.$1,
-                      style: context.typography.body.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      tip.$2,
-                      style: context.typography.label.copyWith(
-                        color: context.appColors.mutedText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      )).toList(),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context, SpacingTokens spacing) {
-    return Center(
-      child: Opacity(
-        opacity: 0.5,
-        child: Column(
-          children: [
-            const Icon(Icons.eco_outlined, size: 24),
-            SizedBox(height: spacing.s),
-            Text(
-              AppCopy.home.footerText,
-              style: Theme.of(context).textTheme.bodySmall,
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        shape: BoxShape.circle,
+        border: Border.all(color: colors.subtleBorder),
+      ),
+      child: ValueListenableBuilder<ThemeMode>(
+        valueListenable: AppTheme.themeModeNotifier,
+        builder: (context, mode, _) {
+          final isCurrentlyDark = mode == ThemeMode.dark ||
+              (mode == ThemeMode.system &&
+                  MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+          
+          return IconButton(
+            icon: Icon(
+              isCurrentlyDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: colors.brand,
             ),
-          ],
-        ),
+            tooltip: isCurrentlyDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            onPressed: () {
+              AppTheme.themeModeNotifier.value =
+                  isCurrentlyDark ? ThemeMode.light : ThemeMode.dark;
+            },
+          );
+        },
       ),
     );
   }
 }
-

@@ -24,14 +24,19 @@ class CropCheckUpApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CropCheckUp',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      scrollBehavior: const AppScrollBehavior(),
-      home: const HomeScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppTheme.themeModeNotifier,
+      builder: (context, themeMode, _) {
+        return MaterialApp(
+          title: 'CropCheckUp',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeMode,
+          scrollBehavior: const AppScrollBehavior(),
+          home: const HomeScreen(),
+        );
+      },
     );
   }
 }

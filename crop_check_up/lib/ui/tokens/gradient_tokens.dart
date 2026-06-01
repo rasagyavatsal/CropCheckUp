@@ -95,17 +95,17 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
     brandHeader: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF0A3926), Color(0xFF1A4936)], // dark theme surfaces
+      colors: [Color(0xFF121212), Color(0xFF1E1E1E)], // black to dark gray
     ),
     cameraOverlay: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1A4936), Color(0xFF0A3926)],
+      colors: [Color(0xFF1E1E1E), Color(0xFF121212)],
     ),
     healthyStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF5DF2B5), Color(0xFF2E7D32)],
+      colors: [Color(0xFF006C4C), Color(0xFF2E7D32)],
     ),
     dangerStatus: LinearGradient(
       begin: Alignment.topLeft,
@@ -122,7 +122,7 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
       end: Alignment.bottomCenter,
       colors: [
         Colors.black,
-        Color(0x1A5DF2B5), // dark semantic success brand with 0.1 alpha
+        Color(0x1A006C4C), // dark semantic success brand with 0.1 alpha
         Colors.black,
       ],
     ),
