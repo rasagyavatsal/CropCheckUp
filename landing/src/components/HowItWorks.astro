@@ -9,27 +9,27 @@ const steps: Step[] = [
   {
     title: 'Capture or upload',
     description: 'The user captures a live camera frame or selects an image from the gallery.',
-    icon: '📷'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>'
   },
   {
     title: 'Remove background',
     description: 'The app isolates the leaf so the classifier focuses on the plant area.',
-    icon: '🪄'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>'
   },
   {
     title: 'Resize image',
     description: 'The processed image is resized to 224 x 224 pixels.',
-    icon: '📐'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>'
   },
   {
     title: 'Run inference',
     description: 'A TensorFlow Lite model predicts the most likely crop condition.',
-    icon: '⚡'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
   },
   {
     title: 'Show diagnosis',
     description: 'The app displays crop name, condition, confidence, symptoms, causes, and management guidance.',
-    icon: '📊'
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>'
   }
 ];
 ---
@@ -45,7 +45,7 @@ const steps: Step[] = [
       {steps.map((step, index) => (
         <div class={`bento-card glass-panel card-${index + 1}`}>
           <div class="card-header">
-            <span class="step-icon">{step.icon}</span>
+            <span class="step-icon" set:html={step.icon}></span>
             <span class="step-number">0{index + 1}</span>
           </div>
           <h3 class="step-title">{step.title}</h3>
@@ -126,7 +126,6 @@ const steps: Step[] = [
   }
 
   .step-icon {
-    font-size: var(--font-size-2xl);
     background: rgba(16, 185, 129, 0.1);
     width: 56px;
     height: 56px;
@@ -135,6 +134,12 @@ const steps: Step[] = [
     justify-content: center;
     border-radius: var(--radius-md);
     border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--color-brand-primary);
+  }
+  
+  .step-icon :global(svg) {
+    width: 24px;
+    height: 24px;
   }
 
   .step-number {

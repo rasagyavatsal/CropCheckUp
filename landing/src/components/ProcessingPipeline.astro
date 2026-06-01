@@ -1,11 +1,11 @@
 ---
 const stages = [
-  { name: "Camera / Gallery", icon: "📱" },
-  { name: "Background removal", icon: "✂️" },
-  { name: "224 x 224 image", icon: "🖼️" },
-  { name: "RGB tensor", icon: "🔢" },
-  { name: "TF Lite inference", icon: "🧠" },
-  { name: "Diagnosis result", icon: "📈" }
+  { name: "Camera / Gallery", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>' },
+  { name: "Background removal", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>' },
+  { name: "224 x 224 image", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>' },
+  { name: "RGB tensor", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="3" x2="21" y1="15" y2="15"/><line x1="9" x2="9" y1="3" y2="21"/><line x1="15" x2="15" y1="3" y2="21"/></svg>' },
+  { name: "TF Lite inference", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.002 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>' },
+  { name: "Diagnosis result", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>' }
 ];
 ---
 
@@ -20,7 +20,7 @@ const stages = [
         {stages.map((stage, index) => (
           <div class="stage-container">
             <div class="stage-node">
-              <div class="stage-icon">{stage.icon}</div>
+              <div class="stage-icon" set:html={stage.icon}></div>
               <div class="stage-glow"></div>
             </div>
             <div class="stage-label">{stage.name}</div>
@@ -34,7 +34,9 @@ const stages = [
       </div>
       
       <div class="technical-notes">
-        <div class="note-icon">💡</div>
+        <div class="note-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+        </div>
         <div class="note-content">
           <p>The model receives a 224 x 224 RGB image. Pixel values are passed in the 0-255 range because preprocessing is included inside the model.</p>
           <p>Transparent background pixels are treated as black during tensor conversion.</p>
@@ -96,8 +98,16 @@ const stages = [
   }
 
   .stage-icon {
-    font-size: 1.5rem;
     z-index: 2;
+    color: var(--color-brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .stage-icon :global(svg) {
+    width: 24px;
+    height: 24px;
   }
 
   .stage-glow {
@@ -193,7 +203,14 @@ const stages = [
   }
 
   .note-icon {
-    font-size: var(--font-size-2xl);
+    color: var(--color-brand-primary);
+    display: flex;
+    align-items: center;
+  }
+  
+  .note-icon svg {
+    width: 24px;
+    height: 24px;
   }
 
   .note-content p {
