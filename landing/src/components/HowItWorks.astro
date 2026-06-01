@@ -1,7 +1,129 @@
 ---
+type Step = {
+  title: string;
+  description: string;
+};
+
+const steps: Step[] = [
+  {
+    title: 'Capture or upload',
+    description: 'The user captures a live camera frame or selects an image from the gallery.'
+  },
+  {
+    title: 'Remove background',
+    description: 'The app isolates the leaf so the classifier focuses on the plant area.'
+  },
+  {
+    title: 'Resize image',
+    description: 'The processed image is resized to 224 x 224 pixels.'
+  },
+  {
+    title: 'Run inference',
+    description: 'A TensorFlow Lite model predicts the most likely crop condition.'
+  },
+  {
+    title: 'Show diagnosis',
+    description: 'The app displays crop name, condition, confidence, symptoms, causes, and management guidance.'
+  }
+];
 ---
+
 <section id="how-it-works" class="section">
   <div class="container">
-    <h2>How It Works</h2>
+    <h2 class="section-title text-center">How It Works</h2>
+    <p class="section-subtitle text-center">A simple, effective workflow for crop condition diagnosis.</p>
+    
+    <div class="workflow-container">
+      <ol class="workflow-list">
+        {steps.map((step, index) => (
+          <li class="workflow-step">
+            <div class="step-number">{index + 1}</div>
+            <div class="step-content">
+              <h3 class="step-title">{step.title}</h3>
+              <p class="step-description">{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   </div>
 </section>
+
+<style>
+  .section-title {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .section-subtitle {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-xl);
+    font-size: 1.125rem;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .workflow-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .workflow-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .workflow-step {
+    display: flex;
+    gap: var(--spacing-md);
+    background-color: var(--color-surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .workflow-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-radius: 50%;
+  }
+
+  .step-title {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.25rem;
+    color: var(--color-text);
+  }
+
+  .step-description {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .workflow-step {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+    }
+  }
+</style>
