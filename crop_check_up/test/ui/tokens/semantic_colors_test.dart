@@ -25,7 +25,7 @@ void main() {
 
     test('provides dark mode semantic colors', () {
       final colors = SemanticColors.dark;
-      expect(colors.brand, const Color(0xFF66D4A0));
+      expect(colors.brand, const Color(0xFF006C4C));
       expect(colors.background, isA<Color>());
       expect(colors.surface, isA<Color>());
       expect(colors.raisedSurface, isA<Color>());
@@ -34,7 +34,7 @@ void main() {
       expect(colors.mutedText, isA<Color>());
       expect(colors.subtleBorder, isA<Color>());
       expect(colors.strongBorder, isA<Color>());
-      expect(colors.success, const Color(0xFF66D4A0));
+      expect(colors.success, const Color(0xFF006C4C));
       expect(colors.warning, isA<Color>());
       expect(colors.danger, isA<Color>());
       expect(colors.cameraScrim, isA<Color>());

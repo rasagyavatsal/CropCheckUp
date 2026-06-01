@@ -118,7 +118,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   );
 
   static const SemanticColors dark = SemanticColors(
-    brand: Color(0xFF66D4A0),
+    brand: Color(0xFF006C4C),
     background: Color(0xFF000000), // OLED pure black background
     surface: Color(0xFF121212),    // Very dark gray surface
     raisedSurface: Color(0xFF1E1E1E), // Slightly lighter gray for cards/elevated layers
@@ -127,7 +127,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     mutedText: Color(0xFF7A7A7A),
     subtleBorder: Color(0xFF282828),
     strongBorder: Color(0xFF505050),
-    success: Color(0xFF66D4A0),
+    success: Color(0xFF006C4C),
     warning: Color(0xFFFFB300),
     danger: Color(0xFFFFB4AB),
     cameraScrim: Color(0x99000000),
