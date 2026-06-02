@@ -2,25 +2,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  /* Brand System - Dark Theme */
-  --color-bg-base: #020617;
-  --color-bg-surface: rgba(15, 23, 42, 0.6);
-  --color-bg-raised: rgba(30, 41, 59, 0.7);
+  /* Brand System - Light Theme (Default) */
+  --color-bg-base: #ffffff;
+  --color-bg-surface: rgba(248, 250, 252, 0.6);
+  --color-bg-raised: rgba(241, 245, 249, 0.7);
   
   --color-brand-primary: #10b981;
   --color-brand-secondary: #059669;
   --color-brand-glow: rgba(16, 185, 129, 0.4);
+  
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  
+  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(16, 185, 129, 0.3);
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+html.dark :root {
+  /* Brand System - Dark Theme */
+  --color-bg-base: #000000;
+  --color-bg-surface: rgba(15, 23, 42, 0.6);
+  --color-bg-raised: rgba(30, 41, 59, 0.7);
   
   --color-text-primary: #f8fafc;
   --color-text-secondary: #cbd5e1;
   --color-text-muted: #94a3b8;
   
   --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(16, 185, 129, 0.3);
+}
 
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+:root {
 
   /* Spacing */
   --space-xs: 0.25rem;

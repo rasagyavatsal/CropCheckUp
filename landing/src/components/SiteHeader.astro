@@ -1,4 +1,5 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
 ---
 <header class="site-header glass-panel">
   <div class="container header-container">
@@ -14,7 +15,10 @@
       <a href="#model-output" class="nav-link">Model Output</a>
       <a href="#dataset" class="nav-link">Dataset</a>
     </nav>
-    <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer">Kaggle Notebook</a>
+    <div class="header-actions">
+      <ThemeToggle />
+      <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer">Kaggle Notebook</a>
+    </div>
   </div>
 </header>
 <style>
@@ -91,6 +95,12 @@
   .nav-cta {
     padding: 0.5rem 1.25rem;
     font-size: var(--font-size-sm);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   @media (max-width: 768px) {

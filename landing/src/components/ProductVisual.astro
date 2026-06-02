@@ -34,12 +34,12 @@
     margin: 0 auto;
     border-radius: 40px;
     padding: 10px;
-    background: rgba(30, 41, 59, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-raised);
+    border: 2px solid var(--color-border-subtle);
     box-shadow: 
-      0 0 0 6px rgba(15, 23, 42, 0.8),
+      0 0 0 6px var(--color-border-hover),
       0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+      inset 0 0 0 2px var(--color-border-subtle);
     z-index: 1;
     transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -56,7 +56,7 @@
     transform: translateX(-50%);
     width: 100px;
     height: 25px;
-    background: rgba(15, 23, 42, 1);
+    background: #000000;
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     z-index: 10;
