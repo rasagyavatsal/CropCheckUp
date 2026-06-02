@@ -1,29 +1,31 @@
 ---
 const stages = [
-  { name: "Camera / Gallery", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>' },
-  { name: "Background removal", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>' },
-  { name: "224 x 224 image", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>' },
-  { name: "RGB tensor", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="3" x2="21" y1="15" y2="15"/><line x1="9" x2="9" y1="3" y2="21"/><line x1="15" x2="15" y1="3" y2="21"/></svg>' },
-  { name: "TF Lite inference", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.002 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>' },
-  { name: "Diagnosis result", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>' }
+  { name: "Camera / Gallery", detail: "Raw leaf photo enters from the mobile capture flow.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>' },
+  { name: "Background removal", detail: "Leaf pixels are isolated so the model sees less surrounding scene noise.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>' },
+  { name: "224 x 224 image", detail: "The isolated image is resized to the model's expected square input.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>' },
+  { name: "RGB tensor", detail: "Pixels are packed as RGB values before inference.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="3" x2="21" y1="15" y2="15"/><line x1="9" x2="9" y1="3" y2="21"/><line x1="15" x2="15" y1="3" y2="21"/></svg>' },
+  { name: "TensorFlow Lite inference", detail: "The on-device model returns a score vector across the label file.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.002 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>' },
+  { name: "Diagnosis result", detail: "The top label is converted into crop, condition, confidence, and guidance.", icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>' }
 ];
 ---
 
 <section id="pipeline" class="section">
   <div class="container">
-    <div class="section-header text-center">
+    <div class="section-header">
+      <p class="section-kicker">Technical path</p>
       <h2>Processing <span class="text-highlight">Pipeline</span></h2>
+      <p class="section-subtitle">The landing page exposes the exact assumptions that matter for this app: input size, color channel handling, label conversion, and what happens to transparent background pixels.</p>
     </div>
     
-    <div class="pipeline-wrapper glass-panel">
+    <div class="pipeline-wrapper">
       <div class="pipeline-flow">
         {stages.map((stage, index) => (
           <div class="stage-container">
             <div class="stage-node">
               <div class="stage-icon" set:html={stage.icon}></div>
-              <div class="stage-glow"></div>
             </div>
             <div class="stage-label">{stage.name}</div>
+            <p class="stage-detail">{stage.detail}</p>
             {index < stages.length - 1 && (
               <div class="connector-line">
                 <div class="moving-dot"></div>
@@ -38,8 +40,10 @@ const stages = [
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
         </div>
         <div class="note-content">
+          <h3>Preprocessing contract</h3>
           <p>The model receives a 224 x 224 RGB image. Pixel values are passed in the 0-255 range because preprocessing is included inside the model.</p>
           <p>Transparent background pixels are treated as black during tensor conversion.</p>
+          <p>The highest scoring label is resolved against the app's label file before the result screen is rendered.</p>
         </div>
       </div>
     </div>
@@ -48,11 +52,31 @@ const stages = [
 
 <style>
   .section-header {
-    margin-bottom: var(--space-3xl);
+    max-width: 820px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-kicker {
+    margin: 0 0 var(--space-s);
+    color: var(--color-brand-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .section-subtitle {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: 1.7;
   }
 
   .pipeline-wrapper {
-    padding: var(--space-2xl);
+    padding: var(--space-xl);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
     overflow: hidden;
   }
 
@@ -60,8 +84,8 @@ const stages = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-m);
-    margin-bottom: var(--space-3xl);
+    gap: var(--space-l);
+    margin-bottom: var(--space-2xl);
     position: relative;
   }
 
@@ -69,7 +93,8 @@ const stages = [
     .pipeline-flow {
       flex-direction: row;
       justify-content: space-between;
-      gap: 0;
+      align-items: flex-start;
+      gap: var(--space-s);
     }
   }
 
@@ -80,16 +105,17 @@ const stages = [
     position: relative;
     z-index: 2;
     flex: 1;
-    min-width: 120px;
+    min-width: 0;
+    width: 100%;
   }
 
   .stage-node {
     position: relative;
     width: 64px;
     height: 64px;
-    background: var(--color-bg-base);
+    background: var(--color-bg-field);
     border: 2px solid var(--color-brand-primary);
-    border-radius: 50%;
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +124,6 @@ const stages = [
   }
 
   .stage-icon {
-    z-index: 2;
     color: var(--color-brand-primary);
     display: flex;
     align-items: center;
@@ -110,46 +135,43 @@ const stages = [
     height: 24px;
   }
 
-  .stage-glow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: var(--color-brand-primary);
-    filter: blur(15px);
-    opacity: 0.2;
-    z-index: 1;
-    border-radius: 50%;
-    transition: opacity 0.3s ease;
-  }
-
-  .stage-node:hover .stage-glow {
-    opacity: 0.5;
-  }
-
   .stage-label {
     text-align: center;
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: 700;
     color: var(--color-text-primary);
+    line-height: 1.35;
+    min-height: 38px;
+    max-width: 148px;
+  }
+
+  .stage-detail {
+    max-width: 160px;
+    min-height: 72px;
+    margin: var(--space-xs) 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    line-height: 1.45;
+    text-align: center;
   }
 
   .connector-line {
     position: absolute;
-    background: var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-brand-primary) 32%, var(--color-border-subtle));
     z-index: 1;
   }
 
   .moving-dot {
     position: absolute;
     background: var(--color-brand-primary);
-    box-shadow: 0 0 10px var(--color-brand-primary);
+    box-shadow: 0 0 8px var(--color-brand-primary);
   }
 
   @media (max-width: 991px) {
     .connector-line {
       width: 2px;
-      height: 40px;
-      bottom: -40px;
+      height: 44px;
+      bottom: -34px;
       left: 50%;
       transform: translateX(-50%);
     }
@@ -165,9 +187,9 @@ const stages = [
   @media (min-width: 992px) {
     .connector-line {
       height: 2px;
-      width: calc(100% - 64px);
+      width: calc(100% - 76px);
       top: 32px;
-      left: calc(50% + 32px);
+      left: calc(50% + 38px);
     }
     .moving-dot {
       height: 2px;
@@ -195,8 +217,8 @@ const stages = [
   .technical-notes {
     display: flex;
     gap: var(--space-m);
-    background: rgba(16, 185, 129, 0.05);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: var(--color-bg-field);
+    border: 1px solid var(--color-border-hover);
     padding: var(--space-l);
     border-radius: var(--radius-lg);
     align-items: flex-start;
@@ -218,6 +240,13 @@ const stages = [
     margin-bottom: var(--space-s);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
+    line-height: 1.6;
+  }
+
+  .note-content h3 {
+    margin: 0 0 var(--space-s);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
   }
 
   .note-content p:last-child {

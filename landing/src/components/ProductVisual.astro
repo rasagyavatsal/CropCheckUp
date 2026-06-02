@@ -1,9 +1,8 @@
 ---
 ---
-<div class="mobile-frame glass-panel">
+<div class="product-visual mobile-frame glass-panel">
   <div class="mobile-notch"></div>
   <div class="video-container">
-    <!-- Replace src with your actual video path, e.g., src="/demo-video.mp4" -->
     <video 
       class="app-video"
       autoplay 
@@ -14,13 +13,17 @@
       <source src="" type="video/mp4" />
     </video>
     
-    <!-- This fallback text is visible when no video is loaded -->
     <div class="video-fallback">
+      <div class="scan-line"></div>
+      <div class="fallback-header">
+        <span class="status-dot"></span>
+        CropCheckUp demo
+      </div>
       <div class="play-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </div>
       <p>Video Placeholder</p>
-      <p class="small-text">Add your video file in the src attribute</p>
+      <p class="small-text">Mobile walkthrough video slot</p>
     </div>
   </div>
 </div>
@@ -38,7 +41,7 @@
     border: 2px solid var(--color-border-subtle);
     box-shadow: 
       0 0 0 6px var(--color-border-hover),
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 25px 50px -12px rgba(23, 32, 27, 0.34),
       inset 0 0 0 2px var(--color-border-subtle);
     z-index: 1;
     transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
@@ -68,7 +71,11 @@
     height: 100%;
     border-radius: 30px;
     overflow: hidden;
-    background: var(--color-bg-base);
+    background:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px),
+      var(--color-bg-field);
+    background-size: 28px 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,13 +85,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background-color: rgba(16, 185, 129, 0.1);
+    background-color: rgba(31, 122, 77, 0.08);
     position: relative;
     z-index: 2;
   }
 
-  /* When the video has no source, it might not render over the fallback. 
-     This ensures the fallback is visible beneath or over the blank video */
   .video-fallback {
     position: absolute;
     inset: 0;
@@ -96,7 +101,48 @@
     padding: var(--space-m);
     color: var(--color-text-secondary);
     pointer-events: none;
-    z-index: 1;
+    z-index: 3;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 24%;
+    height: 2px;
+    background: var(--color-brand-primary);
+    box-shadow: 0 0 18px var(--color-brand-primary);
+    opacity: 0.78;
+    animation: scanPlaceholder 2.8s infinite ease-in-out;
+  }
+
+  @keyframes scanPlaceholder {
+    0%, 100% { transform: translateY(-74px); opacity: 0; }
+    18%, 82% { opacity: 0.78; }
+    50% { transform: translateY(150px); }
+  }
+
+  .fallback-header {
+    position: absolute;
+    top: 58px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-success);
+    box-shadow: 0 0 12px var(--color-success);
   }
 
   .play-icon {
@@ -118,5 +164,13 @@
     font-size: var(--font-size-xs);
     color: var(--color-text-muted) !important;
     margin-top: var(--space-xs) !important;
+  }
+
+  @media (max-width: 480px) {
+    .mobile-frame {
+      width: min(280px, 88vw);
+      height: min(580px, 132vw);
+      transform: perspective(1000px) rotateY(-6deg) rotateX(4deg);
+    }
   }
 </style>

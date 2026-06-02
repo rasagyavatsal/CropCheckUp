@@ -2,51 +2,78 @@
 import ProductVisual from './ProductVisual.astro';
 ---
 <section id="hero" class="section hero">
-  <div class="hero-bg-glow"></div>
   <div class="container hero-content">
     <div class="hero-text">
-      <div class="badge glass-panel">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sparkle-icon"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-        AI-Powered Plant Care
-      </div>
-      <h1 class="hero-title">
-        Diagnose Crop Diseases with <span class="text-highlight">AI Precision</span>
-      </h1>
+      <p class="hero-kicker">Leaf image screening for crop disease triage</p>
+      <h1 class="hero-title">CropCheckUp</h1>
+      <p class="hero-subheading">
+        AI-assisted crop leaf disease detection from camera or gallery images.
+      </p>
       <p class="hero-description">
-        CropCheckUp analyzes leaf images, removes backgrounds, and runs advanced machine learning to predict crop health. Get instant diagnosis and management guidance.
+        CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.
       </p>
       <div class="hero-ctas">
-        <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn btn-primary cta-main">
+        <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" class="btn btn-primary cta-main" target="_blank" rel="noopener noreferrer">
           View Kaggle Notebook
         </a>
-        <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" class="btn btn-outline cta-secondary">
-          Explore Dataset
+        <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" class="btn btn-outline cta-secondary" target="_blank" rel="noopener noreferrer">
+          View Dataset
         </a>
       </div>
+      <dl class="hero-metrics" aria-label="CropCheckUp model facts">
+        <div>
+          <dt>68</dt>
+          <dd>crop and condition labels</dd>
+        </div>
+        <div>
+          <dt>224 x 224</dt>
+          <dd>image input prepared for inference</dd>
+        </div>
+        <div>
+          <dt>0-255</dt>
+          <dd>RGB tensor range handled by the model</dd>
+        </div>
+      </dl>
     </div>
     <div class="hero-visual-wrapper">
-      <div class="visual-glow"></div>
       <ProductVisual />
+      <div class="visual-notes" aria-label="App workflow summary">
+        <div class="note-item">
+          <span class="note-label">Input</span>
+          <span>Camera frame or gallery image</span>
+        </div>
+        <div class="note-item">
+          <span class="note-label">Preprocess</span>
+          <span>Leaf isolated before resize</span>
+        </div>
+        <div class="note-item">
+          <span class="note-label">Result</span>
+          <span>Crop, condition, confidence, guidance</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .hero {
-    min-height: 90vh;
+    min-height: 82svh;
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
+    background: var(--color-bg-base);
   }
-  
-  .hero-bg-glow {
+
+  .hero::before {
+    content: '';
     position: absolute;
-    top: -10%;
-    left: -10%;
-    width: 50vw;
-    height: 50vw;
-    z-index: 0;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.34;
     pointer-events: none;
   }
   
@@ -61,39 +88,46 @@ import ProductVisual from './ProductVisual.astro';
   
   @media (min-width: 992px) {
     .hero-content {
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
       gap: var(--space-3xl);
     }
   }
-  
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--color-brand-primary);
-    margin-bottom: var(--space-l);
-    border: 1px solid var(--color-border-hover);
+
+  .hero-text {
+    max-width: 720px;
   }
   
-  .sparkle-icon {
-    opacity: 0.8;
+  .hero-kicker {
+    margin: 0 0 var(--space-s);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-brand-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0;
   }
   
   .hero-title {
-    margin-bottom: var(--space-m);
-    line-height: 1.1;
+    margin-bottom: var(--space-s);
+    font-size: clamp(3.25rem, 8vw, 6.6rem);
+    line-height: 0.95;
+  }
+
+  .hero-subheading {
+    margin: 0 0 var(--space-m);
+    max-width: 620px;
+    color: var(--color-text-primary);
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    line-height: 1.35;
+    font-family: var(--font-display);
+    font-weight: 500;
   }
   
   .hero-description {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-xl);
-    max-width: 600px;
-    line-height: 1.8;
+    margin: 0 0 var(--space-xl);
+    max-width: 640px;
+    line-height: 1.75;
   }
   
   .hero-ctas {
@@ -103,40 +137,107 @@ import ProductVisual from './ProductVisual.astro';
   }
   
   .cta-main, .cta-secondary {
-    padding: 1rem 2rem;
-    font-size: var(--font-size-lg);
+    min-height: 48px;
+    padding: 0.85rem 1.25rem;
+  }
+
+  .hero-metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-s);
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+  }
+
+  @media (min-width: 640px) {
+    .hero-metrics {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .hero-metrics div {
+    padding: var(--space-m);
+    background: color-mix(in srgb, var(--color-bg-raised) 84%, transparent);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+  }
+
+  .hero-metrics dt {
+    margin-bottom: var(--space-xs);
+    color: var(--color-brand-primary);
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+  }
+
+  .hero-metrics dd {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.35;
   }
   
   .hero-visual-wrapper {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-l);
     justify-content: center;
     align-items: center;
   }
-  
-  .visual-glow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    filter: blur(40px);
-    z-index: 0;
+
+  .visual-notes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-s);
+    width: min(100%, 360px);
+    margin: 0 auto;
+  }
+
+  .note-item {
+    display: grid;
+    grid-template-columns: 94px 1fr;
+    gap: var(--space-s);
+    align-items: center;
+    padding: var(--space-s) var(--space-m);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .note-label {
+    color: var(--color-brand-secondary);
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+
+  @media (min-width: 1180px) {
+    .visual-notes {
+      position: absolute;
+      right: -0.5rem;
+      bottom: 1.5rem;
+      width: 280px;
+      z-index: 3;
+    }
   }
   
   @media (max-width: 768px) {
+    .hero {
+      padding-top: var(--space-2xl);
+    }
+
     .hero-text {
-      text-align: center;
-    }
-    
-    .badge {
-      margin: 0 auto var(--space-l);
-    }
-    
-    .hero-description {
-      margin: 0 auto var(--space-xl);
+      text-align: left;
     }
     
     .hero-ctas {
-      justify-content: center;
+      flex-direction: column;
+    }
+
+    .cta-main, .cta-secondary {
+      width: 100%;
     }
   }
 </style>

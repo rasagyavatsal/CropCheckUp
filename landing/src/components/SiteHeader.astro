@@ -10,10 +10,11 @@ import ThemeToggle from './ThemeToggle.astro';
       <span class="logo-text">Crop<span class="text-highlight">CheckUp</span></span>
     </div>
     <nav class="main-nav">
-      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#how-it-works" class="nav-link">Workflow</a>
       <a href="#pipeline" class="nav-link">Pipeline</a>
-      <a href="#model-output" class="nav-link">Model Output</a>
+      <a href="#model-output" class="nav-link">Output</a>
       <a href="#dataset" class="nav-link">Dataset</a>
+      <a href="#limitations" class="nav-link">Limits</a>
     </nav>
     <div class="header-actions">
       <ThemeToggle />
@@ -29,7 +30,8 @@ import ThemeToggle from './ThemeToggle.astro';
     margin: 1rem auto;
     width: calc(100% - 2rem);
     max-width: var(--section-width);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(23, 32, 27, 0.08);
   }
   
   .header-container {
@@ -58,7 +60,7 @@ import ThemeToggle from './ThemeToggle.astro';
 
   .main-nav {
     display: flex;
-    gap: 2rem;
+    gap: 1.25rem;
     align-items: center;
   }
 
@@ -80,7 +82,6 @@ import ThemeToggle from './ThemeToggle.astro';
     background: var(--color-brand-primary);
     transition: width 0.3s ease;
     border-radius: 2px;
-    box-shadow: 0 0 8px var(--color-brand-primary);
   }
 
   .nav-link:hover {

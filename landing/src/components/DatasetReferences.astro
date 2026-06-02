@@ -2,39 +2,48 @@
 ---
 <section id="dataset" class="section">
   <div class="container">
-    <div class="section-header text-center">
+    <div class="section-header">
+      <p class="section-kicker">Project evidence</p>
       <h2>Resources & <span class="text-highlight">Datasets</span></h2>
-      <p class="section-subtitle">Explore the data and code powering CropCheckUp.</p>
+      <p class="section-subtitle">The model development workflow is documented in the Kaggle notebook. The dataset used for CropCheckUp experiments and training is available on Kaggle.</p>
     </div>
     
     <div class="resources-grid">
       <a href="https://www.kaggle.com/code/rasagyavatsal/cropcheckup" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
-        <div class="card-bg-glow glow-blue"></div>
         <div class="resource-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
         </div>
         <div class="resource-content">
           <h3>Kaggle Notebook</h3>
-          <p>Deep dive into the model development workflow, architecture decisions, and experimentation process.</p>
+          <p>Model development workflow and experimentation.</p>
+          <ul class="resource-list">
+            <li>Training and validation flow</li>
+            <li>Model export assumptions</li>
+            <li>Notebook-level experiment trace</li>
+          </ul>
         </div>
         <div class="resource-action">
           <span class="action-text">View Code</span>
-          <span class="arrow">→</span>
+          <span class="arrow">-&gt;</span>
         </div>
       </a>
 
       <a href="https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset" target="_blank" rel="noopener noreferrer" class="resource-card glass-panel">
-        <div class="card-bg-glow glow-green"></div>
         <div class="resource-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
         </div>
         <div class="resource-content">
           <h3>CropCheckUp Dataset</h3>
-          <p>Access the comprehensive image dataset used for training and validating the crop disease classification model.</p>
+          <p>Image dataset used for CropCheckUp experiments and training.</p>
+          <ul class="resource-list">
+            <li>Crop and condition image labels</li>
+            <li>Training data reference</li>
+            <li>Dataset source for reproducibility</li>
+          </ul>
         </div>
         <div class="resource-action">
           <span class="action-text">Download Data</span>
-          <span class="arrow">→</span>
+          <span class="arrow">-&gt;</span>
         </div>
       </a>
     </div>
@@ -43,19 +52,30 @@
 
 <style>
   .section-header {
-    margin-bottom: var(--space-3xl);
+    max-width: 820px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-kicker {
+    margin: 0 0 var(--space-s);
+    color: var(--color-brand-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0;
   }
   
   .section-subtitle {
-    font-size: var(--font-size-xl);
+    margin: 0;
+    font-size: var(--font-size-lg);
     color: var(--color-text-secondary);
+    line-height: 1.7;
   }
 
   .resources-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-l);
-    max-width: 900px;
     margin: 0 auto;
   }
 
@@ -71,38 +91,17 @@
     padding: var(--space-xl);
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     text-decoration: none;
     border: 1px solid var(--color-border-subtle);
-  }
-
-  .card-bg-glow {
-    position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(50px);
-    opacity: 0.2;
-    transition: opacity 0.4s ease;
-  }
-
-  .glow-blue {
-    background: #3b82f6;
-  }
-
-  .glow-green {
-    background: #10b981;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-raised);
   }
 
   .resource-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-4px);
     border-color: var(--color-border-hover);
-  }
-
-  .resource-card:hover .card-bg-glow {
-    opacity: 0.5;
+    box-shadow: var(--shadow-glass);
   }
 
   .resource-icon {
@@ -112,10 +111,6 @@
     color: var(--color-brand-primary);
   }
   
-  .glow-blue + .resource-icon {
-    color: #3b82f6;
-  }
-
   .resource-content {
     flex: 1;
     position: relative;
@@ -134,6 +129,32 @@
     font-size: var(--font-size-sm);
     line-height: 1.6;
     margin: 0;
+  }
+
+  .resource-list {
+    display: grid;
+    gap: var(--space-s);
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resource-list li {
+    display: flex;
+    gap: var(--space-s);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+  }
+
+  .resource-list li::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--color-brand-secondary);
   }
 
   .resource-action {
