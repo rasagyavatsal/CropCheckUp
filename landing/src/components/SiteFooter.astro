@@ -33,6 +33,10 @@
     
     <div class="footer-bottom">
       <p class="copyright">© {new Date().getFullYear()} CropCheckUp. AI-assisted crop screening project.</p>
+      <p class="license-summary">
+        <a href="https://github.com/rasagyavatsal/CropCheckUp/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Code: Apache-2.0</a>. 
+        <a href="https://github.com/rasagyavatsal/CropCheckUp/blob/main/DATASET_LICENSE.md" target="_blank" rel="noopener noreferrer">Model/data: CC BY-NC-SA 4.0 non-commercial</a>.
+      </p>
     </div>
   </div>
 </footer>
@@ -135,5 +139,22 @@
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
     margin: 0;
+  }
+
+  .license-summary {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin: var(--space-s) 0 0;
+  }
+
+  .license-summary a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .license-summary a:hover {
+    color: var(--color-brand-primary);
+    text-decoration: underline;
   }
 </style>

@@ -1,43 +1,59 @@
-# Astro Starter Kit: Minimal
+# CropCheckUp Landing Site
+
+This directory contains the source code for the public-facing static landing site for the CropCheckUp project.
+
+## Purpose
+
+The landing site serves as the primary informational page for the CropCheckUp application. It provides an overview of the project, how it works, limitations, and links to the dataset, Kaggle notebook, and GitHub repository. It acts as the public frontend matching the repository's mixed-license, non-commercial model/dataset status.
+
+## Requirements
+
+- Node.js `>=22.12.0`
+
+## Setup
+
+Install dependencies using:
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Development
 
-## 🚀 Project Structure
+Start the local development server:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Validation
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Before committing, run the following commands to ensure code quality and build success:
 
-Any static assets, like images, can be placed in the `public/` directory.
+```sh
+npm run check
+npm run build
+npm run lint
+```
 
-## 🧞 Commands
+## Source Layout
 
-All commands are run from the root of the project, from a terminal:
+- `src/components/` - Reusable Astro and UI components.
+- `src/layouts/` - Page layouts.
+- `src/pages/` - Application routes and pages.
+- `src/styles/` - Global CSS and styling.
+- `public/` - Static assets like images and icons.
+- `tests/` - Playwright end-to-end tests.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Deployment
 
-## 👀 Want to learn more?
+This site is built using [Astro](https://astro.build). The output is a static site (`npm run build`) which can be deployed to any static hosting provider (e.g., GitHub Pages, Vercel, Netlify).
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Project Links
+
+For more details on the main project, please refer to:
+
+- [Main README](../README.md)
+- [Model Card](../MODEL_CARD.md)
+- [Dataset License](../DATASET_LICENSE.md)
+- [Attribution](../ATTRIBUTION.md)

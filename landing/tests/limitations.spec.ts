@@ -20,7 +20,8 @@ test('Limitations section contains the 4 correct bullet points', async ({ page }
     'Use a clear image of one leaf.',
     'Avoid blur, shadows, and cluttered backgrounds.',
     'Confirm serious crop issues with an agriculture expert.',
-    'The app can only classify supported labels.'
+    'The app can only classify supported labels.',
+    'Bundled model and dataset are for non-commercial educational/research use.'
   ];
 
   for (const bullet of bullets) {
