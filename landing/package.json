@@ -1,5 +1,14 @@
 {
-  "name": "landing",
+  "name": "cropcheckup-landing",
+  "private": true,
+  "description": "Astro landing site for CropCheckUp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rasagyavatsal/CropCheckUp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rasagyavatsal/CropCheckUp/issues"
+  },
   "type": "module",
   "version": "0.0.1",
   "engines": {
