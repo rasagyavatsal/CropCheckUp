@@ -4,7 +4,6 @@ import '../ui/tokens/typography.dart';
 import '../ui/tokens/shadow_tokens.dart';
 import '../ui/theme/camera_theme.dart';
 
-
 /// Semi‑transparent overlay drawn on top of the camera preview.
 ///
 /// Displays a centred target rectangle with rounded corners and four decorative
@@ -20,7 +19,8 @@ class CameraOverlay extends StatelessWidget {
       builder: (context, constraints) {
         final boxSize = constraints.maxWidth * cameraTheme.frameRatio;
         final left = (constraints.maxWidth - boxSize) / 2;
-        final top = (constraints.maxHeight - boxSize) / cameraTheme.framePosition;
+        final top =
+            (constraints.maxHeight - boxSize) / cameraTheme.framePosition;
 
         return Stack(
           children: [
@@ -40,26 +40,64 @@ class CameraOverlay extends StatelessWidget {
               top: top,
               width: boxSize,
               height: boxSize,
-              child: CustomPaint(
-                painter: _CornerBracketPainter(
-                  stroke: cameraTheme.stroke,
-                  glow: cameraTheme.glow,
-                  cornerLength: cameraTheme.cornerLength,
-                  cornerRadius: cameraTheme.cornerRadius, // or a derived inner radius, but we use cornerRadius to avoid magic numbers
-                ),
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(boxSize, boxSize),
+                    painter: _CornerBracketPainter(
+                      stroke: cameraTheme.stroke,
+                      glow: cameraTheme.glow,
+                      cornerLength: cameraTheme.cornerLength,
+                      cornerRadius: cameraTheme.cornerRadius,
+                    ),
+                  ),
+                  Positioned(
+                    left: 18,
+                    right: 18,
+                    top: boxSize * 0.48,
+                    child: Container(
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: cameraTheme.stroke.color.withValues(alpha: 0.82),
+                        boxShadow: [
+                          BoxShadow(
+                            color: cameraTheme.stroke.color.withValues(
+                              alpha: 0.45,
+                            ),
+                            blurRadius: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            // Instructional text
             Positioned(
-              left: 0,
-              right: 0,
+              left: 24,
+              right: 24,
               top: top + boxSize + cameraTheme.instructionTextSpacing,
-              child: Text(
-                'Centre the leaf inside the frame',
-                textAlign: TextAlign.center,
-                style: context.typography.body.copyWith(
-                  color: cameraTheme.instructionTextColor,
-                  shadows: ShadowTokens.high,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.42),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.16),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  child: Text(
+                    'One leaf inside frame • steady hand • bright light',
+                    textAlign: TextAlign.center,
+                    style: context.typography.label.copyWith(
+                      color: cameraTheme.instructionTextColor,
+                      shadows: ShadowTokens.high,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -90,10 +128,10 @@ class _OverlayPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = scrimColor;
     final outer = Path()..addRect(Offset.zero & size);
-    final inner = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(rect, Radius.circular(cornerRadius)),
-      );
+    final inner =
+        Path()..addRRect(
+          RRect.fromRectAndRadius(rect, Radius.circular(cornerRadius)),
+        );
     final combined = Path.combine(PathOperation.difference, outer, inner);
     canvas.drawPath(combined, paint);
   }
@@ -121,18 +159,21 @@ class _CornerBracketPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = stroke.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke.width
-      ..strokeCap = StrokeCap.round;
+    final paint =
+        Paint()
+          ..color = stroke.color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = stroke.width
+          ..strokeCap = StrokeCap.round;
 
-    final glowPaint = Paint()
-      ..color = glow.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = glow.spreadRadius > 0 ? glow.spreadRadius : stroke.width * 2
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, glow.blurRadius)
-      ..strokeCap = StrokeCap.round;
+    final glowPaint =
+        Paint()
+          ..color = glow.color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth =
+              glow.spreadRadius > 0 ? glow.spreadRadius : stroke.width * 2
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, glow.blurRadius)
+          ..strokeCap = StrokeCap.round;
 
     final len = cornerLength;
     final r = cornerRadius;
@@ -149,7 +190,10 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(0, len)
         ..lineTo(0, r)
-        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, 0) : Offset.zero, radius: Radius.circular(r))
+        ..arcToPoint(
+          Radius.circular(r) != Radius.zero ? Offset(r, 0) : Offset.zero,
+          radius: Radius.circular(r),
+        )
         ..lineTo(len, 0),
     );
     // Top‑right
@@ -157,7 +201,12 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(size.width - len, 0)
         ..lineTo(size.width - r, 0)
-        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(size.width, r) : Offset(size.width, 0), radius: Radius.circular(r))
+        ..arcToPoint(
+          Radius.circular(r) != Radius.zero
+              ? Offset(size.width, r)
+              : Offset(size.width, 0),
+          radius: Radius.circular(r),
+        )
         ..lineTo(size.width, len),
     );
     // Bottom‑left
@@ -165,7 +214,13 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(0, size.height - len)
         ..lineTo(0, size.height - r)
-        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(r, size.height) : Offset(0, size.height), radius: Radius.circular(r), clockwise: false)
+        ..arcToPoint(
+          Radius.circular(r) != Radius.zero
+              ? Offset(r, size.height)
+              : Offset(0, size.height),
+          radius: Radius.circular(r),
+          clockwise: false,
+        )
         ..lineTo(len, size.height),
     );
     // Bottom‑right
@@ -173,8 +228,13 @@ class _CornerBracketPainter extends CustomPainter {
       Path()
         ..moveTo(size.width - len, size.height)
         ..lineTo(size.width - r, size.height)
-        ..arcToPoint(Radius.circular(r) != Radius.zero ? Offset(size.width, size.height - r) : Offset(size.width, size.height),
-            radius: Radius.circular(r), clockwise: false)
+        ..arcToPoint(
+          Radius.circular(r) != Radius.zero
+              ? Offset(size.width, size.height - r)
+              : Offset(size.width, size.height),
+          radius: Radius.circular(r),
+          clockwise: false,
+        )
         ..lineTo(size.width, size.height - len),
     );
   }

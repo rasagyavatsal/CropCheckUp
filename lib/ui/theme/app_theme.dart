@@ -33,30 +33,47 @@ class AppTheme {
     required SemanticColors tokens,
   }) {
     final typography = AppTypography.inter(color: tokens.textPrimary);
-    final onPrimaryColor = brightness == Brightness.light ? tokens.raisedSurface : tokens.background;
-    
+    final onPrimaryColor =
+        brightness == Brightness.light
+            ? tokens.raisedSurface
+            : tokens.background;
+
     const spacing = SpacingTokens();
     const radius = RadiusTokens();
-    
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       extensions: <ThemeExtension<dynamic>>[
         tokens,
         typography,
-        brightness == Brightness.light ? GradientTokens.light : GradientTokens.dark,
+        brightness == Brightness.light
+            ? GradientTokens.light
+            : GradientTokens.dark,
         const AppLayoutTheme(),
-        brightness == Brightness.light ? CameraTheme.light(tokens.cameraScrim) : CameraTheme.dark(tokens.cameraScrim),
-        brightness == Brightness.light 
-            ? DiagnosisStatusTheme.light(tokens.success, tokens.danger, tokens.warning, tokens.mutedText)
-            : DiagnosisStatusTheme.dark(tokens.success, tokens.danger, tokens.warning, tokens.mutedText),
+        brightness == Brightness.light
+            ? CameraTheme.light(tokens.cameraScrim)
+            : CameraTheme.dark(tokens.cameraScrim),
+        brightness == Brightness.light
+            ? DiagnosisStatusTheme.light(
+              tokens.success,
+              tokens.danger,
+              tokens.warning,
+              tokens.mutedText,
+            )
+            : DiagnosisStatusTheme.dark(
+              tokens.success,
+              tokens.danger,
+              tokens.warning,
+              tokens.mutedText,
+            ),
       ],
       colorScheme: ColorScheme(
         brightness: brightness,
         primary: tokens.brand,
         onPrimary: onPrimaryColor,
-        secondary: tokens.warning,
-        onSecondary: tokens.textPrimary,
+        secondary: tokens.brandSecondary,
+        onSecondary: onPrimaryColor,
         error: tokens.danger,
         onError: onPrimaryColor,
         surface: tokens.surface,
@@ -94,9 +111,12 @@ class AppTheme {
           foregroundColor: onPrimaryColor,
           elevation: ElevationTokens.low,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.xl),
+            borderRadius: BorderRadius.circular(radius.l),
           ),
-          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.l,
+            vertical: spacing.m,
+          ),
           textStyle: typography.button,
         ),
       ),
@@ -105,9 +125,12 @@ class AppTheme {
           backgroundColor: tokens.brand,
           foregroundColor: onPrimaryColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.xl),
+            borderRadius: BorderRadius.circular(radius.l),
           ),
-          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.l,
+            vertical: spacing.m,
+          ),
           textStyle: typography.button,
         ),
       ),
@@ -116,9 +139,12 @@ class AppTheme {
           foregroundColor: tokens.brand,
           side: BorderSide(color: tokens.strongBorder),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.xl),
+            borderRadius: BorderRadius.circular(radius.l),
           ),
-          padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.l,
+            vertical: spacing.m,
+          ),
           textStyle: typography.button,
         ),
       ),
@@ -126,9 +152,12 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: tokens.brand,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.xl),
+            borderRadius: BorderRadius.circular(radius.l),
           ),
-          padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.m,
+            vertical: spacing.s,
+          ),
           textStyle: typography.button,
         ),
       ),

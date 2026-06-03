@@ -7,6 +7,7 @@ void main() {
     test('provides light mode semantic colors', () {
       final colors = SemanticColors.light;
       expect(colors.brand, isA<Color>());
+      expect(colors.brandSecondary, isA<Color>());
       expect(colors.background, isA<Color>());
       expect(colors.surface, isA<Color>());
       expect(colors.raisedSurface, isA<Color>());
@@ -25,7 +26,8 @@ void main() {
 
     test('provides dark mode semantic colors', () {
       final colors = SemanticColors.dark;
-      expect(colors.brand, const Color(0xFF006C4C));
+      expect(colors.brand, const Color(0xFF5BB07E));
+      expect(colors.brandSecondary, const Color(0xFF6DAED6));
       expect(colors.background, isA<Color>());
       expect(colors.surface, isA<Color>());
       expect(colors.raisedSurface, isA<Color>());
@@ -34,7 +36,7 @@ void main() {
       expect(colors.mutedText, isA<Color>());
       expect(colors.subtleBorder, isA<Color>());
       expect(colors.strongBorder, isA<Color>());
-      expect(colors.success, const Color(0xFF006C4C));
+      expect(colors.success, const Color(0xFF5BB07E));
       expect(colors.warning, isA<Color>());
       expect(colors.danger, isA<Color>());
       expect(colors.cameraScrim, isA<Color>());
@@ -44,12 +46,13 @@ void main() {
 
     test('ThemeExtension functionality', () {
       final colors = SemanticColors.light;
-      
+
       // copyWith
       final copiedColors = colors.copyWith(brand: Colors.red);
       expect(copiedColors.brand, Colors.red);
+      expect(copiedColors.brandSecondary, colors.brandSecondary);
       expect(copiedColors.background, colors.background); // Rest remains same
-      
+
       // lerp
       final darkColors = SemanticColors.dark;
       final lerped = colors.lerp(darkColors, 0.5) as SemanticColors;

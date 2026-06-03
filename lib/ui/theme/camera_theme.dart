@@ -45,28 +45,45 @@ class CameraTheme extends ThemeExtension<CameraTheme> {
       framePosition: framePosition ?? this.framePosition,
       stroke: stroke ?? this.stroke,
       glow: glow ?? this.glow,
-      captureControlStyling: captureControlStyling ?? this.captureControlStyling,
+      captureControlStyling:
+          captureControlStyling ?? this.captureControlStyling,
       cornerRadius: cornerRadius ?? this.cornerRadius,
       cornerLength: cornerLength ?? this.cornerLength,
-      instructionTextSpacing: instructionTextSpacing ?? this.instructionTextSpacing,
+      instructionTextSpacing:
+          instructionTextSpacing ?? this.instructionTextSpacing,
       instructionTextColor: instructionTextColor ?? this.instructionTextColor,
     );
   }
 
   @override
-  ThemeExtension<CameraTheme> lerp(ThemeExtension<CameraTheme>? other, double t) {
+  ThemeExtension<CameraTheme> lerp(
+    ThemeExtension<CameraTheme>? other,
+    double t,
+  ) {
     if (other is! CameraTheme) return this;
     return CameraTheme(
       scrim: Color.lerp(scrim, other.scrim, t)!,
       frameRatio: lerpDouble(frameRatio, other.frameRatio, t) ?? frameRatio,
-      framePosition: lerpDouble(framePosition, other.framePosition, t) ?? framePosition,
+      framePosition:
+          lerpDouble(framePosition, other.framePosition, t) ?? framePosition,
       stroke: BorderSide.lerp(stroke, other.stroke, t),
       glow: BoxShadow.lerp(glow, other.glow, t) ?? glow,
-      captureControlStyling: BoxDecoration.lerp(captureControlStyling, other.captureControlStyling, t) ?? captureControlStyling,
-      cornerRadius: lerpDouble(cornerRadius, other.cornerRadius, t) ?? cornerRadius,
-      cornerLength: lerpDouble(cornerLength, other.cornerLength, t) ?? cornerLength,
-      instructionTextSpacing: lerpDouble(instructionTextSpacing, other.instructionTextSpacing, t) ?? instructionTextSpacing,
-      instructionTextColor: Color.lerp(instructionTextColor, other.instructionTextColor, t)!,
+      captureControlStyling:
+          BoxDecoration.lerp(
+            captureControlStyling,
+            other.captureControlStyling,
+            t,
+          ) ??
+          captureControlStyling,
+      cornerRadius:
+          lerpDouble(cornerRadius, other.cornerRadius, t) ?? cornerRadius,
+      cornerLength:
+          lerpDouble(cornerLength, other.cornerLength, t) ?? cornerLength,
+      instructionTextSpacing:
+          lerpDouble(instructionTextSpacing, other.instructionTextSpacing, t) ??
+          instructionTextSpacing,
+      instructionTextColor:
+          Color.lerp(instructionTextColor, other.instructionTextColor, t)!,
     );
   }
 
@@ -74,16 +91,20 @@ class CameraTheme extends ThemeExtension<CameraTheme> {
     scrim: scrimColor,
     frameRatio: 0.72,
     framePosition: 2.5,
-    stroke: const BorderSide(color: Colors.white, width: 4.0),
-    glow: const BoxShadow(color: Color(0x4DFFFFFF), blurRadius: 4.0, spreadRadius: 0.0), // color is white with 0.3 opacity
+    stroke: const BorderSide(color: Color(0xFF5BB07E), width: 3.0),
+    glow: const BoxShadow(
+      color: Color(0x4D5BB07E),
+      blurRadius: 8.0,
+      spreadRadius: 0.0,
+    ),
     captureControlStyling: BoxDecoration(
       color: Colors.white,
       shape: BoxShape.circle,
       border: Border.all(color: Colors.grey.shade300, width: 4.0),
     ),
-    cornerRadius: 24.0, // Used to be 24 and 16, let's use 24 for outer, 16 for inner maybe? The issue says remove magic radii. Let's make it 24.0. Wait, cornerBracket used 16.0. Let's make cornerRadius 24.0 and we can derive inner.
+    cornerRadius: 8.0,
     cornerLength: 32.0,
-    instructionTextSpacing: 32.0,
+    instructionTextSpacing: 20.0,
     instructionTextColor: Colors.white,
   );
 
@@ -91,16 +112,20 @@ class CameraTheme extends ThemeExtension<CameraTheme> {
     scrim: scrimColor,
     frameRatio: 0.72,
     framePosition: 2.5,
-    stroke: const BorderSide(color: Colors.white, width: 4.0),
-    glow: const BoxShadow(color: Color(0x4DFFFFFF), blurRadius: 4.0, spreadRadius: 0.0),
+    stroke: const BorderSide(color: Color(0xFF5BB07E), width: 3.0),
+    glow: const BoxShadow(
+      color: Color(0x4D5BB07E),
+      blurRadius: 8.0,
+      spreadRadius: 0.0,
+    ),
     captureControlStyling: BoxDecoration(
       color: Colors.white,
       shape: BoxShape.circle,
       border: Border.all(color: Colors.grey.shade700, width: 4.0),
     ),
-    cornerRadius: 24.0,
+    cornerRadius: 8.0,
     cornerLength: 32.0,
-    instructionTextSpacing: 32.0,
+    instructionTextSpacing: 20.0,
     instructionTextColor: Colors.white,
   );
 }

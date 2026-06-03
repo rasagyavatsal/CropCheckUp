@@ -23,50 +23,65 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.overline,
   });
 
-  /// Factory constructor to create typography tokens using the Inter font.
+  /// Factory constructor preserving the public API while matching the brand
+  /// type pairing used by the landing page.
   factory AppTypography.inter({Color color = Colors.white}) {
     return AppTypography(
-      display: GoogleFonts.inter(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
+      display: GoogleFonts.outfit(
+        fontSize: 34,
+        fontWeight: FontWeight.w700,
         color: color,
-        letterSpacing: -0.5,
+        height: 1.05,
+        letterSpacing: 0,
       ),
-      headline: GoogleFonts.inter(
+      headline: GoogleFonts.outfit(
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: color,
+        height: 1.15,
+        letterSpacing: 0,
       ),
-      title: GoogleFonts.inter(
-        fontSize: 20,
+      title: GoogleFonts.outfit(
+        fontSize: 19,
         fontWeight: FontWeight.w600,
         color: color,
+        height: 1.2,
+        letterSpacing: 0,
       ),
       body: GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
+        fontSize: 15,
+        fontWeight: FontWeight.w400,
         color: color,
+        height: 1.48,
+        letterSpacing: 0,
       ),
       label: GoogleFonts.inter(
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: FontWeight.w500,
         color: color,
+        height: 1.35,
+        letterSpacing: 0,
       ),
       caption: GoogleFonts.inter(
         fontSize: 12,
-        fontWeight: FontWeight.normal,
-        color: color.withValues(alpha: 0.7), // Assuming caption is usually muted
+        fontWeight: FontWeight.w400,
+        color: color.withValues(alpha: 0.7),
+        height: 1.35,
+        letterSpacing: 0,
       ),
-      button: GoogleFonts.inter(
+      button: GoogleFonts.outfit(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: color,
+        height: 1.2,
+        letterSpacing: 0,
       ),
       overline: GoogleFonts.inter(
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
         color: color.withValues(alpha: 0.6),
-        letterSpacing: 1.5,
+        height: 1.3,
+        letterSpacing: 0,
       ),
     );
   }
@@ -95,8 +110,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
   }
 
   @override
-  AppTypography lerp(
-      covariant ThemeExtension<AppTypography>? other, double t) {
+  AppTypography lerp(covariant ThemeExtension<AppTypography>? other, double t) {
     if (other is! AppTypography) return this;
     return AppTypography(
       display: TextStyle.lerp(display, other.display, t)!,

@@ -6,8 +6,8 @@ import '../models/diagnosis_result.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/diagnosis/result_presentation_view.dart';
 import '../ui/components/layout/app_page_shell.dart';
+import '../ui/components/layout/app_grid_background.dart';
 import '../ui/tokens/spacing_tokens.dart';
-
 
 import '../ui/components/app_components.dart';
 
@@ -29,38 +29,45 @@ class DiagnosisResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const spacing = SpacingTokens();
 
-
     return Stack(
       children: [
         AppPageShell(
           applySafeArea: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Shared App Header
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
-                child: AppScreenHeader(
-                  title: AppCopy.result.title,
-                  leading: AppHeaderAction(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                    onPressed: () => Navigator.pop(context),
+          child: AppGridBackground(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: spacing.l,
+                    vertical: spacing.m,
+                  ),
+                  child: AppScreenHeader(
+                    title: AppCopy.result.title,
+                    leading: AppHeaderAction(
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      tooltip:
+                          MaterialLocalizations.of(context).backButtonTooltip,
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ),
                 ),
-              ),
-              
-              // Scrollable Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(spacing.l, spacing.m, spacing.l, spacing.xxl),
-                  child: ResultPresentationView(
-                    result: result,
-                    imageBytes: imageBytes,
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      spacing.l,
+                      spacing.m,
+                      spacing.l,
+                      spacing.xxl,
+                    ),
+                    child: ResultPresentationView(
+                      result: result,
+                      imageBytes: imageBytes,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

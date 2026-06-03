@@ -46,11 +46,15 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
     }
     return GradientTokens(
       brandHeader: LinearGradient.lerp(brandHeader, other.brandHeader, t)!,
-      cameraOverlay: LinearGradient.lerp(cameraOverlay, other.cameraOverlay, t)!,
-      healthyStatus: LinearGradient.lerp(healthyStatus, other.healthyStatus, t)!,
+      cameraOverlay:
+          LinearGradient.lerp(cameraOverlay, other.cameraOverlay, t)!,
+      healthyStatus:
+          LinearGradient.lerp(healthyStatus, other.healthyStatus, t)!,
       dangerStatus: LinearGradient.lerp(dangerStatus, other.dangerStatus, t)!,
-      neutralStatus: LinearGradient.lerp(neutralStatus, other.neutralStatus, t)!,
-      previewBackdrop: LinearGradient.lerp(previewBackdrop, other.previewBackdrop, t)!,
+      neutralStatus:
+          LinearGradient.lerp(neutralStatus, other.neutralStatus, t)!,
+      previewBackdrop:
+          LinearGradient.lerp(previewBackdrop, other.previewBackdrop, t)!,
     );
   }
 
@@ -58,36 +62,32 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
     brandHeader: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1B5E20), Color(0xFF43A047)],
+      colors: [Color(0xFFFFFFFF), Color(0xFFF5F8F4)],
     ),
     cameraOverlay: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF43A047), Color(0xFF1B5E20)],
+      colors: [Color(0xFF1F7A4D), Color(0xFF0F5F8F)],
     ),
     healthyStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF43A047), Color(0xFF2E7D32)],
+      colors: [Color(0xFF1F7A4D), Color(0xFFEFF7F1)],
     ),
     dangerStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFE53935), Color(0xFFB71C1C)],
+      colors: [Color(0xFFB42318), Color(0xFFFFF2F0)],
     ),
     neutralStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF757575), Color(0xFF424242)],
+      colors: [Color(0xFF0F5F8F), Color(0xFFEEF5ED)],
     ),
     previewBackdrop: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [
-        Colors.black,
-        Color(0x1A43A047), // AppTheme.healthyGreen with 0.1 alpha
-        Colors.black,
-      ],
+      colors: [Color(0xFFFFFFFF), Color(0xFFF5F8F4), Color(0xFFFFFFFF)],
     ),
   );
 
@@ -95,36 +95,32 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
     brandHeader: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF121212), Color(0xFF1E1E1E)], // black to dark gray
+      colors: [Color(0xFF111715), Color(0xFF17221D)],
     ),
     cameraOverlay: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1E1E1E), Color(0xFF121212)],
+      colors: [Color(0xFF1D2A24), Color(0xFF0F5F8F)],
     ),
     healthyStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF006C4C), Color(0xFF2E7D32)],
+      colors: [Color(0xFF1D2A24), Color(0xFF5BB07E)],
     ),
     dangerStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFFFB4AB), Color(0xFFE53935)],
+      colors: [Color(0xFF1D2A24), Color(0xFFFFB4AB)],
     ),
     neutralStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFBFC9C2), Color(0xFF8A938C)],
+      colors: [Color(0xFF1D2A24), Color(0xFF6DAED6)],
     ),
     previewBackdrop: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [
-        Colors.black,
-        Color(0x1A006C4C), // dark semantic success brand with 0.1 alpha
-        Colors.black,
-      ],
+      colors: [Colors.black, Color(0xFF17221D), Color(0xFF111715)],
     ),
   );
 }

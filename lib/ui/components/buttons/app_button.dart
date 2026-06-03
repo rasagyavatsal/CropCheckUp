@@ -69,14 +69,15 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveOnPressed = (isLoading || onPressed == null)
-        ? null
-        : () {
-            AppHaptics.primaryAction();
-            onPressed!();
-          };
+    final effectiveOnPressed =
+        (isLoading || onPressed == null)
+            ? null
+            : () {
+              AppHaptics.primaryAction();
+              onPressed!();
+            };
 
-    Widget child = Text(label);
+    Widget child = Text(label, maxLines: 1, overflow: TextOverflow.ellipsis);
 
     if (isLoading) {
       child = Row(
@@ -94,16 +95,12 @@ class AppButton extends StatelessWidget {
     } else if (icon != null) {
       child = Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 8),
-          child,
-        ],
+        children: [Icon(icon, size: 20), const SizedBox(width: 8), child],
       );
     }
 
     final colors = context.appColors;
-    
+
     Widget button;
     switch (_variant) {
       case AppButtonVariant.primary:
@@ -113,8 +110,10 @@ class AppButton extends StatelessWidget {
         button = ElevatedButton(
           onPressed: effectiveOnPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: colors.surface,
+            backgroundColor: colors.raisedSurface,
             foregroundColor: colors.textPrimary,
+            elevation: 0,
+            side: BorderSide(color: colors.subtleBorder),
           ),
           child: child,
         );
@@ -134,7 +133,7 @@ class AppButton extends StatelessWidget {
           onPressed: effectiveOnPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.danger,
-            foregroundColor: colors.raisedSurface,
+            foregroundColor: colors.background,
           ),
           child: child,
         );

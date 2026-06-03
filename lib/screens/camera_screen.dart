@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../ui/theme/theme_ext.dart';
 
 import '../ui/tokens/spacing_tokens.dart';
+import '../ui/tokens/radius_tokens.dart';
+import '../ui/tokens/typography.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/app_components.dart';
 import '../services/camera_session.dart';
@@ -57,10 +59,7 @@ class _CameraScreenState extends State<CameraScreen> {
     });
 
     try {
-      await Future.wait([
-        _coordinator.init(),
-        _session.start(),
-      ]);
+      await Future.wait([_coordinator.init(), _session.start()]);
     } catch (e) {
       _initError = e.toString();
     } finally {
@@ -112,78 +111,227 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
     const spacing = SpacingTokens();
-
     final colors = context.appColors;
 
     return Stack(
       children: [
         AppPageShell(
           applySafeArea: true,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: spacing.l, vertical: spacing.m),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppScreenHeader(
-                  title: 'Scanner',
-                  leading: AppHeaderAction(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    tooltip: AppCopy.shared.backAction,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  trailing: AppHeaderAction(
-                    icon: Icon(
-                      _session.isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-                      color: _session.isFlashOn ? colors.brand : colors.textPrimary,
+          child: AppGridBackground(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                spacing.l,
+                spacing.m,
+                spacing.l,
+                spacing.l,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppScreenHeader(
+                    title: 'Scanner',
+                    leading: AppHeaderAction(
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      tooltip: AppCopy.shared.backAction,
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
-                    tooltip: _session.isFlashOn
-                        ? AppCopy.camera.semanticFlashOff
-                        : AppCopy.camera.semanticFlashOn,
-                    onPressed: () async {
-                      await _session.toggleFlash();
-                      if (mounted) setState(() {});
-                    },
+                    trailing: AppHeaderAction(
+                      icon: Icon(
+                        _session.isFlashOn
+                            ? Icons.flash_on_rounded
+                            : Icons.flash_off_rounded,
+                        color:
+                            _session.isFlashOn
+                                ? colors.brand
+                                : colors.textPrimary,
+                      ),
+                      tooltip:
+                          _session.isFlashOn
+                              ? AppCopy.camera.semanticFlashOff
+                              : AppCopy.camera.semanticFlashOn,
+                      onPressed: () async {
+                        await _session.toggleFlash();
+                        if (mounted) setState(() {});
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(height: spacing.l),
-                
-                // Camera Preview Area
-                Expanded(
-                  child: AppCard.panel(
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
+                  SizedBox(height: spacing.l),
+                  _CameraStatusStrip(isFlashOn: _session.isFlashOn),
+                  SizedBox(height: spacing.m),
+                  Expanded(
+                    child: AppCard.panel(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
                           AppCameraViewfinder(
                             session: _session,
                             onResume: _bootstrap,
                           ),
                           const CameraOverlay(),
+                          Positioned(
+                            left: spacing.m,
+                            right: spacing.m,
+                            top: spacing.m,
+                            child: _ViewfinderLabel(
+                              label: AppCopy.camera.captureReady,
+                            ),
+                          ),
                         ],
                       ),
+                    ),
                   ),
-                ),
-                
-                SizedBox(height: spacing.l),
-                
-                // Bottom Actions
-                Semantics(
-                  button: true,
-                  label: AppCopy.camera.semanticCaptureAction,
-                  child: AppButton.primary(
-                    isFullWidth: true,
-                    isLoading: _isDiagnosing,
-                    icon: Icons.camera_rounded,
-                    label: _isDiagnosing ? 'Analyzing...' : 'Capture Image',
-                    onPressed: _captureAndDiagnose,
+                  SizedBox(height: spacing.m),
+                  _CapturePanel(
+                    isDiagnosing: _isDiagnosing,
+                    onCapture: _captureAndDiagnose,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
         if (_isDiagnosing)
           AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
       ],
+    );
+  }
+}
+
+class _CameraStatusStrip extends StatelessWidget {
+  final bool isFlashOn;
+
+  const _CameraStatusStrip({required this.isFlashOn});
+
+  @override
+  Widget build(BuildContext context) {
+    const spacing = SpacingTokens();
+    final colors = context.appColors;
+
+    return Container(
+      padding: EdgeInsets.all(spacing.m),
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        border: Border.all(color: colors.subtleBorder),
+        borderRadius: BorderRadius.circular(const RadiusTokens().l),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.eco_rounded, size: 20, color: colors.brand),
+          SizedBox(width: spacing.m),
+          Expanded(
+            child: Text(
+              'Leaf acquisition',
+              style: context.typography.label.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Icon(
+            isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+            size: 18,
+            color: isFlashOn ? colors.brand : colors.mutedText,
+          ),
+          SizedBox(width: spacing.xs),
+          Text(
+            isFlashOn ? 'Flash on' : 'Flash off',
+            style: context.typography.caption.copyWith(color: colors.mutedText),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ViewfinderLabel extends StatelessWidget {
+  final String label;
+
+  const _ViewfinderLabel({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    const spacing = SpacingTokens();
+    final colors = context.appColors;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.46),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+        borderRadius: BorderRadius.circular(const RadiusTokens().l),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.m,
+          vertical: spacing.s,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.center_focus_strong_rounded,
+              size: 16,
+              color: colors.brand,
+            ),
+            SizedBox(width: spacing.s),
+            Flexible(
+              child: Text(
+                label,
+                style: context.typography.label.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CapturePanel extends StatelessWidget {
+  final bool isDiagnosing;
+  final VoidCallback onCapture;
+
+  const _CapturePanel({required this.isDiagnosing, required this.onCapture});
+
+  @override
+  Widget build(BuildContext context) {
+    const spacing = SpacingTokens();
+    final colors = context.appColors;
+
+    return Container(
+      padding: EdgeInsets.all(spacing.m),
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        border: Border.all(color: colors.subtleBorder),
+        borderRadius: BorderRadius.circular(const RadiusTokens().l),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Semantics(
+            button: true,
+            label: AppCopy.camera.semanticCaptureAction,
+            child: AppButton.primary(
+              isFullWidth: true,
+              isLoading: isDiagnosing,
+              icon: Icons.camera_rounded,
+              label: isDiagnosing ? 'Analyzing...' : 'Capture leaf',
+              onPressed: onCapture,
+            ),
+          ),
+          SizedBox(height: spacing.s),
+          Text(
+            'The next step checks the isolated specimen before inference.',
+            style: context.typography.caption.copyWith(color: colors.mutedText),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

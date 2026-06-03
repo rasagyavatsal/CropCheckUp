@@ -37,8 +37,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
               Text(title, style: typography.title),
             ],
           ),
-          if (subtitle != null)
-            Text(subtitle!, style: typography.caption),
+          if (subtitle != null) Text(subtitle!, style: typography.caption),
         ],
       ),
       actions: actions,
@@ -74,7 +73,7 @@ class AppSliverHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final typography = context.typography;
     final colors = context.appColors;
-    
+
     return SliverAppBar(
       expandedHeight: expandedHeight,
       pinned: true,
@@ -82,7 +81,10 @@ class AppSliverHeader extends StatelessWidget {
       actions: actions,
       backgroundColor: colors.surface,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        titlePadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 16.0,
+        ),
         centerTitle: false,
         title: Column(
           mainAxisSize: MainAxisSize.min,
@@ -104,17 +106,18 @@ class AppSliverHeader extends StatelessWidget {
             if (subtitle != null)
               Text(
                 subtitle!,
-                style: typography.caption.copyWith(color: colors.textPrimary.withValues(alpha: 0.7)),
+                style: typography.caption.copyWith(
+                  color: colors.textPrimary.withValues(alpha: 0.7),
+                ),
               ),
           ],
         ),
-        background: backgroundGradient != null
-            ? Container(
-                decoration: BoxDecoration(
-                  gradient: backgroundGradient,
-                ),
-              )
-            : null,
+        background:
+            backgroundGradient != null
+                ? Container(
+                  decoration: BoxDecoration(gradient: backgroundGradient),
+                )
+                : null,
       ),
     );
   }
@@ -175,7 +178,8 @@ class AppStatusHeader extends StatelessWidget {
       icon: statusIcon,
       leading: leading,
       actions: actions,
-      backgroundGradient: isHealthy ? gradients.healthyStatus : gradients.dangerStatus,
+      backgroundGradient:
+          isHealthy ? gradients.healthyStatus : gradients.dangerStatus,
       expandedHeight: 240.0,
     );
   }
@@ -205,15 +209,12 @@ class AppScreenHeader extends StatelessWidget {
     final titleWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (brandMark != null) ...[
-          brandMark!,
-          const SizedBox(width: 8),
-        ],
+        if (brandMark != null) ...[brandMark!, const SizedBox(width: 8)],
         Text(
           title,
-          style: typography.headline.copyWith(
-            color: colors.textPrimary,
-          ),
+          style: typography.title.copyWith(color: colors.textPrimary),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -258,10 +259,11 @@ class AppHeaderAction extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colors.raisedSurface,
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: colors.subtleBorder),
       ),
       child: IconButton(
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
         icon: icon,
         tooltip: tooltip,
         onPressed: onPressed,
@@ -269,4 +271,3 @@ class AppHeaderAction extends StatelessWidget {
     );
   }
 }
-

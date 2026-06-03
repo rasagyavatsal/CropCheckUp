@@ -15,17 +15,14 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.light,
-          home: const Scaffold(
-            body: ResultSummaryCard(result: result),
-          ),
+          home: const Scaffold(body: ResultSummaryCard(result: result)),
         ),
       );
 
       expect(find.text('Crop: Tomato'), findsOneWidget);
       expect(find.text('Late blight'), findsOneWidget);
-      expect(find.text('95%'), findsOneWidget);
+      expect(find.text('95%'), findsWidgets);
       expect(find.text('Disease Detected'), findsOneWidget);
     });
   });
 }
-

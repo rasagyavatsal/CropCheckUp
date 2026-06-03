@@ -28,18 +28,18 @@ class ShadowTokens {
   ];
 
   static List<BoxShadow> panel(Color textPrimary) => [
-        BoxShadow(
-          color: textPrimary.withValues(alpha: 0.03),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ];
+    BoxShadow(
+      color: textPrimary.withValues(alpha: 0.07),
+      blurRadius: 26,
+      offset: const Offset(0, 12),
+    ),
+  ];
 
   static List<BoxShadow> elevated(Color textPrimary) => [
-        BoxShadow(
-          color: textPrimary.withValues(alpha: 0.05),
-          blurRadius: 24,
-          offset: const Offset(0, 12),
-        ),
-      ];
+    BoxShadow(
+      color: textPrimary.withValues(alpha: 0.1),
+      blurRadius: 34,
+      offset: const Offset(0, 18),
+    ),
+  ];
 }

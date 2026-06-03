@@ -22,7 +22,9 @@ class ResultPresentationView extends StatelessWidget {
 
   Widget _buildContent(BuildContext context, String content) {
     if (content.contains('\n')) {
-      return BulletList(items: content.split('\n').where((s) => s.trim().isNotEmpty).toList());
+      return BulletList(
+        items: content.split('\n').where((s) => s.trim().isNotEmpty).toList(),
+      );
     }
     final colors = context.appColors;
     return Text(
@@ -41,28 +43,49 @@ class ResultPresentationView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (imageBytes != null) ...[
-          EvidenceImageCard(imageBytes: imageBytes!),
-          SizedBox(height: spacing.xl),
-        ],
         ResultSummaryCard(result: result),
-        SizedBox(height: spacing.xxl),
+        SizedBox(height: spacing.l),
+        if (imageBytes != null) ...[
+          _ReportSectionLabel(
+            icon: Icons.photo_library_rounded,
+            label: 'Evidence image',
+          ),
+          SizedBox(height: spacing.sm),
+          EvidenceImageCard(imageBytes: imageBytes!),
+          SizedBox(height: spacing.l),
+        ],
+        _ReportSectionLabel(
+          icon:
+              result.isHealthy
+                  ? Icons.shield_rounded
+                  : Icons.assignment_rounded,
+          label: result.isHealthy ? 'Field notes' : 'Action notes',
+        ),
+        SizedBox(height: spacing.sm),
         if (result.isHealthy) ...[
           InfoSection(
             title: AppCopy.result.sectionStatus,
             icon: Icons.info_outline_rounded,
-            content: _buildContent(context, AppCopy.result.healthyConfidence(result.cropName, result.confidencePercent.toString())),
+            content: _buildContent(
+              context,
+              AppCopy.result.healthyConfidence(
+                result.cropName,
+                result.confidencePercent.toString(),
+              ),
+            ),
           ),
-          SizedBox(height: spacing.xl),
+          SizedBox(height: spacing.m),
           InfoSection(
             title: AppCopy.result.sectionHealthyTips,
             icon: Icons.shield_rounded,
-            content: const BulletList(items: [
-              'Maintain proper spacing between plants.',
-              'Use drip irrigation rather than overhead watering.',
-              'Rotate crops each season.',
-              'Monitor periodically for early signs of disease.',
-            ]),
+            content: const BulletList(
+              items: [
+                'Maintain proper spacing between plants.',
+                'Use drip irrigation rather than overhead watering.',
+                'Rotate crops each season.',
+                'Monitor periodically for early signs of disease.',
+              ],
+            ),
           ),
         ] else ...[
           if (result.symptoms != null) ...[
@@ -71,7 +94,7 @@ class ResultPresentationView extends StatelessWidget {
               icon: Icons.visibility_rounded,
               content: _buildContent(context, result.symptoms!),
             ),
-            SizedBox(height: spacing.xl),
+            SizedBox(height: spacing.m),
           ],
           if (result.causes != null) ...[
             InfoSection(
@@ -79,7 +102,7 @@ class ResultPresentationView extends StatelessWidget {
               icon: Icons.biotech_rounded,
               content: _buildContent(context, result.causes!),
             ),
-            SizedBox(height: spacing.xl),
+            SizedBox(height: spacing.m),
           ],
           if (result.management != null) ...[
             InfoSection(
@@ -87,15 +110,50 @@ class ResultPresentationView extends StatelessWidget {
               icon: Icons.medical_services_rounded,
               content: _buildContent(context, result.management!),
             ),
-            SizedBox(height: spacing.xl),
           ],
-          if (result.symptoms == null && result.causes == null && result.management == null)
+          if (result.symptoms == null &&
+              result.causes == null &&
+              result.management == null)
             InfoSection(
               title: AppCopy.result.sectionAbout,
               icon: Icons.info_outline_rounded,
-              content: _buildContent(context, AppCopy.result.diagnosisConfidence(result.cropName, result.diseaseName, result.confidencePercent.toString())),
+              content: _buildContent(
+                context,
+                AppCopy.result.diagnosisConfidence(
+                  result.cropName,
+                  result.diseaseName,
+                  result.confidencePercent.toString(),
+                ),
+              ),
             ),
         ],
+      ],
+    );
+  }
+}
+
+class _ReportSectionLabel extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _ReportSectionLabel({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    const spacing = SpacingTokens();
+    final colors = context.appColors;
+
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: colors.brandSecondary),
+        SizedBox(width: spacing.s),
+        Text(
+          label,
+          style: context.typography.label.copyWith(
+            color: colors.brandSecondary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ],
     );
   }

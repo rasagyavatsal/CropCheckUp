@@ -17,41 +17,31 @@ class AppCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final _CardVariant _variant;
 
-  const AppCard({
-    super.key,
-    this.child,
-    this.padding,
-  })  : _variant = _CardVariant.base,
-        onTap = null,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null,
-        image = null;
+  const AppCard({super.key, this.child, this.padding})
+    : _variant = _CardVariant.base,
+      onTap = null,
+      title = null,
+      subtitle = null,
+      icon = null,
+      statusColor = null,
+      image = null;
 
-  const AppCard.action({
-    super.key,
-    this.child,
-    this.onTap,
-    this.padding,
-  })  : _variant = _CardVariant.action,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null,
-        image = null;
+  const AppCard.action({super.key, this.child, this.onTap, this.padding})
+    : _variant = _CardVariant.action,
+      title = null,
+      subtitle = null,
+      icon = null,
+      statusColor = null,
+      image = null;
 
-  const AppCard.info({
-    super.key,
-    this.child,
-    this.padding,
-  })  : _variant = _CardVariant.info,
-        onTap = null,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null,
-        image = null;
+  const AppCard.info({super.key, this.child, this.padding})
+    : _variant = _CardVariant.info,
+      onTap = null,
+      title = null,
+      subtitle = null,
+      icon = null,
+      statusColor = null,
+      image = null;
 
   const AppCard.status({
     super.key,
@@ -60,10 +50,10 @@ class AppCard extends StatelessWidget {
     this.icon,
     this.statusColor,
     this.padding,
-  })  : _variant = _CardVariant.status,
-        child = null,
-        onTap = null,
-        image = null;
+  }) : _variant = _CardVariant.status,
+       child = null,
+       onTap = null,
+       image = null;
 
   const AppCard.image({
     super.key,
@@ -71,42 +61,36 @@ class AppCard extends StatelessWidget {
     this.child,
     this.onTap,
     this.padding,
-  })  : _variant = _CardVariant.image,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null;
+  }) : _variant = _CardVariant.image,
+       title = null,
+       subtitle = null,
+       icon = null,
+       statusColor = null;
 
-  const AppCard.elevated({
-    super.key,
-    this.child,
-    this.padding,
-  })  : _variant = _CardVariant.elevated,
-        onTap = null,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null,
-        image = null;
+  const AppCard.elevated({super.key, this.child, this.padding})
+    : _variant = _CardVariant.elevated,
+      onTap = null,
+      title = null,
+      subtitle = null,
+      icon = null,
+      statusColor = null,
+      image = null;
 
-  const AppCard.panel({
-    super.key,
-    this.child,
-    this.padding,
-  })  : _variant = _CardVariant.panel,
-        onTap = null,
-        title = null,
-        subtitle = null,
-        icon = null,
-        statusColor = null,
-        image = null;
+  const AppCard.panel({super.key, this.child, this.padding})
+    : _variant = _CardVariant.panel,
+      onTap = null,
+      title = null,
+      subtitle = null,
+      icon = null,
+      statusColor = null,
+      image = null;
 
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<SemanticColors>();
     const spacing = SpacingTokens();
     const radius = RadiusTokens();
-    
+
     Color? backgroundColor = tokens?.raisedSurface;
     List<BoxShadow>? shadows;
     BorderSide? borderSide;
@@ -119,23 +103,36 @@ class AppCard extends StatelessWidget {
       case _CardVariant.base:
       case _CardVariant.image:
       case _CardVariant.panel:
+        if (tokens != null) {
+          borderSide = BorderSide(color: tokens.subtleBorder);
+        }
         break;
       case _CardVariant.action:
         backgroundColor = tokens?.surface;
+        if (tokens != null) {
+          borderSide = BorderSide(color: tokens.subtleBorder);
+        }
         break;
       case _CardVariant.info:
         backgroundColor = tokens?.raisedSurface;
+        if (tokens != null) {
+          borderSide = BorderSide(color: tokens.subtleBorder);
+        }
         break;
       case _CardVariant.elevated:
-        backgroundColor = tokens?.surface;
+        backgroundColor = tokens?.raisedSurface;
         if (tokens != null) {
           shadows = ShadowTokens.elevated(tokens.textPrimary);
+          borderSide = BorderSide(color: tokens.subtleBorder);
         }
         break;
       case _CardVariant.status:
         backgroundColor = tokens?.surface;
         if (statusColor != null) {
-          borderSide = BorderSide(color: statusColor!, width: 2.0);
+          borderSide = BorderSide(
+            color: statusColor!.withValues(alpha: 0.52),
+            width: 1.0,
+          );
         }
         break;
     }
@@ -145,24 +142,26 @@ class AppCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(radius.xl),
+        borderRadius: BorderRadius.circular(radius.l),
         border: borderSide != null ? Border.fromBorderSide(borderSide) : null,
         boxShadow: shadows,
       ),
       clipBehavior: Clip.antiAlias,
-      child: onTap != null
-          ? Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: onTap,
-                child: cardContent,
-              ),
-            )
-          : cardContent,
+      child:
+          onTap != null
+              ? Material(
+                color: Colors.transparent,
+                child: InkWell(onTap: onTap, child: cardContent),
+              )
+              : cardContent,
     );
   }
 
-  Widget _buildContent(BuildContext context, SemanticColors? tokens, SpacingTokens spacing) {
+  Widget _buildContent(
+    BuildContext context,
+    SemanticColors? tokens,
+    SpacingTokens spacing,
+  ) {
     if (_variant == _CardVariant.status) {
       return Padding(
         padding: padding ?? EdgeInsets.all(spacing.m),
@@ -178,9 +177,17 @@ class AppCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (title != null)
-                    Text(title!, style: Theme.of(context).textTheme.titleMedium),
+                    Text(
+                      title!,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   if (subtitle != null)
-                    Text(subtitle!, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: tokens?.textSecondary)),
+                    Text(
+                      subtitle!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: tokens?.textSecondary,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -188,7 +195,7 @@ class AppCard extends StatelessWidget {
         ),
       );
     }
-    
+
     if (_variant == _CardVariant.image) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

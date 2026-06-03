@@ -6,17 +6,14 @@ import 'package:crop_check_up/ui/components/app_components.dart';
 class EvidenceImageCard extends StatelessWidget {
   final Uint8List imageBytes;
 
-  const EvidenceImageCard({
-    super.key,
-    required this.imageBytes,
-  });
+  const EvidenceImageCard({super.key, required this.imageBytes});
 
   @override
   Widget build(BuildContext context) {
     return AppImagePanel(
       imageBytes: imageBytes,
       semanticLabel: AppCopy.result.semanticEvidenceImage,
-      height: 260,
+      height: 220,
     );
   }
 }

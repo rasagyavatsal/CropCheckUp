@@ -29,7 +29,7 @@ void main() {
       expect(appImagePanelFinder, findsOneWidget);
 
       final AppImagePanel panel = tester.widget(appImagePanelFinder);
-      expect(panel.height, equals(260));
+      expect(panel.height, equals(220));
     });
   });
 }

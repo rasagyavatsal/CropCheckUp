@@ -132,7 +132,7 @@ void main() {
       );
       
       final decoration = decoratedBox.decoration as BoxDecoration;
-      expect(decoration.borderRadius, BorderRadius.circular(24.0)); // radius.xl is 24.0
+      expect(decoration.borderRadius, BorderRadius.circular(8.0));
     });
   });
 }

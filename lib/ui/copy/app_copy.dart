@@ -11,7 +11,7 @@ class AppCopy {
 
 class SharedCopy {
   const SharedCopy();
-  
+
   String get backAction => 'Back';
   String get closeAction => 'Close';
 }
@@ -21,16 +21,16 @@ class HomeCopy {
 
   String get initLoading => 'Warming up crop diagnosis models…';
   String get initErrorTitle => 'Failed to load diagnosis models';
-  String get actionCameraTitle => 'Camera';
-  String get actionCameraSubtitle => 'Take a photo of a leaf';
-  String get actionUploadTitle => 'Upload';
-  String get actionUploadSubtitle => 'From gallery';
-  String get tipsTitle => 'Tips for Best Results';
-  String get diagnoseTitle => 'Diagnose Plant';
-  String get footerText => 'v1.0.0 • Powered by TensorFlow Lite';
+  String get actionCameraTitle => 'Scan with Camera';
+  String get actionCameraSubtitle => 'Live leaf capture';
+  String get actionUploadTitle => 'Choose from Gallery';
+  String get actionUploadSubtitle => 'Analyze an existing image';
+  String get tipsTitle => 'Capture Checklist';
+  String get diagnoseTitle => 'Leaf Diagnostics';
+  String get footerText => '68 labels • 224 x 224 input • TensorFlow Lite';
   String get loadingOverlayTitle => 'Diagnosing plant health...';
   String get loadingOverlaySubtitle => 'Identifying patterns and diseases';
-  
+
   // Semantics
   String get semanticScanAction => 'Scan plant using camera';
   String get semanticUploadAction => 'Upload image from gallery';
@@ -40,9 +40,10 @@ class CameraCopy {
   const CameraCopy();
 
   String get flashOn => 'Flash On';
-  String get captureReady => 'Align leaf and tap to capture';
+  String get captureReady => 'Frame one leaf for diagnosis';
   String get captureFailed => 'Failed to capture frame, please try again.';
-  String get diagnosisFailed => 'Could not confidently diagnose. Please try again.';
+  String get diagnosisFailed =>
+      'Could not confidently diagnose. Please try again.';
 
   // Semantics
   String get semanticCaptureAction => 'Capture photo';
@@ -54,7 +55,8 @@ class PreviewCopy {
   const PreviewCopy();
 
   String get title => 'Confirm Specimen';
-  String get instruction => 'Is the background removal correct? Ensure only the plant leaf is clearly visible.';
+  String get instruction =>
+      'Check that the isolated leaf is clear before running inference.';
   String get actionRetry => 'Retry';
   String get actionConfirm => 'Confirm';
 
@@ -65,10 +67,10 @@ class PreviewCopy {
 class ResultCopy {
   const ResultCopy();
 
-  String get title => 'Diagnosis Result';
+  String get title => 'Diagnosis Report';
   String get statusHealthy => 'HEALTHY PLANT';
   String get statusDisease => 'DISEASE DETECTED';
-  
+
   String get sectionStatus => 'Status';
   String get sectionSymptoms => 'Symptoms';
   String get sectionCauses => 'Causes';
@@ -77,12 +79,16 @@ class ResultCopy {
   String get sectionHealthyTips => 'Maintenance Tips';
   String get actionDone => 'Done';
 
-  String diagnosisConfidence(String cropName, String diseaseName, String confidence) {
-    return '$diseaseName was detected on the $cropName leaf with $confidence% confidence. Early treatment is critical to prevent further spread.';
+  String diagnosisConfidence(
+    String cropName,
+    String diseaseName,
+    String confidence,
+  ) {
+    return '$diseaseName was detected on the $cropName leaf with $confidence% confidence. Use this as triage and inspect the plant before treatment.';
   }
 
   String healthyConfidence(String cropName, String confidence) {
-    return 'The AI model determined this $cropName leaf is healthy with $confidence% confidence.';
+    return 'The model classified this $cropName leaf as healthy with $confidence% confidence. Keep monitoring new growth and changing spots.';
   }
 
   // Semantics

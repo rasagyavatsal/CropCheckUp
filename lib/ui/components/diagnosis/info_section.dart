@@ -22,41 +22,47 @@ class InfoSection extends StatelessWidget {
     const radius = RadiusTokens();
     const spacing = SpacingTokens();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                size: 24,
-                color: colors.brand,
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(spacing.l),
+      decoration: BoxDecoration(
+        color: colors.raisedSurface,
+        borderRadius: BorderRadius.circular(radius.l),
+        border: Border.all(color: colors.subtleBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (icon != null) ...[
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: colors.brand.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(radius.l),
+                  ),
+                  child: Icon(icon, size: 20, color: colors.brand),
+                ),
+                SizedBox(width: spacing.m),
+              ],
+              Expanded(
+                child: Text(
+                  title,
+                  style: context.typography.title.copyWith(
+                    color: colors.textPrimary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              SizedBox(width: spacing.m),
             ],
-            Text(
-              title,
-              style: context.typography.title.copyWith(
-                color: colors.textPrimary,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: spacing.m),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(spacing.l),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: BorderRadius.circular(radius.l),
-            border: Border.all(
-              color: colors.subtleBorder,
-            ),
           ),
-          child: content,
-        ),
-      ],
+          SizedBox(height: spacing.m),
+          content,
+        ],
+      ),
     );
   }
 }

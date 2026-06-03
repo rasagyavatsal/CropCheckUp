@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color brand;
+  final Color brandSecondary;
   final Color background;
   final Color surface;
   final Color raisedSurface;
@@ -12,13 +13,14 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color strongBorder;
   final Color success; // Healthy diagnosis
   final Color warning; // Uncertain states
-  final Color danger;  // Disease diagnosis
+  final Color danger; // Disease diagnosis
   final Color cameraScrim;
   final Color overlay;
   final Color disabled;
 
   const SemanticColors({
     required this.brand,
+    required this.brandSecondary,
     required this.background,
     required this.surface,
     required this.raisedSurface,
@@ -38,6 +40,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   @override
   SemanticColors copyWith({
     Color? brand,
+    Color? brandSecondary,
     Color? background,
     Color? surface,
     Color? raisedSurface,
@@ -55,6 +58,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   }) {
     return SemanticColors(
       brand: brand ?? this.brand,
+      brandSecondary: brandSecondary ?? this.brandSecondary,
       background: background ?? this.background,
       surface: surface ?? this.surface,
       raisedSurface: raisedSurface ?? this.raisedSurface,
@@ -82,6 +86,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     }
     return SemanticColors(
       brand: Color.lerp(brand, other.brand, t)!,
+      brandSecondary: Color.lerp(brandSecondary, other.brandSecondary, t)!,
       background: Color.lerp(background, other.background, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       raisedSurface: Color.lerp(raisedSurface, other.raisedSurface, t)!,
@@ -100,38 +105,40 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   }
 
   static const SemanticColors light = SemanticColors(
-    brand: Color(0xFF006C4C), // agricultural green
-    background: Color(0xFFFBFDF9),
-    surface: Color(0xFFF0FDF4),
+    brand: Color(0xFF1F7A4D),
+    brandSecondary: Color(0xFF0F5F8F),
+    background: Color(0xFFFFFFFF),
+    surface: Color(0xFFF5F8F4),
     raisedSurface: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF191C1A),
-    textSecondary: Color(0xFF404943),
-    mutedText: Color(0xFF707973),
-    subtleBorder: Color(0xFFE1E3DF),
-    strongBorder: Color(0xFF707973),
-    success: Color(0xFF006C4C),
-    warning: Color(0xFF98690B),
-    danger: Color(0xFFBA1A1A),
-    cameraScrim: Color(0x99000000),
+    textPrimary: Color(0xFF17201B),
+    textSecondary: Color(0xFF40524A),
+    mutedText: Color(0xFF6F7F76),
+    subtleBorder: Color(0x1C17201B),
+    strongBorder: Color(0x571F7A4D),
+    success: Color(0xFF1F7A4D),
+    warning: Color(0xFFB7791F),
+    danger: Color(0xFFB42318),
+    cameraScrim: Color(0xA6000000),
     overlay: Color(0x33000000),
-    disabled: Color(0x61191C1A),
+    disabled: Color(0x5C17201B),
   );
 
   static const SemanticColors dark = SemanticColors(
-    brand: Color(0xFF006C4C),
-    background: Color(0xFF000000), // OLED pure black background
-    surface: Color(0xFF121212),    // Very dark gray surface
-    raisedSurface: Color(0xFF1E1E1E), // Slightly lighter gray for cards/elevated layers
-    textPrimary: Color(0xFFF5F5F5),
-    textSecondary: Color(0xFFC0C0C0),
-    mutedText: Color(0xFF7A7A7A),
-    subtleBorder: Color(0xFF282828),
-    strongBorder: Color(0xFF505050),
-    success: Color(0xFF006C4C),
-    warning: Color(0xFFFFB300),
+    brand: Color(0xFF5BB07E),
+    brandSecondary: Color(0xFF6DAED6),
+    background: Color(0xFF111715),
+    surface: Color(0xFF17221D),
+    raisedSurface: Color(0xFF1D2A24),
+    textPrimary: Color(0xFFF5FBF6),
+    textSecondary: Color(0xFFC7D7CC),
+    mutedText: Color(0xFF94AA9D),
+    subtleBorder: Color(0x1FFFFFFF),
+    strongBorder: Color(0x665BB07E),
+    success: Color(0xFF5BB07E),
+    warning: Color(0xFFE0A13E),
     danger: Color(0xFFFFB4AB),
-    cameraScrim: Color(0x99000000),
-    overlay: Color(0x33000000),
-    disabled: Color(0x61F5F5F5),
+    cameraScrim: Color(0xB0000000),
+    overlay: Color(0x52000000),
+    disabled: Color(0x61F5FBF6),
   );
 }
