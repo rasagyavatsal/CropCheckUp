@@ -13,6 +13,7 @@ node_modules/
 .svn/
 .swiftpm/
 migrate_working_dir/
+.ralph/
 
 # IntelliJ related
 *.iml
@@ -49,3 +50,5 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+cache/
+PROMPT.md
