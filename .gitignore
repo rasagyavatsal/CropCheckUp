@@ -52,3 +52,18 @@ app.*.map.json
 .fvm/
 cache/
 PROMPT.md
+
+# Secrets and local environments
+.antigravitycli/
+.env
+.env.*
+!.env.example
+
+# Certificates and keys
+*.pem
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+*.provisionprofile
