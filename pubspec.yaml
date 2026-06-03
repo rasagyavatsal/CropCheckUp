@@ -18,7 +18,7 @@ dependencies:
   camera: ^0.11.1
   image: ^4.5.3
   path_provider: ^2.1.5
-  google_fonts: ^6.2.1
+  google_fonts: ^8.1.0
   image_picker: ^1.1.2
   image_background_remover: ^2.0.0
 
