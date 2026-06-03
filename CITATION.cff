@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: CropCheckUp
+message: >-
+  If you use this software or the associated datasets, please cite it as below, 
+  and ensure you also cite the original source datasets listed in ATTRIBUTION.md.
+type: software
+authors:
+  - given-names: Rasagya
+    family-names: Vatsal
+repository-code: 'https://github.com/rasagyavatsal/CropCheckUp'
