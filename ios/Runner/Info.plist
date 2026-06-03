@@ -47,5 +47,7 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>CropCheckUp needs camera access to scan plant leaves for disease detection.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CropCheckUp needs photo library access to select plant leaf images for on-device disease detection.</string>
 </dict>
 </plist>
