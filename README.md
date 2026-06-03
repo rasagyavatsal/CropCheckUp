@@ -69,14 +69,14 @@ Usage of the bundled model and dataset is strictly non-commercial. For more info
 ## License
 | Component | License |
 |---|---|
-| Flutter app source code | Apache License 2.0 |
-| Landing page source code | Apache License 2.0 |
-| Tests and configuration | Apache License 2.0 |
-| Trained model artifacts | CC BY-NC-SA 4.0 |
-| Derived CropCheckUp dataset | CC BY-NC-SA 4.0 |
+| Flutter app source code | Apache-2.0 |
+| Landing page source code | Apache-2.0 |
+| Tests and configuration | Apache-2.0 |
+| Trained model artifacts | CC-BY-NC-SA-4.0 |
+| Derived CropCheckUp dataset | CC-BY-NC-SA-4.0 |
 | CropCheckUp name/logo/branding | all rights reserved unless stated otherwise |
 
-*Please note that the permissive Apache 2.0 license for source code does not extend to the models or datasets, which are strictly licensed under the non-commercial CC BY-NC-SA 4.0 license.*
+*Please note that the permissive Apache-2.0 license for source code does not extend to the models or datasets, which are strictly licensed under the non-commercial CC-BY-NC-SA-4.0 license.*
 
 ## Responsible-use disclaimer
 This tool is for educational and demonstrative purposes only and does not constitute professional agricultural advice. Always confirm serious crop issues with a qualified agricultural expert.

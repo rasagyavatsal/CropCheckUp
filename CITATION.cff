@@ -4,6 +4,7 @@ message: >-
   If you use this software or the associated datasets, please cite it as below, 
   and ensure you also cite the original source datasets listed in ATTRIBUTION.md.
 type: software
+license: Apache-2.0
 authors:
   - given-names: Rasagya
     family-names: Vatsal

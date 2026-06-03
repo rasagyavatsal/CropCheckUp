@@ -34,12 +34,12 @@ test('Footer contains license summary and documentation links', async ({ page })
   await page.goto('/');
   const footer = page.locator('footer');
   
-  await expect(footer.getByText('Code: Apache-2.0. Model/data: CC BY-NC-SA 4.0 non-commercial.')).toBeVisible();
+  await expect(footer.getByText('Code: Apache-2.0. Model/data: CC-BY-NC-SA-4.0 non-commercial.')).toBeVisible();
   
   // Checking documentation links (like MODEL_CARD, DATASET_LICENSE, ATTRIBUTION)
   const codeLicense = footer.locator('a', { hasText: 'Code: Apache-2.0' });
   await expect(codeLicense).toHaveAttribute('href', 'https://github.com/rasagyavatsal/CropCheckUp/blob/main/LICENSE');
   
-  const dataLicense = footer.locator('a', { hasText: 'Model/data: CC BY-NC-SA 4.0 non-commercial' });
+  const dataLicense = footer.locator('a', { hasText: 'Model/data: CC-BY-NC-SA-4.0 non-commercial' });
   await expect(dataLicense).toHaveAttribute('href', 'https://github.com/rasagyavatsal/CropCheckUp/blob/main/DATASET_LICENSE.md');
 });

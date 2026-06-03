@@ -42,14 +42,14 @@ test('DatasetReferences section contains source dataset attribution and licenses
   const section = page.locator('section#dataset');
   
   await expect(section.getByText('PlantVillage')).toBeVisible();
-  await expect(section.getByText('CC BY-NC-SA 4.0').first()).toBeVisible();
+  await expect(section.getByText('CC-BY-NC-SA-4.0').first()).toBeVisible();
   await expect(section.getByText('Mango Leaf Disease')).toBeVisible();
-  await expect(section.getByText('CC BY-NC 4.0')).toBeVisible();
+  await expect(section.getByText('CC-BY-NC-4.0')).toBeVisible();
 });
 
 test('DatasetReferences section contains the derived dataset/model license statement', async ({ page }) => {
   await page.goto('/');
   const section = page.locator('section#dataset');
   
-  await expect(section.getByText('CropCheckUp derived dataset and bundled model artifacts are licensed CC BY-NC-SA 4.0 for non-commercial use.')).toBeVisible();
+  await expect(section.getByText('CropCheckUp derived dataset and bundled model artifacts are licensed CC-BY-NC-SA-4.0 for non-commercial use.')).toBeVisible();
 });

@@ -1,6 +1,7 @@
 {
   "name": "cropcheckup-landing",
   "private": true,
+  "license": "Apache-2.0",
   "description": "Astro landing site for CropCheckUp",
   "repository": {
     "type": "git",
