@@ -36,20 +36,6 @@ import ProductVisual from './ProductVisual.astro';
     </div>
     <div class="hero-visual-wrapper">
       <ProductVisual />
-      <div class="visual-notes" aria-label="App workflow summary">
-        <div class="note-item">
-          <span class="note-label">Input</span>
-          <span>Camera frame or gallery image</span>
-        </div>
-        <div class="note-item">
-          <span class="note-label">Preprocess</span>
-          <span>Leaf isolated before resize</span>
-        </div>
-        <div class="note-item">
-          <span class="note-label">Result</span>
-          <span>Crop, condition, confidence, guidance</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -176,43 +162,7 @@ import ProductVisual from './ProductVisual.astro';
     align-items: center;
   }
 
-  .visual-notes {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-s);
-    width: min(100%, 360px);
-    margin: 0 auto;
-  }
 
-  .note-item {
-    display: grid;
-    grid-template-columns: 94px 1fr;
-    gap: var(--space-s);
-    align-items: center;
-    padding: var(--space-s) var(--space-m);
-    background: var(--color-bg-raised);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-lg);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
-  }
-
-  .note-label {
-    color: var(--color-brand-secondary);
-    font-weight: 700;
-    font-family: var(--font-display);
-  }
-
-  @media (min-width: 1180px) {
-    .visual-notes {
-      position: absolute;
-      right: -0.5rem;
-      bottom: 1.5rem;
-      width: 280px;
-      z-index: 3;
-    }
-  }
-  
   @media (max-width: 768px) {
     .hero {
       padding-top: var(--space-2xl);
