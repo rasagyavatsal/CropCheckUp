@@ -3,9 +3,6 @@
 <section id="limitations" class="section">
   <div class="container">
     <div class="limitations-wrapper">
-      <div class="warning-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-      </div>
       <div class="limitations-content">
         <h2>Important Limitations</h2>
         <p class="intro-text">CropCheckUp is an AI-assisted screening tool. Results depend on image quality, lighting, leaf visibility, and whether the condition exists in the trained labels.</p>
@@ -31,55 +28,20 @@
 
 <style>
   .limitations-wrapper {
-    display: flex;
-    flex-direction: column;
     padding: var(--space-2xl);
-    border-left: 4px solid var(--color-warning);
     background: var(--color-bg-raised);
     border-top: 1px solid var(--color-border-subtle);
     border-right: 1px solid var(--color-border-subtle);
+    border-left: 1px solid var(--color-border-subtle);
     border-bottom: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
   }
 
-  @media (min-width: 768px) {
-    .limitations-wrapper {
-      flex-direction: row;
-      gap: var(--space-xl);
-      align-items: center;
-    }
-  }
-
   .limitations-content {
     position: relative;
     z-index: 1;
-  }
-
-  .warning-icon {
-    margin-bottom: var(--space-m);
-    color: var(--color-warning);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (min-width: 768px) {
-    .warning-icon {
-      margin-bottom: 0;
-    }
-    
-    .warning-icon svg {
-      width: 80px;
-      height: 80px;
-    }
-  }
-
-  .limitations-content {
-    flex: 1;
   }
 
   .limitations-content h2 {
