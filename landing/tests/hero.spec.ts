@@ -8,7 +8,7 @@ test('Hero section contains the product name as a heading', async ({ page }) => 
 
 test('Hero section contains subheading and description', async ({ page }) => {
   await page.goto('/');
-  const subheading = page.locator('p', { hasText: 'AI-assisted crop leaf disease detection from camera or gallery images.' });
+  const subheading = page.locator('p', { hasText: 'AI-assisted crop leaf disease detection.' });
   await expect(subheading).toBeVisible();
 
   const description = page.locator('p', { hasText: 'CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.' });
