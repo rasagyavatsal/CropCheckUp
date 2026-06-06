@@ -12,15 +12,15 @@ void main() {
         AppCopy.home.initErrorTitle,
         equals('Failed to load diagnosis models'),
       );
-      expect(AppCopy.home.actionCameraTitle, equals('Scan with Camera'));
+      expect(AppCopy.home.actionCameraTitle, equals('Take Photo'));
       expect(AppCopy.home.actionCameraSubtitle, equals('Live leaf capture'));
-      expect(AppCopy.home.actionUploadTitle, equals('Choose from Gallery'));
+      expect(AppCopy.home.actionUploadTitle, equals('Choose Photo'));
       expect(
         AppCopy.home.actionUploadSubtitle,
         equals('Analyze an existing image'),
       );
-      expect(AppCopy.home.tipsTitle, equals('Capture Checklist'));
-      expect(AppCopy.home.diagnoseTitle, equals('Leaf Diagnostics'));
+      expect(AppCopy.home.tipsTitle, equals('Photo Tips'));
+      expect(AppCopy.home.diagnoseTitle, equals('Check Leaf Health'));
       expect(
         AppCopy.home.footerText,
         equals('68 labels • 224 x 224 input • TensorFlow Lite'),
@@ -37,10 +37,7 @@ void main() {
 
     test('camera strings are centralized', () {
       expect(AppCopy.camera.flashOn, equals('Flash On'));
-      expect(
-        AppCopy.camera.captureReady,
-        equals('Frame one leaf for diagnosis'),
-      );
+      expect(AppCopy.camera.captureReady, equals('Center one leaf'));
       expect(
         AppCopy.camera.captureFailed,
         equals('Failed to capture frame, please try again.'),
@@ -52,15 +49,13 @@ void main() {
     });
 
     test('preview strings are centralized', () {
-      expect(AppCopy.preview.title, equals('Confirm Specimen'));
+      expect(AppCopy.preview.title, equals('Review Leaf'));
       expect(
         AppCopy.preview.instruction,
-        equals(
-          'Check that the isolated leaf is clear before running inference.',
-        ),
+        equals('Make sure the leaf is clear before diagnosing.'),
       );
-      expect(AppCopy.preview.actionRetry, equals('Retry'));
-      expect(AppCopy.preview.actionConfirm, equals('Confirm'));
+      expect(AppCopy.preview.actionRetry, equals('Try Again'));
+      expect(AppCopy.preview.actionConfirm, equals('Diagnose'));
     });
 
     test('result strings handle dynamic values correctly', () {

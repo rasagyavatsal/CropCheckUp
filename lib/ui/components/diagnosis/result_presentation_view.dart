@@ -46,22 +46,9 @@ class ResultPresentationView extends StatelessWidget {
         ResultSummaryCard(result: result),
         SizedBox(height: spacing.l),
         if (imageBytes != null) ...[
-          _ReportSectionLabel(
-            icon: Icons.photo_library_rounded,
-            label: 'Evidence image',
-          ),
-          SizedBox(height: spacing.sm),
           EvidenceImageCard(imageBytes: imageBytes!),
           SizedBox(height: spacing.l),
         ],
-        _ReportSectionLabel(
-          icon:
-              result.isHealthy
-                  ? Icons.shield_rounded
-                  : Icons.assignment_rounded,
-          label: result.isHealthy ? 'Field notes' : 'Action notes',
-        ),
-        SizedBox(height: spacing.sm),
         if (result.isHealthy) ...[
           InfoSection(
             title: AppCopy.result.sectionStatus,
@@ -127,33 +114,6 @@ class ResultPresentationView extends StatelessWidget {
               ),
             ),
         ],
-      ],
-    );
-  }
-}
-
-class _ReportSectionLabel extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _ReportSectionLabel({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: colors.brandSecondary),
-        SizedBox(width: spacing.s),
-        Text(
-          label,
-          style: context.typography.label.copyWith(
-            color: colors.brandSecondary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ],
     );
   }

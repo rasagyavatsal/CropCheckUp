@@ -6,7 +6,6 @@ import '../ui/components/app_components.dart';
 import '../ui/components/layout/layout.dart';
 import '../ui/adaptive/app_adaptive.dart';
 import '../ui/tokens/spacing_tokens.dart';
-import '../ui/tokens/radius_tokens.dart';
 import '../ui/theme/theme_ext.dart';
 import '../ui/theme/app_theme.dart';
 import 'camera_screen.dart';
@@ -75,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    final colors = context.appColors;
     const spacing = SpacingTokens();
 
     return Stack(
@@ -110,18 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     onGalleryPressed: _startGalleryDiagnosis,
-                  ),
-                  SizedBox(height: spacing.l),
-                  const _CaptureChecklist(),
-                  SizedBox(height: spacing.l),
-                  const _ModelFacts(),
-                  SizedBox(height: spacing.l),
-                  Text(
-                    AppCopy.home.footerText,
-                    style: context.typography.caption.copyWith(
-                      color: colors.mutedText,
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -173,39 +159,13 @@ class _HomeStatusHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.sm,
-            vertical: spacing.s,
-          ),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            border: Border.all(color: colors.subtleBorder),
-            borderRadius: BorderRadius.circular(const RadiusTokens().l),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.check_circle_rounded, size: 16, color: colors.success),
-              SizedBox(width: spacing.s),
-              Text(
-                'Model ready',
-                style: context.typography.label.copyWith(
-                  color: colors.brandSecondary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: spacing.m),
         Text(
           AppCopy.home.diagnoseTitle,
           style: context.typography.display.copyWith(color: colors.textPrimary),
         ),
         SizedBox(height: spacing.s),
         Text(
-          'Camera or gallery input for crop leaf triage.',
+          'Take or choose a clear leaf photo to get a quick diagnosis.',
           style: context.typography.body.copyWith(color: colors.textSecondary),
         ),
       ],
@@ -225,46 +185,12 @@ class _DiagnosisActionPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const spacing = SpacingTokens();
-    final colors = context.appColors;
 
     return AppCard.panel(
       padding: EdgeInsets.all(spacing.l),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: colors.brand.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(const RadiusTokens().l),
-                ),
-                child: Icon(
-                  Icons.document_scanner_rounded,
-                  color: colors.brand,
-                ),
-              ),
-              SizedBox(width: spacing.m),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('New diagnosis', style: context.typography.title),
-                    SizedBox(height: spacing.xs),
-                    Text(
-                      'Single leaf image required',
-                      style: context.typography.caption.copyWith(
-                        color: colors.mutedText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.l),
           Semantics(
             button: true,
             label: AppCopy.home.semanticScanAction,
@@ -287,178 +213,6 @@ class _DiagnosisActionPanel extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CaptureChecklist extends StatelessWidget {
-  const _CaptureChecklist();
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(AppCopy.home.tipsTitle, style: context.typography.title),
-        SizedBox(height: spacing.sm),
-        const _ChecklistRow(
-          icon: Icons.wb_sunny_rounded,
-          label: 'Bright light',
-          value: 'Avoid shadows and glare',
-        ),
-        SizedBox(height: spacing.s),
-        const _ChecklistRow(
-          icon: Icons.filter_center_focus_rounded,
-          label: 'One leaf',
-          value: 'Fill most of the frame',
-        ),
-        SizedBox(height: spacing.s),
-        const _ChecklistRow(
-          icon: Icons.layers_clear_rounded,
-          label: 'Clear background',
-          value: 'Keep other plants out',
-        ),
-      ],
-    );
-  }
-}
-
-class _ChecklistRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _ChecklistRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return Container(
-      padding: EdgeInsets.all(spacing.m),
-      decoration: BoxDecoration(
-        color: colors.raisedSurface,
-        border: Border.all(color: colors.subtleBorder),
-        borderRadius: BorderRadius.circular(const RadiusTokens().l),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: colors.brandSecondary),
-          SizedBox(width: spacing.m),
-          Expanded(
-            child: Text(
-              label,
-              style: context.typography.label.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Flexible(
-            child: Text(
-              value,
-              style: context.typography.caption.copyWith(
-                color: colors.mutedText,
-              ),
-              textAlign: TextAlign.right,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ModelFacts extends StatelessWidget {
-  const _ModelFacts();
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = (constraints.maxWidth - spacing.s * 2) / 3;
-
-        return Wrap(
-          spacing: spacing.s,
-          runSpacing: spacing.s,
-          children:
-              [
-                _FactTile(width: itemWidth, value: '68', label: 'labels'),
-                _FactTile(width: itemWidth, value: '224', label: 'input px'),
-                _FactTile(
-                  width: itemWidth,
-                  value: 'TFLite',
-                  label: 'local model',
-                ),
-              ].map((tile) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colors.surface,
-                    border: Border.all(color: colors.subtleBorder),
-                    borderRadius: BorderRadius.circular(const RadiusTokens().l),
-                  ),
-                  child: tile,
-                );
-              }).toList(),
-        );
-      },
-    );
-  }
-}
-
-class _FactTile extends StatelessWidget {
-  final double width;
-  final String value;
-  final String label;
-
-  const _FactTile({
-    required this.width,
-    required this.value,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return SizedBox(
-      width: width,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: spacing.s,
-          vertical: spacing.m,
-        ),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: context.typography.title.copyWith(color: colors.brand),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: spacing.xs),
-            Text(
-              label,
-              style: context.typography.caption.copyWith(
-                color: colors.mutedText,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
       ),
     );
   }

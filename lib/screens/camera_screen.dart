@@ -156,8 +156,6 @@ class _CameraScreenState extends State<CameraScreen> {
                     ),
                   ),
                   SizedBox(height: spacing.l),
-                  _CameraStatusStrip(isFlashOn: _session.isFlashOn),
-                  SizedBox(height: spacing.m),
                   Expanded(
                     child: AppCard.panel(
                       child: Stack(
@@ -193,51 +191,6 @@ class _CameraScreenState extends State<CameraScreen> {
         if (_isDiagnosing)
           AppProcessingOverlay(message: AppCopy.home.loadingOverlayTitle),
       ],
-    );
-  }
-}
-
-class _CameraStatusStrip extends StatelessWidget {
-  final bool isFlashOn;
-
-  const _CameraStatusStrip({required this.isFlashOn});
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return Container(
-      padding: EdgeInsets.all(spacing.m),
-      decoration: BoxDecoration(
-        color: colors.raisedSurface,
-        border: Border.all(color: colors.subtleBorder),
-        borderRadius: BorderRadius.circular(const RadiusTokens().l),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.eco_rounded, size: 20, color: colors.brand),
-          SizedBox(width: spacing.m),
-          Expanded(
-            child: Text(
-              'Leaf acquisition',
-              style: context.typography.label.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Icon(
-            isFlashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-            size: 18,
-            color: isFlashOn ? colors.brand : colors.mutedText,
-          ),
-          SizedBox(width: spacing.xs),
-          Text(
-            isFlashOn ? 'Flash on' : 'Flash off',
-            style: context.typography.caption.copyWith(color: colors.mutedText),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -323,12 +276,6 @@ class _CapturePanel extends StatelessWidget {
               label: isDiagnosing ? 'Analyzing...' : 'Capture leaf',
               onPressed: onCapture,
             ),
-          ),
-          SizedBox(height: spacing.s),
-          Text(
-            'The next step checks the isolated specimen before inference.',
-            style: context.typography.caption.copyWith(color: colors.mutedText),
-            textAlign: TextAlign.center,
           ),
         ],
       ),

@@ -21,12 +21,12 @@ class HomeCopy {
 
   String get initLoading => 'Warming up crop diagnosis models…';
   String get initErrorTitle => 'Failed to load diagnosis models';
-  String get actionCameraTitle => 'Scan with Camera';
+  String get actionCameraTitle => 'Take Photo';
   String get actionCameraSubtitle => 'Live leaf capture';
-  String get actionUploadTitle => 'Choose from Gallery';
+  String get actionUploadTitle => 'Choose Photo';
   String get actionUploadSubtitle => 'Analyze an existing image';
-  String get tipsTitle => 'Capture Checklist';
-  String get diagnoseTitle => 'Leaf Diagnostics';
+  String get tipsTitle => 'Photo Tips';
+  String get diagnoseTitle => 'Check Leaf Health';
   String get footerText => '68 labels • 224 x 224 input • TensorFlow Lite';
   String get loadingOverlayTitle => 'Diagnosing plant health...';
   String get loadingOverlaySubtitle => 'Identifying patterns and diseases';
@@ -40,7 +40,7 @@ class CameraCopy {
   const CameraCopy();
 
   String get flashOn => 'Flash On';
-  String get captureReady => 'Frame one leaf for diagnosis';
+  String get captureReady => 'Center one leaf';
   String get captureFailed => 'Failed to capture frame, please try again.';
   String get diagnosisFailed =>
       'Could not confidently diagnose. Please try again.';
@@ -54,11 +54,10 @@ class CameraCopy {
 class PreviewCopy {
   const PreviewCopy();
 
-  String get title => 'Confirm Specimen';
-  String get instruction =>
-      'Check that the isolated leaf is clear before running inference.';
-  String get actionRetry => 'Retry';
-  String get actionConfirm => 'Confirm';
+  String get title => 'Review Leaf';
+  String get instruction => 'Make sure the leaf is clear before diagnosing.';
+  String get actionRetry => 'Try Again';
+  String get actionConfirm => 'Diagnose';
 
   // Semantics
   String get semanticPreviewImage => 'Segmented plant leaf preview';

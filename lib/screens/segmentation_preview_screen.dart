@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import '../ui/app_design_system.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/layout/layout.dart';
-import '../ui/tokens/typography.dart';
-import '../ui/theme/theme_ext.dart';
 import '../ui/tokens/spacing_tokens.dart';
-import '../ui/tokens/radius_tokens.dart';
 
 /// Screen to preview the segmented image before inference.
 ///
@@ -56,8 +53,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: spacing.l),
-                  _PreviewStatus(instruction: AppCopy.preview.instruction),
-                  SizedBox(height: spacing.m),
                   Expanded(
                     child: SizedBox(
                       width: double.infinity,
@@ -68,8 +63,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: spacing.m),
-                  const _SpecimenChecklist(),
                   SizedBox(height: spacing.m),
                   Semantics(
                     button: true,
@@ -98,113 +91,6 @@ class SegmentationPreviewScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _PreviewStatus extends StatelessWidget {
-  final String instruction;
-
-  const _PreviewStatus({required this.instruction});
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return Container(
-      padding: EdgeInsets.all(spacing.m),
-      decoration: BoxDecoration(
-        color: colors.raisedSurface,
-        border: Border.all(color: colors.subtleBorder),
-        borderRadius: BorderRadius.circular(const RadiusTokens().l),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.content_cut_rounded, color: colors.brandSecondary),
-          SizedBox(width: spacing.m),
-          Expanded(
-            child: Text(
-              instruction,
-              style: context.typography.label.copyWith(
-                color: colors.textSecondary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SpecimenChecklist extends StatelessWidget {
-  const _SpecimenChecklist();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Expanded(
-          child: _SpecimenSignal(
-            icon: Icons.eco_rounded,
-            label: 'Leaf visible',
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: _SpecimenSignal(
-            icon: Icons.auto_fix_high_rounded,
-            label: 'Background removed',
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: _SpecimenSignal(
-            icon: Icons.center_focus_strong_rounded,
-            label: 'Edges clear',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SpecimenSignal extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _SpecimenSignal({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    const spacing = SpacingTokens();
-    final colors = context.appColors;
-
-    return Container(
-      constraints: const BoxConstraints(minHeight: 86),
-      padding: EdgeInsets.all(spacing.s),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border.all(color: colors.subtleBorder),
-        borderRadius: BorderRadius.circular(const RadiusTokens().l),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 18, color: colors.brand),
-          SizedBox(height: spacing.s),
-          Text(
-            label,
-            style: context.typography.caption.copyWith(
-              color: colors.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
     );
   }
 }
