@@ -8,30 +8,36 @@ import 'package:image/image.dart' as img;
 
 import 'package:crop_check_up/ui/flow/diagnosis_flow_coordinator.dart';
 import 'package:crop_check_up/services/diagnosis_workflow_service.dart';
+import 'package:crop_check_up/services/diagnosis_history_repository.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 import 'package:crop_check_up/ui/app_design_system.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
 
 class MockImagePicker extends Mock implements ImagePicker {}
 class MockDiagnosisWorkflowService extends Mock implements DiagnosisWorkflowService {}
+class MockDiagnosisHistoryRepository extends Mock implements DiagnosisHistoryRepository {}
 
 void main() {
   late MockImagePicker mockImagePicker;
   late MockDiagnosisWorkflowService mockWorkflowService;
+  late MockDiagnosisHistoryRepository mockHistoryRepository;
   late DiagnosisFlowCoordinator coordinator;
 
   setUpAll(() {
     registerFallbackValue(Uint8List(0));
     registerFallbackValue(img.Image(width: 1, height: 1));
+    registerFallbackValue(DiagnosisResult(rawLabel: '', confidence: 0.0));
   });
 
   setUp(() {
     mockImagePicker = MockImagePicker();
     mockWorkflowService = MockDiagnosisWorkflowService();
+    mockHistoryRepository = MockDiagnosisHistoryRepository();
 
     coordinator = DiagnosisFlowCoordinator(
       imagePicker: mockImagePicker,
       workflowService: mockWorkflowService,
+      historyRepository: mockHistoryRepository,
     );
   });
 
@@ -201,6 +207,187 @@ void main() {
       await tester.pumpAndSettle();
       
       expect(result, DiagnosisOutcome.success);
+    });
+
+    testWidgets('startGalleryDiagnosis records history on success', (tester) async {
+      when(() => mockImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 1024))
+          .thenAnswer((_) async => XFile.fromData(Uint8List(0)));
+          
+      final dummyImg = img.Image(width: 1, height: 1);
+      final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
+      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
+      when(() => mockWorkflowService.classifyImage(any()))
+          .thenReturn(expectedResult);
+      when(() => mockHistoryRepository.recordDiagnosis(
+        result: any(named: 'result'),
+        imageBytes: any(named: 'imageBytes'),
+      )).thenAnswer((_) async {});
+      
+      await tester.pumpWidget(buildTestApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () => coordinator.startGalleryDiagnosis(context),
+              child: const Text('Start'),
+            );
+          }
+        )
+      ));
+      
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.preview.actionConfirm));
+      await tester.pumpAndSettle();
+      
+      verify(() => mockHistoryRepository.recordDiagnosis(
+        result: expectedResult,
+        imageBytes: dummyBytes,
+      )).called(1);
+    });
+
+    testWidgets('startCameraDiagnosis records history on success', (tester) async {
+      final dummyImg = img.Image(width: 1, height: 1);
+      final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
+      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+
+      when(() => mockWorkflowService.processImageObj(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
+      when(() => mockWorkflowService.classifyImage(any()))
+          .thenReturn(expectedResult);
+      when(() => mockHistoryRepository.recordDiagnosis(
+        result: any(named: 'result'),
+        imageBytes: any(named: 'imageBytes'),
+      )).thenAnswer((_) async {});
+      
+      await tester.pumpWidget(buildTestApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () => coordinator.startCameraDiagnosis(context, dummyImg),
+              child: const Text('Start'),
+            );
+          }
+        )
+      ));
+      
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.preview.actionConfirm));
+      await tester.pumpAndSettle();
+      
+      verify(() => mockHistoryRepository.recordDiagnosis(
+        result: expectedResult,
+        imageBytes: dummyBytes,
+      )).called(1);
+    });
+
+    testWidgets('preview cancellation records nothing to history', (tester) async {
+      when(() => mockImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 1024))
+          .thenAnswer((_) async => XFile.fromData(Uint8List(0)));
+          
+      final dummyImg = img.Image(width: 1, height: 1);
+      final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
+
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
+      
+      await tester.pumpWidget(buildTestApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () => coordinator.startGalleryDiagnosis(context),
+              child: const Text('Start'),
+            );
+          }
+        )
+      ));
+      
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.preview.actionRetry));
+      await tester.pumpAndSettle();
+      
+      verifyNever(() => mockHistoryRepository.recordDiagnosis(
+        result: any(named: 'result'),
+        imageBytes: any(named: 'imageBytes'),
+      ));
+    });
+
+    testWidgets('classification failure records nothing to history', (tester) async {
+      when(() => mockImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 1024))
+          .thenAnswer((_) async => XFile.fromData(Uint8List(0)));
+          
+      final dummyImg = img.Image(width: 1, height: 1);
+      final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
+
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
+      when(() => mockWorkflowService.classifyImage(any()))
+          .thenReturn(null);
+      
+      await tester.pumpWidget(buildTestApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () => coordinator.startGalleryDiagnosis(context),
+              child: const Text('Start'),
+            );
+          }
+        )
+      ));
+      
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.preview.actionConfirm));
+      await tester.pumpAndSettle();
+      
+      verifyNever(() => mockHistoryRepository.recordDiagnosis(
+        result: any(named: 'result'),
+        imageBytes: any(named: 'imageBytes'),
+      ));
+    });
+
+    testWidgets('repository write failure still returns success on navigation', (tester) async {
+      when(() => mockImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 1024))
+          .thenAnswer((_) async => XFile.fromData(Uint8List(0)));
+          
+      final dummyImg = img.Image(width: 1, height: 1);
+      final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
+      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+
+      when(() => mockWorkflowService.processImageBytes(any()))
+          .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
+      when(() => mockWorkflowService.classifyImage(any()))
+          .thenReturn(expectedResult);
+      when(() => mockHistoryRepository.recordDiagnosis(
+        result: any(named: 'result'),
+        imageBytes: any(named: 'imageBytes'),
+      )).thenThrow(Exception('Disk full'));
+      
+      DiagnosisOutcome? result;
+      await tester.pumpWidget(buildTestApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                result = await coordinator.startGalleryDiagnosis(context);
+              },
+              child: const Text('Start'),
+            );
+          }
+        )
+      ));
+      
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.preview.actionConfirm));
+      await tester.pumpAndSettle();
+      
+      expect(result, DiagnosisOutcome.success);
+      expect(find.text(AppCopy.result.title), findsOneWidget);
     });
   });
 }

@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:crop_check_up/services/diagnosis_workflow_service.dart';
+import 'package:crop_check_up/services/diagnosis_history_repository.dart';
 import 'package:crop_check_up/ui/copy/app_copy.dart';
 import 'package:crop_check_up/screens/segmentation_preview_screen.dart';
 import 'package:crop_check_up/screens/diagnosis_result_screen.dart';
@@ -20,12 +21,15 @@ enum DiagnosisOutcome {
 class DiagnosisFlowCoordinator {
   final ImagePicker _imagePicker;
   final DiagnosisWorkflowService _workflowService;
+  final DiagnosisHistoryRepository _historyRepository;
 
   DiagnosisFlowCoordinator({
     ImagePicker? imagePicker,
     DiagnosisWorkflowService? workflowService,
+    DiagnosisHistoryRepository? historyRepository,
   })  : _imagePicker = imagePicker ?? ImagePicker(),
-        _workflowService = workflowService ?? DiagnosisWorkflowService();
+        _workflowService = workflowService ?? DiagnosisWorkflowService(),
+        _historyRepository = historyRepository ?? DiagnosisHistoryRepository();
 
   /// Initialises required services for diagnosis.
   Future<void> init() async {
@@ -103,6 +107,19 @@ class DiagnosisFlowCoordinator {
     final result = _workflowService.classifyImage(processResult.resizedImage!);
     
     if (result != null) {
+      if (context.mounted) {
+        try {
+          await _historyRepository.recordDiagnosis(
+            result: result,
+            imageBytes: processResult.resizedBytes!,
+          );
+        } catch (_) {
+          // Handle history write failures without turning a successful diagnosis into a failed diagnosis.
+        }
+      }
+
+      if (!context.mounted) return DiagnosisOutcome.failed;
+
       Navigator.of(context).push(
         AppRoute.standard<void>(
           builder: (_) => DiagnosisResultScreen(
