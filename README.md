@@ -11,12 +11,23 @@ The repository also includes an Astro landing site for the public project page.
 
 ## Model Scope
 
-The bundled classifier uses 224 x 224 RGB input and supports 68 crop and
+The bundled classifier is exported as TensorFlow Lite from a MobileNetV3Large
+transfer-learning pipeline. It uses 224 x 224 RGB input and supports 68 crop and
 condition labels across:
 
 Apple, Blueberry, Bottle Gourd, Cherry, Corn, Grape, Mango, Orange, Papaya,
 Peach, Bell Pepper, Potato, Raspberry, Soybean, Squash, Strawberry, Tomato, and
 Zucchini.
+
+Training uses an ImageNet-pretrained MobileNetV3Large backbone, GPU-side image
+augmentation, class-weighted sparse categorical cross-entropy for dataset
+imbalance, and an 80/20 training/validation split. The exported model includes
+MobileNetV3 preprocessing inside the graph, so the app feeds 224 x 224 RGB
+values in the 0-255 range and resolves outputs against `assets/labels.txt`.
+
+The current Kaggle training run used 59,989 images across 68 labels. The final
+fine-tuned checkpoint restored the best validation-loss epoch, which reported
+96.11% validation accuracy and 0.1251 validation loss before TFLite export.
 
 CropCheckUp is an AI-assisted screening tool, not a substitute for expert
 agronomy advice. Results depend on image quality, lighting, leaf visibility,
