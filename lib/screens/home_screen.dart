@@ -1,33 +1,61 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import '../models/diagnosis_history_entry.dart';
+import '../services/diagnosis_history_repository.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/flow/diagnosis_flow_coordinator.dart';
 import '../ui/copy/app_copy.dart';
 import '../ui/components/app_components.dart';
+import '../ui/components/history/recent_diagnoses_section.dart';
 import '../ui/components/layout/layout.dart';
 import '../ui/adaptive/app_adaptive.dart';
 import '../ui/tokens/spacing_tokens.dart';
 import '../ui/theme/theme_ext.dart';
 import '../ui/theme/app_theme.dart';
 import 'camera_screen.dart';
+import 'diagnosis_result_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final DiagnosisFlowCoordinator? coordinator;
+  final DiagnosisHistoryRepository? historyRepository;
+  final WidgetBuilder? cameraScreenBuilder;
+
+  const HomeScreen({
+    super.key,
+    this.coordinator,
+    this.historyRepository,
+    this.cameraScreenBuilder,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _coordinator = DiagnosisFlowCoordinator();
+  late final DiagnosisHistoryRepository _historyRepository;
+  late final DiagnosisFlowCoordinator _coordinator;
+  late final bool _ownsCoordinator;
 
   bool _isInitialising = true;
   String? _initError;
   bool _isDiagnosing = false;
+  bool _isHistoryLoading = true;
+  String? _historyError;
+  List<DiagnosisHistoryEntry> _recentDiagnoses = const [];
+  int _historyLoadRequest = 0;
 
   @override
   void initState() {
     super.initState();
+    _historyRepository =
+        widget.historyRepository ?? DiagnosisHistoryRepository();
+    _coordinator =
+        widget.coordinator ??
+        DiagnosisFlowCoordinator(historyRepository: _historyRepository);
+    _ownsCoordinator = widget.coordinator == null;
     _bootstrap();
+    unawaited(_loadRecentDiagnoses(showLoading: false));
   }
 
   Future<void> _bootstrap() async {
@@ -47,14 +75,86 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _coordinator.dispose();
+    if (_ownsCoordinator) {
+      _coordinator.dispose();
+    }
     super.dispose();
   }
 
   Future<void> _startGalleryDiagnosis() async {
+    if (_isDiagnosing) return;
+
     setState(() => _isDiagnosing = true);
-    await _coordinator.startGalleryDiagnosis(context);
-    if (mounted) setState(() => _isDiagnosing = false);
+    DiagnosisOutcome outcome = DiagnosisOutcome.failed;
+
+    try {
+      outcome = await _coordinator.startGalleryDiagnosis(context);
+    } catch (_) {
+      if (mounted) {
+        AppFeedback.showError(context, AppCopy.camera.diagnosisFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _isDiagnosing = false);
+    }
+
+    if (mounted && outcome == DiagnosisOutcome.success) {
+      unawaited(_loadRecentDiagnoses());
+    }
+  }
+
+  Future<void> _startCameraDiagnosis() async {
+    await Navigator.push<void>(
+      context,
+      AppRoute.standard(
+        builder:
+            (context) =>
+                widget.cameraScreenBuilder?.call(context) ??
+                const CameraScreen(),
+      ),
+    );
+
+    if (mounted) {
+      unawaited(_loadRecentDiagnoses());
+    }
+  }
+
+  Future<void> _loadRecentDiagnoses({bool showLoading = true}) async {
+    final request = ++_historyLoadRequest;
+
+    if (showLoading && mounted) {
+      setState(() {
+        _isHistoryLoading = true;
+        _historyError = null;
+      });
+    }
+
+    try {
+      final entries = await _historyRepository.loadRecent(limit: 10);
+      if (!mounted || request != _historyLoadRequest) return;
+      setState(() {
+        _recentDiagnoses = entries;
+        _historyError = null;
+        _isHistoryLoading = false;
+      });
+    } catch (e) {
+      if (!mounted || request != _historyLoadRequest) return;
+      setState(() {
+        _historyError = e.toString();
+        _isHistoryLoading = false;
+      });
+    }
+  }
+
+  void _openHistoryEntry(DiagnosisHistoryEntry entry) {
+    Navigator.of(context).push(
+      AppRoute.standard<void>(
+        builder:
+            (_) => DiagnosisResultScreen(
+              result: entry.result,
+              imageBytes: entry.imageBytes,
+            ),
+      ),
+    );
   }
 
   @override
@@ -79,37 +179,42 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: [
         AppPageShell(
-          applySafeArea: true,
+          applySafeArea: false,
           child: AppGridBackground(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(
-                spacing.l,
-                spacing.m,
-                spacing.l,
-                spacing.xl,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AppScreenHeader(
-                    title: 'CropCheckUp',
-                    brandMark: const AppBrandMark(),
-                    centerTitle: false,
-                    trailing: _buildThemeToggle(context),
-                  ),
-                  SizedBox(height: spacing.xl),
-                  const _HomeStatusHeader(),
-                  SizedBox(height: spacing.l),
-                  _DiagnosisActionPanel(
-                    onCameraPressed: () {
-                      Navigator.push(
-                        context,
-                        AppRoute.standard(builder: (_) => const CameraScreen()),
-                      );
-                    },
-                    onGalleryPressed: _startGalleryDiagnosis,
-                  ),
-                ],
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  spacing.l,
+                  spacing.m,
+                  spacing.l,
+                  spacing.xl,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppScreenHeader(
+                      title: 'CropCheckUp',
+                      brandMark: const AppBrandMark(),
+                      centerTitle: false,
+                      trailing: _buildThemeToggle(context),
+                    ),
+                    SizedBox(height: spacing.xl),
+                    const _HomeStatusHeader(),
+                    SizedBox(height: spacing.l),
+                    _DiagnosisActionPanel(
+                      onCameraPressed: _startCameraDiagnosis,
+                      onGalleryPressed: _startGalleryDiagnosis,
+                    ),
+                    SizedBox(height: spacing.l),
+                    RecentDiagnosesSection(
+                      entries: _recentDiagnoses,
+                      isLoading: _isHistoryLoading,
+                      error: _historyError,
+                      onRetry: _loadRecentDiagnoses,
+                      onEntryTap: _openHistoryEntry,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

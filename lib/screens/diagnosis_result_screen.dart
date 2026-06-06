@@ -32,41 +32,43 @@ class DiagnosisResultScreen extends StatelessWidget {
     return Stack(
       children: [
         AppPageShell(
-          applySafeArea: true,
+          applySafeArea: false,
           child: AppGridBackground(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacing.l,
-                    vertical: spacing.m,
-                  ),
-                  child: AppScreenHeader(
-                    title: AppCopy.result.title,
-                    leading: AppHeaderAction(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      tooltip:
-                          MaterialLocalizations.of(context).backButtonTooltip,
-                      onPressed: () => Navigator.pop(context),
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: spacing.l,
+                      vertical: spacing.m,
+                    ),
+                    child: AppScreenHeader(
+                      title: AppCopy.result.title,
+                      leading: AppHeaderAction(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        tooltip:
+                            MaterialLocalizations.of(context).backButtonTooltip,
+                        onPressed: () => Navigator.pop(context),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      spacing.l,
-                      spacing.m,
-                      spacing.l,
-                      spacing.xxl,
-                    ),
-                    child: ResultPresentationView(
-                      result: result,
-                      imageBytes: imageBytes,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(
+                        spacing.l,
+                        spacing.m,
+                        spacing.l,
+                        spacing.xxl,
+                      ),
+                      child: ResultPresentationView(
+                        result: result,
+                        imageBytes: imageBytes,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

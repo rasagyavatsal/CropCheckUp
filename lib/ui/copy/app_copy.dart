@@ -27,6 +27,12 @@ class HomeCopy {
   String get actionUploadSubtitle => 'Analyze an existing image';
   String get tipsTitle => 'Photo Tips';
   String get diagnoseTitle => 'Check Leaf Health';
+  String get recentDiagnosesTitle => 'Recent Diagnoses';
+  String get recentLoading => 'Loading recent diagnoses';
+  String get recentEmptyTitle => 'No diagnoses yet';
+  String get recentEmptyMessage =>
+      'Recent diagnoses will appear here after you complete a scan.';
+  String get recentError => 'Recent diagnoses could not be loaded.';
   String get footerText => '68 labels • 224 x 224 input • TensorFlow Lite';
   String get loadingOverlayTitle => 'Diagnosing plant health...';
   String get loadingOverlaySubtitle => 'Identifying patterns and diseases';

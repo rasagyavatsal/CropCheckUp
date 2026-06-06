@@ -14,6 +14,7 @@ class AppGridBackground extends StatelessWidget {
     final opacity = brightness == Brightness.light ? 0.038 : 0.045;
 
     return Stack(
+      fit: StackFit.expand,
       children: [
         Positioned.fill(
           child: IgnorePointer(

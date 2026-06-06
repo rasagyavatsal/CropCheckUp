@@ -116,74 +116,76 @@ class _CameraScreenState extends State<CameraScreen> {
     return Stack(
       children: [
         AppPageShell(
-          applySafeArea: true,
+          applySafeArea: false,
           child: AppGridBackground(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.l,
-                spacing.m,
-                spacing.l,
-                spacing.l,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AppScreenHeader(
-                    title: 'Scanner',
-                    leading: AppHeaderAction(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      tooltip: AppCopy.shared.backAction,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    trailing: AppHeaderAction(
-                      icon: Icon(
-                        _session.isFlashOn
-                            ? Icons.flash_on_rounded
-                            : Icons.flash_off_rounded,
-                        color:
-                            _session.isFlashOn
-                                ? colors.brand
-                                : colors.textPrimary,
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  spacing.l,
+                  spacing.m,
+                  spacing.l,
+                  spacing.l,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppScreenHeader(
+                      title: 'Scanner',
+                      leading: AppHeaderAction(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        tooltip: AppCopy.shared.backAction,
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                      tooltip:
+                      trailing: AppHeaderAction(
+                        icon: Icon(
                           _session.isFlashOn
-                              ? AppCopy.camera.semanticFlashOff
-                              : AppCopy.camera.semanticFlashOn,
-                      onPressed: () async {
-                        await _session.toggleFlash();
-                        if (mounted) setState(() {});
-                      },
-                    ),
-                  ),
-                  SizedBox(height: spacing.l),
-                  Expanded(
-                    child: AppCard.panel(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          AppCameraViewfinder(
-                            session: _session,
-                            onResume: _bootstrap,
-                          ),
-                          const CameraOverlay(),
-                          Positioned(
-                            left: spacing.m,
-                            right: spacing.m,
-                            top: spacing.m,
-                            child: _ViewfinderLabel(
-                              label: AppCopy.camera.captureReady,
-                            ),
-                          ),
-                        ],
+                              ? Icons.flash_on_rounded
+                              : Icons.flash_off_rounded,
+                          color:
+                              _session.isFlashOn
+                                  ? colors.brand
+                                  : colors.textPrimary,
+                        ),
+                        tooltip:
+                            _session.isFlashOn
+                                ? AppCopy.camera.semanticFlashOff
+                                : AppCopy.camera.semanticFlashOn,
+                        onPressed: () async {
+                          await _session.toggleFlash();
+                          if (mounted) setState(() {});
+                        },
                       ),
                     ),
-                  ),
-                  SizedBox(height: spacing.m),
-                  _CapturePanel(
-                    isDiagnosing: _isDiagnosing,
-                    onCapture: _captureAndDiagnose,
-                  ),
-                ],
+                    SizedBox(height: spacing.l),
+                    Expanded(
+                      child: AppCard.panel(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            AppCameraViewfinder(
+                              session: _session,
+                              onResume: _bootstrap,
+                            ),
+                            const CameraOverlay(),
+                            Positioned(
+                              left: spacing.m,
+                              right: spacing.m,
+                              top: spacing.m,
+                              child: _ViewfinderLabel(
+                                label: AppCopy.camera.captureReady,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: spacing.m),
+                    _CapturePanel(
+                      isDiagnosing: _isDiagnosing,
+                      onCapture: _captureAndDiagnose,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

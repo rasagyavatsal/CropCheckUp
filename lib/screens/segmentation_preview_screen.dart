@@ -32,60 +32,62 @@ class SegmentationPreviewScreen extends StatelessWidget {
     return Stack(
       children: [
         AppPageShell(
-          applySafeArea: true,
+          applySafeArea: false,
           child: AppGridBackground(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.l,
-                spacing.m,
-                spacing.l,
-                spacing.l,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AppScreenHeader(
-                    title: AppCopy.preview.title,
-                    leading: AppHeaderAction(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      tooltip: AppCopy.preview.actionRetry,
-                      onPressed: () => Navigator.pop(context, false),
-                    ),
-                  ),
-                  SizedBox(height: spacing.l),
-                  Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: AppImagePanel(
-                        imageBytes: imageBytes,
-                        semanticLabel: AppCopy.preview.semanticPreviewImage,
-                        heroTag: 'segmentation_preview',
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  spacing.l,
+                  spacing.m,
+                  spacing.l,
+                  spacing.l,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppScreenHeader(
+                      title: AppCopy.preview.title,
+                      leading: AppHeaderAction(
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        tooltip: AppCopy.preview.actionRetry,
+                        onPressed: () => Navigator.pop(context, false),
                       ),
                     ),
-                  ),
-                  SizedBox(height: spacing.m),
-                  Semantics(
-                    button: true,
-                    label: AppCopy.preview.actionConfirm,
-                    child: AppButton.primary(
-                      isFullWidth: true,
-                      icon: Icons.check_circle_rounded,
+                    SizedBox(height: spacing.l),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: AppImagePanel(
+                          imageBytes: imageBytes,
+                          semanticLabel: AppCopy.preview.semanticPreviewImage,
+                          heroTag: 'segmentation_preview',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: spacing.m),
+                    Semantics(
+                      button: true,
                       label: AppCopy.preview.actionConfirm,
-                      onPressed: () => Navigator.pop(context, true),
+                      child: AppButton.primary(
+                        isFullWidth: true,
+                        icon: Icons.check_circle_rounded,
+                        label: AppCopy.preview.actionConfirm,
+                        onPressed: () => Navigator.pop(context, true),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: spacing.sm),
-                  Semantics(
-                    button: true,
-                    label: AppCopy.preview.actionRetry,
-                    child: AppButton.secondary(
-                      isFullWidth: true,
-                      icon: Icons.refresh_rounded,
+                    SizedBox(height: spacing.sm),
+                    Semantics(
+                      button: true,
                       label: AppCopy.preview.actionRetry,
-                      onPressed: () => Navigator.pop(context, false),
+                      child: AppButton.secondary(
+                        isFullWidth: true,
+                        icon: Icons.refresh_rounded,
+                        label: AppCopy.preview.actionRetry,
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
