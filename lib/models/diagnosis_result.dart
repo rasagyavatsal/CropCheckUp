@@ -94,4 +94,23 @@ class DiagnosisResult {
       symptoms.hashCode ^
       causes.hashCode ^
       management.hashCode;
+
+  Map<String, dynamic> toJson() => {
+        'rawLabel': rawLabel,
+        'confidence': confidence,
+        'symptoms': symptoms,
+        'causes': causes,
+        'management': management,
+      };
+
+  factory DiagnosisResult.fromJson(Map<String, dynamic> json) {
+    return DiagnosisResult(
+      rawLabel: json['rawLabel'] as String,
+      confidence: (json['confidence'] as num).toDouble(),
+      symptoms: json['symptoms'] as String?,
+      causes: json['causes'] as String?,
+      management: json['management'] as String?,
+    );
+  }
 }
+

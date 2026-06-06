@@ -260,5 +260,49 @@ void main() {
         });
       }
     });
+
+    group('JSON serialization', () {
+      test('toJson and fromJson round-trip with all fields', () {
+        const original = DiagnosisResult(
+          rawLabel: 'Tomato___Late_blight',
+          confidence: 0.95,
+          symptoms: 'symptoms text',
+          causes: 'causes text',
+          management: 'management text',
+        );
+
+        final json = original.toJson();
+        expect(json['rawLabel'], 'Tomato___Late_blight');
+        expect(json['confidence'], 0.95);
+        expect(json['symptoms'], 'symptoms text');
+        expect(json['causes'], 'causes text');
+        expect(json['management'], 'management text');
+
+        final reconstructed = DiagnosisResult.fromJson(json);
+        expect(reconstructed, equals(original));
+        expect(reconstructed.cropName, 'Tomato');
+        expect(reconstructed.diseaseName, 'Late blight');
+        expect(reconstructed.displayLabel, 'Tomato — Late blight');
+        expect(reconstructed.confidencePercent, 95);
+      });
+
+      test('toJson and fromJson round-trip with null optional fields', () {
+        const original = DiagnosisResult(
+          rawLabel: 'Blueberry___healthy',
+          confidence: 0.99,
+        );
+
+        final json = original.toJson();
+        expect(json['rawLabel'], 'Blueberry___healthy');
+        expect(json['confidence'], 0.99);
+        expect(json['symptoms'], isNull);
+        expect(json['causes'], isNull);
+        expect(json['management'], isNull);
+
+        final reconstructed = DiagnosisResult.fromJson(json);
+        expect(reconstructed, equals(original));
+      });
+    });
   });
 }
+
