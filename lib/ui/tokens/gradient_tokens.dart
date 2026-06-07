@@ -59,68 +59,38 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
   }
 
   static const GradientTokens light = GradientTokens(
-    brandHeader: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFFFFFFFF), Color(0xFFF5F8F4)],
-    ),
-    cameraOverlay: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF1F7A4D), Color(0xFF0F5F8F)],
-    ),
-    healthyStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF1F7A4D), Color(0xFFEFF7F1)],
-    ),
-    dangerStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFFB42318), Color(0xFFFFF2F0)],
-    ),
-    neutralStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0F5F8F), Color(0xFFEEF5ED)],
-    ),
-    previewBackdrop: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFFFFFFFF), Color(0xFFF5F8F4), Color(0xFFFFFFFF)],
-    ),
+    brandHeader: _StandardGradient([Color(0xFFFFFFFF), Color(0xFFF5F8F4)]),
+    cameraOverlay: _StandardGradient([Color(0xFF1F7A4D), Color(0xFF0F5F8F)]),
+    healthyStatus: _StandardGradient([Color(0xFF1F7A4D), Color(0xFFEFF7F1)]),
+    dangerStatus: _StandardGradient([Color(0xFFB42318), Color(0xFFFFF2F0)]),
+    neutralStatus: _StandardGradient([Color(0xFF0F5F8F), Color(0xFFEEF5ED)]),
+    previewBackdrop: _VerticalGradient([Color(0xFFFFFFFF), Color(0xFFF5F8F4), Color(0xFFFFFFFF)]),
   );
 
   static const GradientTokens dark = GradientTokens(
-    brandHeader: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Colors.black, Color(0xFF050505)],
-    ),
-    cameraOverlay: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0B0B0B), Color(0xFF0F5F8F)],
-    ),
-    healthyStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0B0B0B), Color(0xFF5BB07E)],
-    ),
-    dangerStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0B0B0B), Color(0xFFFFB4AB)],
-    ),
-    neutralStatus: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0B0B0B), Color(0xFF6DAED6)],
-    ),
-    previewBackdrop: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.black, Color(0xFF050505), Colors.black],
-    ),
+    brandHeader: _StandardGradient([Colors.black, Color(0xFF050505)]),
+    cameraOverlay: _StandardGradient([Color(0xFF0B0B0B), Color(0xFF0F5F8F)]),
+    healthyStatus: _StandardGradient([Color(0xFF0B0B0B), Color(0xFF5BB07E)]),
+    dangerStatus: _StandardGradient([Color(0xFF0B0B0B), Color(0xFFFFB4AB)]),
+    neutralStatus: _StandardGradient([Color(0xFF0B0B0B), Color(0xFF6DAED6)]),
+    previewBackdrop: _VerticalGradient([Colors.black, Color(0xFF050505), Colors.black]),
   );
+}
+
+class _StandardGradient extends LinearGradient {
+  const _StandardGradient(List<Color> colors)
+      : super(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        );
+}
+
+class _VerticalGradient extends LinearGradient {
+  const _VerticalGradient(List<Color> colors)
+      : super(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: colors,
+        );
 }

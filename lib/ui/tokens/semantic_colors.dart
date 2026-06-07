@@ -37,6 +37,25 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.disabled,
   });
 
+  const SemanticColors._({
+    required this.brand,
+    required this.brandSecondary,
+    required this.background,
+    required this.surface,
+    required this.raisedSurface,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.mutedText,
+    required this.subtleBorder,
+    required this.strongBorder,
+    Color? success,
+    required this.warning,
+    required this.danger,
+    required this.cameraScrim,
+    required this.overlay,
+    required this.disabled,
+  }) : success = success ?? brand;
+
   @override
   SemanticColors copyWith({
     Color? brand,
@@ -104,7 +123,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     );
   }
 
-  static const SemanticColors light = SemanticColors(
+  static const SemanticColors light = SemanticColors._(
     brand: Color(0xFF1F7A4D),
     brandSecondary: Color(0xFF0F5F8F),
     background: Color(0xFFFFFFFF),
@@ -115,7 +134,6 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     mutedText: Color(0xFF6F7F76),
     subtleBorder: Color(0x1C17201B),
     strongBorder: Color(0x571F7A4D),
-    success: Color(0xFF1F7A4D),
     warning: Color(0xFFB7791F),
     danger: Color(0xFFB42318),
     cameraScrim: Color(0xA6000000),
@@ -123,7 +141,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     disabled: Color(0x5C17201B),
   );
 
-  static const SemanticColors dark = SemanticColors(
+  static const SemanticColors dark = SemanticColors._(
     brand: Color(0xFF5BB07E),
     brandSecondary: Color(0xFF6DAED6),
     background: Color(0xFF000000),
@@ -134,7 +152,6 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     mutedText: Color(0xFF94AA9D),
     subtleBorder: Color(0x1FFFFFFF),
     strongBorder: Color(0x665BB07E),
-    success: Color(0xFF5BB07E),
     warning: Color(0xFFE0A13E),
     danger: Color(0xFFFFB4AB),
     cameraScrim: Color(0xB0000000),
