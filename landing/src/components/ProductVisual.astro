@@ -1,19 +1,24 @@
 ---
+const lightVideoSrc = '/videos/light.mp4';
+const darkVideoSrc = '/videos/dark.mp4';
 ---
 <div class="product-visual mobile-frame glass-panel">
-  <div class="mobile-notch"></div>
+  <div class="mobile-notch" aria-hidden="true"></div>
   <div class="video-container">
     <video 
       class="app-video"
+      data-theme-video
+      data-light-src={lightVideoSrc}
+      data-dark-src={darkVideoSrc}
       autoplay 
       loop 
       muted 
       playsinline 
-    >
-      <source src="" type="video/mp4" />
-    </video>
+      preload="metadata"
+      aria-label="CropCheckUp mobile app walkthrough"
+    ></video>
     
-    <div class="video-fallback">
+    <div class="video-fallback" aria-hidden="true">
       <div class="scan-line"></div>
       <div class="fallback-header">
         <span class="status-dot"></span>
@@ -22,11 +27,59 @@
       <div class="play-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </div>
-      <p>Video Placeholder</p>
-      <p class="small-text">Mobile walkthrough video slot</p>
+      <p>Loading walkthrough</p>
+      <p class="small-text">Mobile app demo</p>
     </div>
   </div>
 </div>
+
+<script>
+  const themeVideo = document.querySelector<HTMLVideoElement>('[data-theme-video]');
+
+  const getThemeVideoSource = () => {
+    if (!themeVideo) {
+      return undefined;
+    }
+
+    return document.documentElement.classList.contains('dark')
+      ? themeVideo.dataset.darkSrc
+      : themeVideo.dataset.lightSrc;
+  };
+
+  const updateThemeVideo = () => {
+    if (!themeVideo) {
+      return;
+    }
+
+    const nextSource = getThemeVideoSource();
+
+    if (!nextSource || themeVideo.dataset.currentSrc === nextSource) {
+      return;
+    }
+
+    themeVideo.dataset.currentSrc = nextSource;
+    themeVideo.classList.remove('is-ready');
+    themeVideo.src = nextSource;
+    themeVideo.load();
+    themeVideo.play().catch(() => undefined);
+  };
+
+  themeVideo?.addEventListener('loadeddata', () => {
+    themeVideo.classList.add('is-ready');
+  });
+
+  themeVideo?.addEventListener('error', () => {
+    themeVideo.classList.remove('is-ready');
+  });
+
+  updateThemeVideo();
+
+  const themeObserver = new MutationObserver(updateThemeVideo);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+</script>
 
 <style>
   .mobile-frame {
@@ -88,6 +141,17 @@
     background-color: rgba(31, 122, 77, 0.08);
     position: relative;
     z-index: 2;
+    opacity: 0;
+    transition: opacity 0.24s ease;
+  }
+
+  .app-video.is-ready {
+    opacity: 1;
+  }
+
+  .app-video.is-ready + .video-fallback {
+    opacity: 0;
+    visibility: hidden;
   }
 
   .video-fallback {
@@ -102,6 +166,9 @@
     color: var(--color-text-secondary);
     pointer-events: none;
     z-index: 3;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.24s ease, visibility 0.24s ease;
   }
 
   .scan-line {
