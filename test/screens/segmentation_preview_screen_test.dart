@@ -9,6 +9,39 @@ void main() {
     // 1x1 transparent PNG
     final mockBytes = transparentPngBytes;
 
+    Future<void> pumpPreviewHelper(
+      WidgetTester tester, {
+      required void Function(bool?) onResult,
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.dark,
+          home: Builder(
+            builder:
+                (context) => ElevatedButton(
+                  onPressed: () async {
+                    final result = await SegmentationPreviewScreen.show(
+                      context,
+                      mockBytes,
+                    );
+                    onResult(result);
+                  },
+                  child: const Text('Open'),
+                ),
+          ),
+        ),
+      );
+    }
+
+    Future<void> tapConfirm(WidgetTester tester) async {
+      await tester.tap(find.text('Diagnose'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> tapRetry(WidgetTester tester) async {
+      await tester.tap(find.text('Try Again'));
+      await tester.pumpAndSettle();
+    }
 
     testWidgets('renders image and action buttons', (
       WidgetTester tester,
@@ -33,58 +66,30 @@ void main() {
 
     testWidgets('Diagnose button returns true', (WidgetTester tester) async {
       bool? result;
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.dark,
-          home: Builder(
-            builder:
-                (context) => ElevatedButton(
-                  onPressed: () async {
-                    result = await SegmentationPreviewScreen.show(
-                      context,
-                      mockBytes,
-                    );
-                  },
-                  child: const Text('Open'),
-                ),
-          ),
-        ),
+      await pumpPreviewHelper(
+        tester,
+        onResult: (r) => result = r,
       );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Diagnose'));
-      await tester.pumpAndSettle();
+      await tapConfirm(tester);
 
       expect(result, isTrue);
     });
 
     testWidgets('Try Again button returns false', (WidgetTester tester) async {
       bool? result;
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.dark,
-          home: Builder(
-            builder:
-                (context) => ElevatedButton(
-                  onPressed: () async {
-                    result = await SegmentationPreviewScreen.show(
-                      context,
-                      mockBytes,
-                    );
-                  },
-                  child: const Text('Open'),
-                ),
-          ),
-        ),
+      await pumpPreviewHelper(
+        tester,
+        onResult: (r) => result = r,
       );
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Try Again'));
-      await tester.pumpAndSettle();
+      await tapRetry(tester);
 
       expect(result, isFalse);
     });
