@@ -88,6 +88,17 @@ fvm flutter devices
 fvm flutter run -d <device-id>
 ```
 
+### Gradle Dependency Locking
+
+Android dependency resolution is locked. To refresh the lockfiles:
+
+```sh
+cd android
+./gradlew resolveAndLockAll --write-locks
+```
+
+*Note: If the system's default Java version is too new (e.g. JDK 25+), you may need to override `JAVA_HOME` to point to a Java 17 installation (e.g., `JAVA_HOME=/path/to/jdk-17 ./gradlew resolveAndLockAll --write-locks`).*
+
 ## Landing Site Setup
 
 ```sh

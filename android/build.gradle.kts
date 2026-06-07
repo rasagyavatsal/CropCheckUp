@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -5,6 +15,25 @@ allprojects {
     }
     dependencyLocking {
         lockAllConfigurations()
+    }
+}
+
+tasks.register("resolveAndLockAll") {
+    doFirst {
+        require(gradle.startParameter.isWriteDependencyLocks) {
+            "Must be run with --write-locks"
+        }
+    }
+    doLast {
+        allprojects {
+            configurations.filter { it.isCanBeResolved }.forEach {
+                try {
+                    it.resolve()
+                } catch (e: Exception) {
+                    // Ignore resolution failures
+                }
+            }
+        }
     }
 }
 
