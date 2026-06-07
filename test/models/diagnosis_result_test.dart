@@ -3,156 +3,162 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
 
 void main() {
+  DiagnosisResult _createResult({
+    String rawLabel = 'Tomato___Late_blight',
+    double confidence = 0.95,
+    String? symptoms,
+    String? causes,
+    String? management,
+  }) {
+    return DiagnosisResult(
+      rawLabel: rawLabel,
+      confidence: confidence,
+      symptoms: symptoms,
+      causes: causes,
+      management: management,
+    );
+  }
+
   group('DiagnosisResult', () {
     group('label parsing', () {
-      test('extracts crop name from standard label', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Tomato___Late_blight',
-          confidence: 0.95,
-        );
-        expect(result.cropName, 'Tomato');
-      });
+      final cases = [
+        (
+          description: 'extracts crop name from standard label',
+          raw: 'Tomato___Late_blight',
+          crop: 'Tomato',
+          disease: 'Late blight',
+        ),
+        (
+          description: 'extracts crop name with parentheses',
+          raw: 'Cherry_(including_sour)___Powdery_mildew',
+          crop: 'Cherry (including sour)',
+          disease: 'Powdery mildew',
+        ),
+        (
+          description: 'extracts crop name with underscores replaced by spaces',
+          raw: 'Corn_(maize)___Common_rust_',
+          crop: 'Corn (maize)',
+          disease: 'Common rust',
+        ),
+        (
+          description: 'returns "Healthy" for healthy labels',
+          raw: 'Tomato___healthy',
+          crop: 'Tomato',
+          disease: 'Healthy',
+        ),
+        (
+          description: 'extracts complex disease names',
+          raw: 'Grape___Esca_(Black_Measles)',
+          crop: 'Grape',
+          disease: 'Esca (Black Measles)',
+        ),
+        (
+          description: 'handles labels with spaces in disease name',
+          raw: 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
+          crop: 'Corn (maize)',
+          disease: 'Cercospora leaf spot Gray leaf spot',
+        ),
+        (
+          description: 'returns Unknown for malformed labels without separator',
+          raw: 'SomePlant',
+          crop: 'SomePlant',
+          disease: 'Unknown',
+        ),
+      ];
 
-      test('extracts crop name with parentheses', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Cherry_(including_sour)___Powdery_mildew',
-          confidence: 0.88,
-        );
-        expect(result.cropName, 'Cherry (including sour)');
-      });
-
-      test('extracts crop name with underscores replaced by spaces', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Corn_(maize)___Common_rust_',
-          confidence: 0.90,
-        );
-        expect(result.cropName, 'Corn (maize)');
-      });
-
-      test('extracts disease name from standard label', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Tomato___Late_blight',
-          confidence: 0.95,
-        );
-        expect(result.diseaseName, 'Late blight');
-      });
-
-      test('returns "Healthy" for healthy labels', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Tomato___healthy',
-          confidence: 0.99,
-        );
-        expect(result.diseaseName, 'Healthy');
-      });
-
-      test('extracts complex disease names', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Grape___Esca_(Black_Measles)',
-          confidence: 0.76,
-        );
-        expect(result.diseaseName, 'Esca (Black Measles)');
-      });
-
-      test('handles labels with spaces in disease name', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
-          confidence: 0.85,
-        );
-        expect(result.cropName, 'Corn (maize)');
-        expect(result.diseaseName, 'Cercospora leaf spot Gray leaf spot');
-      });
-
-      test('returns Unknown for malformed labels without separator', () {
-        const result = DiagnosisResult(
-          rawLabel: 'SomePlant',
-          confidence: 0.50,
-        );
-        expect(result.cropName, 'SomePlant');
-        expect(result.diseaseName, 'Unknown');
-      });
+      for (final tc in cases) {
+        test(tc.description, () {
+          final result = _createResult(rawLabel: tc.raw);
+          expect(result.cropName, tc.crop);
+          expect(result.diseaseName, tc.disease);
+        });
+      }
     });
 
     group('displayLabel', () {
-      test('combines crop and disease with em dash', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Apple___Apple_scab',
-          confidence: 0.92,
-        );
-        expect(result.displayLabel, 'Apple — Apple scab');
-      });
+      final cases = [
+        (
+          description: 'combines crop and disease with em dash',
+          raw: 'Apple___Apple_scab',
+          expected: 'Apple — Apple scab',
+        ),
+        (
+          description: 'shows Healthy for healthy plants',
+          raw: 'Blueberry___healthy',
+          expected: 'Blueberry — Healthy',
+        ),
+      ];
 
-      test('shows Healthy for healthy plants', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Blueberry___healthy',
-          confidence: 0.97,
-        );
-        expect(result.displayLabel, 'Blueberry — Healthy');
-      });
+      for (final tc in cases) {
+        test(tc.description, () {
+          final result = _createResult(rawLabel: tc.raw);
+          expect(result.displayLabel, tc.expected);
+        });
+      }
     });
 
     group('isHealthy', () {
-      test('returns true for healthy labels', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Peach___healthy',
-          confidence: 0.95,
-        );
-        expect(result.isHealthy, isTrue);
-      });
+      final cases = [
+        (
+          description: 'returns true for healthy labels',
+          raw: 'Peach___healthy',
+          expected: true,
+        ),
+        (
+          description: 'returns false for diseased labels',
+          raw: 'Potato___Late_blight',
+          expected: false,
+        ),
+        (
+          description: 'is case-insensitive',
+          raw: 'Grape___Healthy',
+          expected: true,
+        ),
+      ];
 
-      test('returns false for diseased labels', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Potato___Late_blight',
-          confidence: 0.90,
-        );
-        expect(result.isHealthy, isFalse);
-      });
-
-      test('is case-insensitive', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Grape___Healthy',
-          confidence: 0.95,
-        );
-        expect(result.isHealthy, isTrue);
-      });
+      for (final tc in cases) {
+        test(tc.description, () {
+          final result = _createResult(rawLabel: tc.raw);
+          expect(result.isHealthy, tc.expected ? isTrue : isFalse);
+        });
+      }
     });
 
     group('confidence', () {
-      test('returns correct percentage', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Tomato___healthy',
+      final cases = [
+        (
+          description: 'returns correct percentage',
           confidence: 0.9432,
-        );
-        expect(result.confidencePercent, 94);
-      });
-
-      test('rounds correctly at boundary', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Tomato___healthy',
+          expected: 94,
+        ),
+        (
+          description: 'rounds correctly at boundary',
           confidence: 0.755,
-        );
-        expect(result.confidencePercent, 76);
-      });
-
-      test('handles 100% confidence', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Apple___healthy',
+          expected: 76,
+        ),
+        (
+          description: 'handles 100% confidence',
           confidence: 1.0,
-        );
-        expect(result.confidencePercent, 100);
-      });
-
-      test('handles 0% confidence', () {
-        const result = DiagnosisResult(
-          rawLabel: 'Apple___healthy',
+          expected: 100,
+        ),
+        (
+          description: 'handles 0% confidence',
           confidence: 0.0,
-        );
-        expect(result.confidencePercent, 0);
-      });
+          expected: 0,
+        ),
+      ];
+
+      for (final tc in cases) {
+        test(tc.description, () {
+          final result = _createResult(confidence: tc.confidence);
+          expect(result.confidencePercent, tc.expected);
+        });
+      }
     });
 
     group('optional info fields', () {
       test('stores and returns symptoms, causes, and management', () {
-        const result = DiagnosisResult(
+        final result = _createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
           symptoms: 'Brown spots on leaves',
@@ -165,7 +171,7 @@ void main() {
       });
 
       test('fields are null when not provided', () {
-        const result = DiagnosisResult(
+        final result = _createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
         );
@@ -177,28 +183,28 @@ void main() {
 
     group('equality', () {
       test('equal for same label and confidence', () {
-        const a = DiagnosisResult(rawLabel: 'A___B', confidence: 0.5);
-        const b = DiagnosisResult(rawLabel: 'A___B', confidence: 0.5);
+        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = _createResult(rawLabel: 'A___B', confidence: 0.5);
         expect(a, equals(b));
         expect(a.hashCode, equals(b.hashCode));
       });
 
       test('not equal for different labels', () {
-        const a = DiagnosisResult(rawLabel: 'A___B', confidence: 0.5);
-        const b = DiagnosisResult(rawLabel: 'A___C', confidence: 0.5);
+        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = _createResult(rawLabel: 'A___C', confidence: 0.5);
         expect(a, isNot(equals(b)));
       });
 
       test('not equal for different confidence', () {
-        const a = DiagnosisResult(rawLabel: 'A___B', confidence: 0.5);
-        const b = DiagnosisResult(rawLabel: 'A___B', confidence: 0.6);
+        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = _createResult(rawLabel: 'A___B', confidence: 0.6);
         expect(a, isNot(equals(b)));
       });
     });
 
     group('toString', () {
       test('contains display label and percentage', () {
-        const result = DiagnosisResult(
+        final result = _createResult(
           rawLabel: 'Strawberry___Leaf_scorch',
           confidence: 0.87,
         );
@@ -252,7 +258,7 @@ void main() {
 
       for (final label in labels) {
         test('parses "$label" without error', () {
-          final result = DiagnosisResult(rawLabel: label, confidence: 0.9);
+          final result = _createResult(rawLabel: label, confidence: 0.9);
           expect(result.cropName, isNotEmpty);
           expect(result.diseaseName, isNotEmpty);
           expect(result.displayLabel, contains('—'));
@@ -263,7 +269,7 @@ void main() {
 
     group('JSON serialization', () {
       test('toJson and fromJson round-trip with all fields', () {
-        const original = DiagnosisResult(
+        final original = _createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
           symptoms: 'symptoms text',
@@ -287,7 +293,7 @@ void main() {
       });
 
       test('toJson and fromJson round-trip with null optional fields', () {
-        const original = DiagnosisResult(
+        final original = _createResult(
           rawLabel: 'Blueberry___healthy',
           confidence: 0.99,
         );
@@ -305,4 +311,3 @@ void main() {
     });
   });
 }
-
