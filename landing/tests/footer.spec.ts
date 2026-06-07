@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+
+const packageJson = JSON.parse(
+  await readFile(new URL('../package.json', import.meta.url), 'utf-8')
+) as { version: string };
 
 test('Footer is present with semantic tag', async ({ page }) => {
   await page.goto('/');
@@ -42,4 +47,11 @@ test('Footer contains license summary and documentation links', async ({ page })
   
   const dataLicense = footer.locator('a', { hasText: 'Model/data: CC-BY-NC-SA-4.0 non-commercial' });
   await expect(dataLicense).toHaveAttribute('href', 'https://github.com/rasagyavatsal/CropCheckUp/blob/main/DATASET_LICENSE.md');
+});
+
+test('Footer displays the landing package version', async ({ page }) => {
+  await page.goto('/');
+  const footer = page.locator('footer');
+
+  await expect(footer.getByText(`Landing v${packageJson.version}`)).toBeVisible();
 });

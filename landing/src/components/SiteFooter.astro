@@ -1,4 +1,7 @@
 ---
+import packageJson from '../../package.json';
+
+const landingVersion = packageJson.version;
 ---
 <footer class="site-footer">
   <div class="container footer-container">
@@ -31,6 +34,7 @@
     
     <div class="footer-bottom">
       <p class="copyright">© {new Date().getFullYear()} CropCheckUp.</p>
+      <p class="version">Landing v{landingVersion}</p>
       <p class="license-summary">
         <a href="https://github.com/rasagyavatsal/CropCheckUp/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Code: Apache-2.0</a>. 
         <a href="https://github.com/rasagyavatsal/CropCheckUp/blob/main/DATASET_LICENSE.md" target="_blank" rel="noopener noreferrer">Model/data: CC-BY-NC-SA-4.0 non-commercial</a>.
@@ -138,6 +142,12 @@
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
     margin: 0;
+  }
+
+  .version {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    margin: var(--space-xs) 0 0;
   }
 
   .license-summary {
