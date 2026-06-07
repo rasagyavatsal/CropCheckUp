@@ -3,7 +3,6 @@ const lightVideoSrc = '/videos/light.mp4';
 const darkVideoSrc = '/videos/dark.mp4';
 ---
 <div class="product-visual mobile-frame glass-panel">
-  <div class="mobile-notch" aria-hidden="true"></div>
   <div class="video-container">
     <video 
       class="app-video"
@@ -103,19 +102,6 @@ const darkVideoSrc = '/videos/dark.mp4';
 
   .mobile-frame:hover {
     transform: perspective(1000px) rotateY(0) rotateX(0) translateY(-10px);
-  }
-
-  .mobile-notch {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 25px;
-    background: #000000;
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    z-index: 10;
   }
 
   .video-container {
