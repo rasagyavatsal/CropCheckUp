@@ -17,6 +17,8 @@
   
   --color-border-subtle: rgba(23, 32, 27, 0.11);
   --color-border-hover: rgba(31, 122, 77, 0.34);
+  --color-grid-line: rgba(23, 32, 27, 0.11);
+  --grid-background-opacity: 0.34;
 
   --color-success: #1f7a4d;
   --color-warning: #b7791f;
@@ -25,10 +27,10 @@
 }
 
 html.dark {
-  --color-bg-base: #111715;
-  --color-bg-surface: #17221d;
-  --color-bg-raised: #1d2a24;
-  --color-bg-field: #142019;
+  --color-bg-base: #000000;
+  --color-bg-surface: #050505;
+  --color-bg-raised: #0b0b0b;
+  --color-bg-field: #111111;
   
   --color-text-primary: #f5fbf6;
   --color-text-secondary: #c7d7cc;
@@ -36,6 +38,8 @@ html.dark {
   
   --color-border-subtle: rgba(255, 255, 255, 0.12);
   --color-border-hover: rgba(91, 176, 126, 0.4);
+  --color-grid-line: rgba(255, 255, 255, 0.14);
+  --grid-background-opacity: 0.72;
 }
 
 :root {

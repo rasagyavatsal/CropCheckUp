@@ -11,7 +11,7 @@ class AppGridBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final brightness = Theme.of(context).brightness;
-    final opacity = brightness == Brightness.light ? 0.038 : 0.045;
+    final opacity = brightness == Brightness.light ? 0.038 : 0.10;
 
     return Stack(
       fit: StackFit.expand,

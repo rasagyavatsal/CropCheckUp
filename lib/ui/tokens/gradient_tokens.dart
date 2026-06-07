@@ -95,32 +95,32 @@ class GradientTokens extends ThemeExtension<GradientTokens> {
     brandHeader: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF111715), Color(0xFF17221D)],
+      colors: [Colors.black, Color(0xFF050505)],
     ),
     cameraOverlay: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1D2A24), Color(0xFF0F5F8F)],
+      colors: [Color(0xFF0B0B0B), Color(0xFF0F5F8F)],
     ),
     healthyStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1D2A24), Color(0xFF5BB07E)],
+      colors: [Color(0xFF0B0B0B), Color(0xFF5BB07E)],
     ),
     dangerStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1D2A24), Color(0xFFFFB4AB)],
+      colors: [Color(0xFF0B0B0B), Color(0xFFFFB4AB)],
     ),
     neutralStatus: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF1D2A24), Color(0xFF6DAED6)],
+      colors: [Color(0xFF0B0B0B), Color(0xFF6DAED6)],
     ),
     previewBackdrop: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Colors.black, Color(0xFF17221D), Color(0xFF111715)],
+      colors: [Colors.black, Color(0xFF050505), Colors.black],
     ),
   );
 }

@@ -11,6 +11,20 @@ void main() {
       expect(gradient.brandHeader.colors.length, 2);
     });
 
+    test('dark gradients use black background tones', () {
+      const gradient = GradientTokens.dark;
+
+      expect(gradient.brandHeader.colors, [
+        Colors.black,
+        const Color(0xFF050505),
+      ]);
+      expect(gradient.previewBackdrop.colors, [
+        Colors.black,
+        const Color(0xFF050505),
+        Colors.black,
+      ]);
+    });
+
     test('lerp works correctly', () {
       const start = GradientTokens.light;
       const end = GradientTokens.dark;

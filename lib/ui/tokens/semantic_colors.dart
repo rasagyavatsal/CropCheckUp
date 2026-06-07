@@ -126,9 +126,9 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   static const SemanticColors dark = SemanticColors(
     brand: Color(0xFF5BB07E),
     brandSecondary: Color(0xFF6DAED6),
-    background: Color(0xFF111715),
-    surface: Color(0xFF17221D),
-    raisedSurface: Color(0xFF1D2A24),
+    background: Color(0xFF000000),
+    surface: Color(0xFF050505),
+    raisedSurface: Color(0xFF0B0B0B),
     textPrimary: Color(0xFFF5FBF6),
     textSecondary: Color(0xFFC7D7CC),
     mutedText: Color(0xFF94AA9D),

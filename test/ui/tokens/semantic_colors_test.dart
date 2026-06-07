@@ -28,9 +28,9 @@ void main() {
       final colors = SemanticColors.dark;
       expect(colors.brand, const Color(0xFF5BB07E));
       expect(colors.brandSecondary, const Color(0xFF6DAED6));
-      expect(colors.background, isA<Color>());
-      expect(colors.surface, isA<Color>());
-      expect(colors.raisedSurface, isA<Color>());
+      expect(colors.background, Colors.black);
+      expect(colors.surface, const Color(0xFF050505));
+      expect(colors.raisedSurface, const Color(0xFF0B0B0B));
       expect(colors.textPrimary, isA<Color>());
       expect(colors.textSecondary, isA<Color>());
       expect(colors.mutedText, isA<Color>());
