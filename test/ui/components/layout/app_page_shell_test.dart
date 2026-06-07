@@ -42,8 +42,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.light,
-          home: AppPageShell.scrollable(
-            child: const SizedBox(key: Key('child')),
+          home: const AppPageShell.scrollable(
+            child: SizedBox(key: Key('child')),
           ),
         ),
       );
@@ -55,8 +55,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.light,
-          home: AppPageShell.sliver(
-            slivers: const [
+          home: const AppPageShell.sliver(
+            slivers: [
               SliverToBoxAdapter(child: SizedBox(key: Key('child'))),
             ],
           ),

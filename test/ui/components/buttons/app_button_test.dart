@@ -4,6 +4,8 @@ import 'package:crop_check_up/ui/components/buttons/app_button.dart';
 import 'package:crop_check_up/ui/theme/app_theme.dart';
 
 void main() {
+  const primaryButtonLabel = 'Primary Button';
+
   Widget buildTestableWidget(Widget child) {
     return MaterialApp(
       theme: AppTheme.light,
@@ -20,7 +22,7 @@ void main() {
       await tester.pumpWidget(
         buildTestableWidget(
           AppButton.primary(
-            label: 'Primary Button',
+            label: primaryButtonLabel,
             onPressed: () {
               pressed = true;
             },
@@ -28,7 +30,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Primary Button'), findsOneWidget);
+      expect(find.text(primaryButtonLabel), findsOneWidget);
 
       await tester.tap(find.byType(AppButton));
       await tester.pumpAndSettle();
@@ -40,8 +42,8 @@ void main() {
 
       await tester.pumpWidget(
         buildTestableWidget(
-          AppButton.primary(
-            label: 'Primary Button',
+          const AppButton.primary(
+            label: primaryButtonLabel,
             onPressed: null,
           ),
         ),
@@ -59,7 +61,7 @@ void main() {
       await tester.pumpWidget(
         buildTestableWidget(
           AppButton.primary(
-            label: 'Primary Button',
+            label: primaryButtonLabel,
             isLoading: true,
             onPressed: () {
               pressed = true;

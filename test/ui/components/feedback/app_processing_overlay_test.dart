@@ -9,9 +9,9 @@ void main() {
     testWidgets('renders correctly and absorbs pointer', (tester) async {
       await tester.pumpWidget(MaterialApp(
         theme: AppTheme.light,
-        home: Stack(
+        home: const Stack(
           children: [
-            const Scaffold(body: Text('Background')),
+            Scaffold(body: Text('Background')),
             AppProcessingOverlay(
               message: 'Processing...',
             ),

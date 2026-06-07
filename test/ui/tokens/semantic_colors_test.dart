@@ -5,7 +5,7 @@ import 'package:crop_check_up/ui/tokens/semantic_colors.dart';
 void main() {
   group('SemanticColors', () {
     test('provides light mode semantic colors', () {
-      final colors = SemanticColors.light;
+      const colors = SemanticColors.light;
       expect(colors.brand, isA<Color>());
       expect(colors.brandSecondary, isA<Color>());
       expect(colors.background, isA<Color>());
@@ -25,7 +25,7 @@ void main() {
     });
 
     test('provides dark mode semantic colors', () {
-      final colors = SemanticColors.dark;
+      const colors = SemanticColors.dark;
       expect(colors.brand, const Color(0xFF5BB07E));
       expect(colors.brandSecondary, const Color(0xFF6DAED6));
       expect(colors.background, Colors.black);
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('ThemeExtension functionality', () {
-      final colors = SemanticColors.light;
+      const colors = SemanticColors.light;
 
       // copyWith
       final copiedColors = colors.copyWith(brand: Colors.red);
@@ -54,7 +54,7 @@ void main() {
       expect(copiedColors.background, colors.background); // Rest remains same
 
       // lerp
-      final darkColors = SemanticColors.dark;
+      const darkColors = SemanticColors.dark;
       final lerped = colors.lerp(darkColors, 0.5) as SemanticColors;
       expect(lerped.brand, Color.lerp(colors.brand, darkColors.brand, 0.5));
     });

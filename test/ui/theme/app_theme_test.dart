@@ -23,7 +23,7 @@ void main() {
       WidgetTester tester,
     ) async {
       final colorScheme = AppTheme.light.colorScheme;
-      final tokens = SemanticColors.light;
+      const tokens = SemanticColors.light;
 
       expect(colorScheme.primary, equals(tokens.brand));
       expect(colorScheme.surface, equals(tokens.surface));
@@ -36,7 +36,7 @@ void main() {
       WidgetTester tester,
     ) async {
       final colorScheme = AppTheme.dark.colorScheme;
-      final tokens = SemanticColors.dark;
+      const tokens = SemanticColors.dark;
 
       expect(colorScheme.primary, equals(tokens.brand));
       expect(colorScheme.surface, equals(tokens.surface));

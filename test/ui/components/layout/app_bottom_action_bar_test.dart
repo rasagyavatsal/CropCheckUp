@@ -6,10 +6,10 @@ void main() {
   group('AppBottomActionBar', () {
     testWidgets('wraps child with SafeArea and padding', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: AppBottomActionBar(
-              child: const SizedBox(key: Key('child')),
+              child: SizedBox(key: Key('child')),
             ),
           ),
         ),

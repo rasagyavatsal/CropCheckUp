@@ -26,7 +26,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(Uint8List(0));
     registerFallbackValue(img.Image(width: 1, height: 1));
-    registerFallbackValue(DiagnosisResult(rawLabel: '', confidence: 0.0));
+    registerFallbackValue(const DiagnosisResult(rawLabel: '', confidence: 0.0));
   });
 
   setUp(() {
@@ -150,7 +150,7 @@ void main() {
           .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
 
       when(() => mockWorkflowService.classifyImage(any()))
-          .thenReturn(DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
+          .thenReturn(const DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
       
       DiagnosisOutcome? result;
       await tester.pumpWidget(buildTestApp(
@@ -184,7 +184,7 @@ void main() {
           .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
 
       when(() => mockWorkflowService.classifyImage(any()))
-          .thenReturn(DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
+          .thenReturn(const DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99));
       
       DiagnosisOutcome? result;
       await tester.pumpWidget(buildTestApp(
@@ -215,7 +215,7 @@ void main() {
           
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+      const expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
 
       when(() => mockWorkflowService.processImageBytes(any()))
           .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
@@ -251,7 +251,7 @@ void main() {
     testWidgets('startCameraDiagnosis records history on success', (tester) async {
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+      const expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
 
       when(() => mockWorkflowService.processImageObj(any()))
           .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));
@@ -356,7 +356,7 @@ void main() {
           
       final dummyImg = img.Image(width: 1, height: 1);
       final dummyBytes = Uint8List.fromList(img.encodePng(dummyImg));
-      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+      const expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
 
       when(() => mockWorkflowService.processImageBytes(any()))
           .thenAnswer((_) async => WorkflowProcessResult.success(dummyImg, dummyBytes));

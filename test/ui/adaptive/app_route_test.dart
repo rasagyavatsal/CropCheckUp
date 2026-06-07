@@ -3,18 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/ui/adaptive/app_route.dart';
 
 void main() {
+  const testRoute = '/test';
+
   group('AppRoute', () {
     testWidgets('standard route creates a route that builds the page', (tester) async {
       final route = AppRoute.standard(builder: (context) => const Text('Standard Page'));
       
       await tester.pumpWidget(MaterialApp(
         onGenerateRoute: (settings) {
-          if (settings.name == '/test') {
+          if (settings.name == testRoute) {
             return route;
           }
           return null;
         },
-        initialRoute: '/test',
+        initialRoute: testRoute,
       ));
 
       expect(find.text('Standard Page'), findsOneWidget);
@@ -25,12 +27,12 @@ void main() {
       
       await tester.pumpWidget(MaterialApp(
         onGenerateRoute: (settings) {
-          if (settings.name == '/test') {
+          if (settings.name == testRoute) {
             return route;
           }
           return null;
         },
-        initialRoute: '/test',
+        initialRoute: testRoute,
       ));
 
       expect(find.text('Dialog Page'), findsOneWidget);

@@ -27,7 +27,7 @@ void main() {
     });
 
     test('recordDiagnosis saves the diagnosis and image, loadRecent retrieves it', () async {
-      final result = const DiagnosisResult(
+      const result = DiagnosisResult(
         rawLabel: 'Tomato___Late_blight',
         confidence: 0.95,
         symptoms: 'spots',
@@ -59,8 +59,8 @@ void main() {
     });
 
     test('loadRecent returns entries sorted newest-first', () async {
-      final result1 = const DiagnosisResult(rawLabel: 'Tomato___healthy', confidence: 0.9);
-      final result2 = const DiagnosisResult(rawLabel: 'Potato___Late_blight', confidence: 0.8);
+      const result1 = DiagnosisResult(rawLabel: 'Tomato___healthy', confidence: 0.9);
+      const result2 = DiagnosisResult(rawLabel: 'Potato___Late_blight', confidence: 0.8);
       
       await repository.recordDiagnosis(result: result1, imageBytes: Uint8List.fromList([1]));
       // Wait a bit to ensure different timestamps
@@ -119,7 +119,7 @@ void main() {
     });
 
     test('persisted history survives repository recreate', () async {
-      final result = const DiagnosisResult(
+      const result = DiagnosisResult(
         rawLabel: 'Apple___Apple_scab',
         confidence: 0.77,
       );

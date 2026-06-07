@@ -88,7 +88,7 @@ void main() {
 
     test('classifyImage returns correct diagnosis', () {
       final dummyImg = img.Image(width: 1, height: 1);
-      final expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
+      const expectedResult = DiagnosisResult(rawLabel: 'Healthy', confidence: 0.99);
       
       when(() => mockClassifier.classifyImage(any())).thenReturn(expectedResult);
 

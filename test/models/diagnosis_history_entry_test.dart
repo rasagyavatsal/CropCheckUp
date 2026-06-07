@@ -7,7 +7,7 @@ void main() {
   group('DiagnosisHistoryEntry', () {
     test('holds fields correctly', () {
       final now = DateTime.now();
-      final result = const DiagnosisResult(
+      const result = DiagnosisResult(
         rawLabel: 'Tomato___Late_blight',
         confidence: 0.95,
       );
@@ -27,8 +27,9 @@ void main() {
     });
 
     test('JSON serialization round-trip', () {
+      const entryId = 'entry-1';
       final now = DateTime.parse('2026-06-06T12:00:00.000Z');
-      final result = const DiagnosisResult(
+      const result = DiagnosisResult(
         rawLabel: 'Tomato___Late_blight',
         confidence: 0.95,
         symptoms: 'spots',
@@ -36,14 +37,14 @@ void main() {
       final imageBytes = Uint8List.fromList([1, 2, 3]);
 
       final entry = DiagnosisHistoryEntry(
-        id: 'entry-1',
+        id: entryId,
         createdAt: now,
         result: result,
         imageBytes: imageBytes,
       );
 
       final json = entry.toJson();
-      expect(json['id'], 'entry-1');
+      expect(json['id'], entryId);
       expect(json['createdAt'], '2026-06-06T12:00:00.000Z');
       expect(json['result']['rawLabel'], 'Tomato___Late_blight');
       expect(json['result']['confidence'], 0.95);
@@ -51,7 +52,7 @@ void main() {
 
       // Reconstruct using fromJson and the original imageBytes
       final reconstructed = DiagnosisHistoryEntry.fromJson(json, imageBytes);
-      expect(reconstructed.id, 'entry-1');
+      expect(reconstructed.id, entryId);
       expect(reconstructed.createdAt, now);
       expect(reconstructed.result, result);
       expect(reconstructed.imageBytes, imageBytes);

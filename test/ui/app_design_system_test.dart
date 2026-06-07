@@ -5,9 +5,9 @@ void main() {
   testWidgets('AppDesignSystem barrel exports expected UI layers', (WidgetTester tester) async {
     // If these classes can be instantiated via the barrel file,
     // the structure and facade are correctly set up.
-    expect(AppTokens(), isNotNull);
+    expect(const AppTokens(), isNotNull);
     expect(AppTheme.light, isNotNull);
-    expect(AppAdaptive(), isNotNull);
-    expect(AppComponents(), isNotNull);
+    expect(const AppAdaptive(), isNotNull);
+    expect(const AppComponents(), isNotNull);
   });
 }
