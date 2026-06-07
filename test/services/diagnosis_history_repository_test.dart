@@ -27,21 +27,27 @@ void main() {
     });
 
     test('recordDiagnosis saves the diagnosis and image, loadRecent retrieves it', () async {
-      const result = DiagnosisResult(
+      final expectedResult = _createResult(
         rawLabel: 'Tomato___Late_blight',
         confidence: 0.95,
         symptoms: 'spots',
       );
-      final imageBytes = Uint8List.fromList([10, 20, 30, 40]);
+      final imageBytes = _createImageBytes([10, 20, 30, 40]);
 
-      await repository.recordDiagnosis(result: result, imageBytes: imageBytes);
+      await _recordDiagnosis(
+        repository,
+        label: 'Tomato___Late_blight',
+        confidence: 0.95,
+        imageBytes: imageBytes,
+        symptoms: 'spots',
+      );
 
       final entries = await repository.loadRecent();
       expect(entries.length, 1);
       
       final entry = entries.first;
       expect(entry.id, isNotEmpty);
-      expect(entry.result, result);
+      expect(entry.result, expectedResult);
       expect(entry.imageBytes, imageBytes);
       expect(DateTime.now().difference(entry.createdAt).inSeconds, lessThan(5));
 
@@ -59,13 +65,20 @@ void main() {
     });
 
     test('loadRecent returns entries sorted newest-first', () async {
-      const result1 = DiagnosisResult(rawLabel: 'Tomato___healthy', confidence: 0.9);
-      const result2 = DiagnosisResult(rawLabel: 'Potato___Late_blight', confidence: 0.8);
-      
-      await repository.recordDiagnosis(result: result1, imageBytes: Uint8List.fromList([1]));
+      await _recordDiagnosis(
+        repository,
+        label: 'Tomato___healthy',
+        confidence: 0.9,
+        imageBytes: _createImageBytes([1]),
+      );
       // Wait a bit to ensure different timestamps
       await Future.delayed(const Duration(milliseconds: 10));
-      await repository.recordDiagnosis(result: result2, imageBytes: Uint8List.fromList([2]));
+      await _recordDiagnosis(
+        repository,
+        label: 'Potato___Late_blight',
+        confidence: 0.8,
+        imageBytes: _createImageBytes([2]),
+      );
 
       final entries = await repository.loadRecent();
       expect(entries.length, 2);
@@ -75,9 +88,11 @@ void main() {
 
     test('loadRecent respects the limit parameter', () async {
       for (int i = 0; i < 5; i++) {
-        await repository.recordDiagnosis(
-          result: DiagnosisResult(rawLabel: 'Plant___$i', confidence: 0.9),
-          imageBytes: Uint8List.fromList([i]),
+        await _recordDiagnosis(
+          repository,
+          label: 'Plant___$i',
+          confidence: 0.9,
+          imageBytes: _createImageBytes([i]),
         );
         await Future.delayed(const Duration(milliseconds: 2));
       }
@@ -92,9 +107,11 @@ void main() {
     test('enforces max 20 entries and deletes pruned image files', () async {
       // Record 22 diagnoses
       for (int i = 0; i < 22; i++) {
-        await repository.recordDiagnosis(
-          result: DiagnosisResult(rawLabel: 'Plant___$i', confidence: 0.9),
-          imageBytes: Uint8List.fromList([i]),
+        await _recordDiagnosis(
+          repository,
+          label: 'Plant___$i',
+          confidence: 0.9,
+          imageBytes: _createImageBytes([i]),
         );
         await Future.delayed(const Duration(milliseconds: 2));
       }
@@ -119,21 +136,53 @@ void main() {
     });
 
     test('persisted history survives repository recreate', () async {
-      const result = DiagnosisResult(
-        rawLabel: 'Apple___Apple_scab',
-        confidence: 0.77,
-      );
-      final imageBytes = Uint8List.fromList([1, 3, 5]);
+      final imageBytes = _createImageBytes([1, 3, 5]);
 
-      await repository.recordDiagnosis(result: result, imageBytes: imageBytes);
+      await _recordDiagnosis(
+        repository,
+        label: 'Apple___Apple_scab',
+        confidence: 0.77,
+        imageBytes: imageBytes,
+      );
 
       // Recreate repository pointing to the same tempDir
       final newRepository = DiagnosisHistoryRepository(baseDirectory: tempDir);
       final entries = await newRepository.loadRecent();
       
       expect(entries.length, 1);
-      expect(entries.first.result, result);
+      expect(entries.first.result, _createResult(rawLabel: 'Apple___Apple_scab', confidence: 0.77));
       expect(entries.first.imageBytes, imageBytes);
     });
   });
+}
+
+DiagnosisResult _createResult({
+  required String rawLabel,
+  required double confidence,
+  String? symptoms,
+}) {
+  return DiagnosisResult(
+    rawLabel: rawLabel,
+    confidence: confidence,
+    symptoms: symptoms,
+  );
+}
+
+Uint8List _createImageBytes(List<int> bytes) {
+  return Uint8List.fromList(bytes);
+}
+
+Future<void> _recordDiagnosis(
+  DiagnosisHistoryRepository repo, {
+  required String label,
+  required double confidence,
+  required Uint8List imageBytes,
+  String? symptoms,
+}) async {
+  final result = _createResult(
+    rawLabel: label,
+    confidence: confidence,
+    symptoms: symptoms,
+  );
+  await repo.recordDiagnosis(result: result, imageBytes: imageBytes);
 }
