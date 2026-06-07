@@ -23,3 +23,6 @@ plugins {
 }
 
 include(":app")
+
+rootProject.name = "CropCheckUp"
+
