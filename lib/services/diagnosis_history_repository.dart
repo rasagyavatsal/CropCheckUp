@@ -31,27 +31,16 @@ class DiagnosisHistoryRepository {
   /// Loads recent diagnosis history entries up to the specified [limit],
   /// sorted newest-first.
   Future<List<DiagnosisHistoryEntry>> loadRecent({int limit = 10}) async {
-    final dir = await _getDirectory();
-    final indexFile = File('${dir.path}/$_indexFileName');
-    if (!await indexFile.exists()) {
-      return [];
-    }
-
     try {
-      final contents = await indexFile.readAsString();
-      final List<dynamic> jsonList = json.decode(contents);
+      final dir = await _getDirectory();
+      final parsedItems = await _readAndParseIndex(dir);
 
       final entries = <DiagnosisHistoryEntry>[];
-      for (final item in jsonList) {
-        if (item is Map<String, dynamic>) {
-          final id = item['id'] as String?;
-          if (id == null) continue;
-
-          final pngFile = File('${dir.path}/$id.png');
-          if (await pngFile.exists()) {
-            final imageBytes = await pngFile.readAsBytes();
-            entries.add(DiagnosisHistoryEntry.fromJson(item, imageBytes));
-          }
+      for (final item in parsedItems) {
+        final pngFile = File('${dir.path}/${item.id}.png');
+        if (await pngFile.exists()) {
+          final imageBytes = await pngFile.readAsBytes();
+          entries.add(DiagnosisHistoryEntry.fromJson(item.json, imageBytes));
         }
       }
 
@@ -60,7 +49,7 @@ class DiagnosisHistoryRepository {
 
       // Apply limit
       return entries.take(limit).toList();
-    } catch (e) {
+    } catch (_) {
       // In case of parsing error or corruption, return empty list
       return [];
     }
@@ -90,32 +79,7 @@ class DiagnosisHistoryRepository {
     );
 
     // Load existing index items
-    final indexFile = File('${dir.path}/$_indexFileName');
-    List<dynamic> jsonList = [];
-    if (await indexFile.exists()) {
-      try {
-        final contents = await indexFile.readAsString();
-        jsonList = json.decode(contents);
-      } catch (_) {
-        // Ignore corrupt index file and start fresh
-      }
-    }
-
-    // Reconstruct parsed items to perform sorting and pruning
-    final parsedIndexItems = <_IndexItem>[];
-    for (final item in jsonList) {
-      if (item is Map<String, dynamic>) {
-        final itemId = item['id'] as String?;
-        final itemCreatedAtStr = item['createdAt'] as String?;
-        if (itemId != null && itemCreatedAtStr != null) {
-          parsedIndexItems.add(_IndexItem(
-            id: itemId,
-            createdAt: DateTime.parse(itemCreatedAtStr),
-            json: item,
-          ));
-        }
-      }
-    }
+    var parsedIndexItems = await _readAndParseIndex(dir);
 
     // Add new item
     parsedIndexItems.add(_IndexItem(
@@ -124,26 +88,64 @@ class DiagnosisHistoryRepository {
       json: newEntry.toJson(),
     ));
 
+    // Sort and prune entries
+    parsedIndexItems = await _sortAndPrune(parsedIndexItems, dir);
+
+    // Convert kept items back to JSON list and write back index file
+    final newJsonList = parsedIndexItems.map((item) => item.json).toList();
+    final indexFile = File('${dir.path}/$_indexFileName');
+    await indexFile.writeAsString(json.encode(newJsonList));
+  }
+
+  Future<List<_IndexItem>> _readAndParseIndex(Directory dir) async {
+    final indexFile = File('${dir.path}/$_indexFileName');
+    if (!await indexFile.exists()) {
+      return [];
+    }
+
+    try {
+      final contents = await indexFile.readAsString();
+      final List<dynamic> jsonList = json.decode(contents);
+
+      final parsedIndexItems = <_IndexItem>[];
+      for (final item in jsonList) {
+        if (item is Map<String, dynamic>) {
+          final itemId = item['id'] as String?;
+          final itemCreatedAtStr = item['createdAt'] as String?;
+          if (itemId != null && itemCreatedAtStr != null) {
+            parsedIndexItems.add(_IndexItem(
+              id: itemId,
+              createdAt: DateTime.parse(itemCreatedAtStr),
+              json: item,
+            ));
+          }
+        }
+      }
+      return parsedIndexItems;
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<List<_IndexItem>> _sortAndPrune(
+    List<_IndexItem> items,
+    Directory dir,
+  ) async {
     // Sort newest-first
-    parsedIndexItems.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     // Prune entries exceeding max limit
-    if (parsedIndexItems.length > _maxEntries) {
-      final itemsToPrune = parsedIndexItems.sublist(_maxEntries);
+    if (items.length > _maxEntries) {
+      final itemsToPrune = items.sublist(_maxEntries);
       for (final item in itemsToPrune) {
         final file = File('${dir.path}/${item.id}.png');
         if (await file.exists()) {
           await file.delete();
         }
       }
-      parsedIndexItems.removeRange(_maxEntries, parsedIndexItems.length);
+      items.removeRange(_maxEntries, items.length);
     }
-
-    // Convert kept items back to JSON list
-    final newJsonList = parsedIndexItems.map((item) => item.json).toList();
-
-    // Write back index file
-    await indexFile.writeAsString(json.encode(newJsonList));
+    return items;
   }
 
   static String _randomString(int length) {

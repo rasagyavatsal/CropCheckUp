@@ -14,10 +14,14 @@ class ConfidenceMeter extends StatelessWidget {
   Widget build(BuildContext context) {
     final int percentage = (confidence * 100).round();
     final colors = context.appColors;
-    
-    final color = percentage >= 80 
-      ? colors.success 
-      : (percentage >= 50 ? colors.warning : colors.danger);
+    final Color color;
+    if (percentage >= 80) {
+      color = colors.success;
+    } else if (percentage >= 50) {
+      color = colors.warning;
+    } else {
+      color = colors.danger;
+    }
     
     return Semantics(
       label: 'Diagnosis confidence score: $percentage%',
