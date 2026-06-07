@@ -7,8 +7,6 @@ background, resizes the processed image for a bundled TensorFlow Lite model, and
 shows the predicted crop condition with confidence and management information.
 The repository also includes an Astro landing site for the public project page.
 
-<img src="assets/logo.png" alt="CropCheckUp logo" width="140">
-
 ## Model Scope
 
 The bundled classifier is exported as TensorFlow Lite from a MobileNetV3Large
