@@ -101,6 +101,22 @@ void main() {
       expect(find.text(AppCopy.home.tipsTitle), findsNothing);
     });
 
+    testWidgets('renders app version from metadata loader', (tester) async {
+      final repository = TestDiagnosisHistoryRepository([
+        (_) async => const [],
+      ]);
+
+      await _pumpHome(
+        tester,
+        coordinator: TestDiagnosisFlowCoordinator(),
+        historyRepository: repository,
+        appVersionLoader: () async => '0.0.1',
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppCopy.home.versionLabel('0.0.1')), findsOneWidget);
+    });
+
     testWidgets('renders carousel with multiple history entries', (
       tester,
     ) async {
@@ -236,6 +252,7 @@ Future<void> _pumpHome(
   required DiagnosisFlowCoordinator coordinator,
   required DiagnosisHistoryRepository historyRepository,
   WidgetBuilder? cameraScreenBuilder,
+  Future<String?> Function()? appVersionLoader,
 }) {
   return tester.pumpWidget(
     MaterialApp(
@@ -244,6 +261,7 @@ Future<void> _pumpHome(
         coordinator: coordinator,
         historyRepository: historyRepository,
         cameraScreenBuilder: cameraScreenBuilder,
+        appVersionLoader: appVersionLoader,
       ),
     ),
   );

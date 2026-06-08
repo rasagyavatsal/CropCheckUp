@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '../models/diagnosis_history_entry.dart';
+import '../services/app_metadata_service.dart';
 import '../services/diagnosis_history_repository.dart';
 import '../ui/tokens/typography.dart';
 import '../ui/flow/diagnosis_flow_coordinator.dart';
@@ -20,12 +21,14 @@ class HomeScreen extends StatefulWidget {
   final DiagnosisFlowCoordinator? coordinator;
   final DiagnosisHistoryRepository? historyRepository;
   final WidgetBuilder? cameraScreenBuilder;
+  final Future<String?> Function()? appVersionLoader;
 
   const HomeScreen({
     super.key,
     this.coordinator,
     this.historyRepository,
     this.cameraScreenBuilder,
+    this.appVersionLoader,
   });
 
   @override
@@ -35,10 +38,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final DiagnosisHistoryRepository _historyRepository;
   late final DiagnosisFlowCoordinator _coordinator;
+  late final Future<String?> Function() _appVersionLoader;
   late final bool _ownsCoordinator;
 
   bool _isInitialising = true;
   String? _initError;
+  String? _appVersion;
   bool _isDiagnosing = false;
   bool _isHistoryLoading = true;
   String? _historyError;
@@ -53,8 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _coordinator =
         widget.coordinator ??
         DiagnosisFlowCoordinator(historyRepository: _historyRepository);
+    _appVersionLoader =
+        widget.appVersionLoader ?? const AppMetadataService().loadVersion;
     _ownsCoordinator = widget.coordinator == null;
     _bootstrap();
+    unawaited(_loadAppVersion());
     unawaited(_loadRecentDiagnoses(showLoading: false));
   }
 
@@ -70,6 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
       _initError = e.toString();
     } finally {
       if (mounted) setState(() => _isInitialising = false);
+    }
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final version = await _appVersionLoader();
+      if (!mounted || version == null) return;
+      setState(() => _appVersion = version);
+    } catch (_) {
+      // Version is supplementary metadata; the home workflow should not block.
     }
   }
 
@@ -213,6 +231,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       onRetry: _loadRecentDiagnoses,
                       onEntryTap: _openHistoryEntry,
                     ),
+                    if (_appVersion != null) ...[
+                      SizedBox(height: spacing.l),
+                      _AppVersionFooter(version: _appVersion!),
+                    ],
                   ],
                 ),
               ),
@@ -249,6 +271,25 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         );
       },
+    );
+  }
+}
+
+class _AppVersionFooter extends StatelessWidget {
+  final String version;
+
+  const _AppVersionFooter({required this.version});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Align(
+      alignment: Alignment.center,
+      child: Text(
+        AppCopy.home.versionLabel(version),
+        style: context.typography.caption.copyWith(color: colors.mutedText),
+      ),
     );
   }
 }

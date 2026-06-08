@@ -37,6 +37,8 @@ class HomeCopy {
   String get loadingOverlayTitle => 'Diagnosing plant health...';
   String get loadingOverlaySubtitle => 'Identifying patterns and diseases';
 
+  String versionLabel(String version) => 'Version $version';
+
   // Semantics
   String get semanticScanAction => 'Scan plant using camera';
   String get semanticUploadAction => 'Upload image from gallery';

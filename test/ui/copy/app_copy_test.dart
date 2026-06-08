@@ -33,6 +33,7 @@ void main() {
         AppCopy.home.loadingOverlaySubtitle,
         equals('Identifying patterns and diseases'),
       );
+      expect(AppCopy.home.versionLabel('0.0.1'), equals('Version 0.0.1'));
     });
 
     test('camera strings are centralized', () {

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:crop_check_up/models/diagnosis_result.dart';
 
 void main() {
-  DiagnosisResult _createResult({
+  DiagnosisResult createResult({
     String rawLabel = 'Tomato___Late_blight',
     double confidence = 0.95,
     String? symptoms,
@@ -68,7 +68,7 @@ void main() {
 
       for (final tc in cases) {
         test(tc.description, () {
-          final result = _createResult(rawLabel: tc.raw);
+          final result = createResult(rawLabel: tc.raw);
           expect(result.cropName, tc.crop);
           expect(result.diseaseName, tc.disease);
         });
@@ -91,7 +91,7 @@ void main() {
 
       for (final tc in cases) {
         test(tc.description, () {
-          final result = _createResult(rawLabel: tc.raw);
+          final result = createResult(rawLabel: tc.raw);
           expect(result.displayLabel, tc.expected);
         });
       }
@@ -118,7 +118,7 @@ void main() {
 
       for (final tc in cases) {
         test(tc.description, () {
-          final result = _createResult(rawLabel: tc.raw);
+          final result = createResult(rawLabel: tc.raw);
           expect(result.isHealthy, tc.expected ? isTrue : isFalse);
         });
       }
@@ -141,16 +141,12 @@ void main() {
           confidence: 1.0,
           expected: 100,
         ),
-        (
-          description: 'handles 0% confidence',
-          confidence: 0.0,
-          expected: 0,
-        ),
+        (description: 'handles 0% confidence', confidence: 0.0, expected: 0),
       ];
 
       for (final tc in cases) {
         test(tc.description, () {
-          final result = _createResult(confidence: tc.confidence);
+          final result = createResult(confidence: tc.confidence);
           expect(result.confidencePercent, tc.expected);
         });
       }
@@ -158,7 +154,7 @@ void main() {
 
     group('optional info fields', () {
       test('stores and returns symptoms, causes, and management', () {
-        final result = _createResult(
+        final result = createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
           symptoms: 'Brown spots on leaves',
@@ -171,7 +167,7 @@ void main() {
       });
 
       test('fields are null when not provided', () {
-        final result = _createResult(
+        final result = createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
         );
@@ -183,28 +179,28 @@ void main() {
 
     group('equality', () {
       test('equal for same label and confidence', () {
-        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
-        final b = _createResult(rawLabel: 'A___B', confidence: 0.5);
+        final a = createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = createResult(rawLabel: 'A___B', confidence: 0.5);
         expect(a, equals(b));
         expect(a.hashCode, equals(b.hashCode));
       });
 
       test('not equal for different labels', () {
-        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
-        final b = _createResult(rawLabel: 'A___C', confidence: 0.5);
+        final a = createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = createResult(rawLabel: 'A___C', confidence: 0.5);
         expect(a, isNot(equals(b)));
       });
 
       test('not equal for different confidence', () {
-        final a = _createResult(rawLabel: 'A___B', confidence: 0.5);
-        final b = _createResult(rawLabel: 'A___B', confidence: 0.6);
+        final a = createResult(rawLabel: 'A___B', confidence: 0.5);
+        final b = createResult(rawLabel: 'A___B', confidence: 0.6);
         expect(a, isNot(equals(b)));
       });
     });
 
     group('toString', () {
       test('contains display label and percentage', () {
-        final result = _createResult(
+        final result = createResult(
           rawLabel: 'Strawberry___Leaf_scorch',
           confidence: 0.87,
         );
@@ -258,7 +254,7 @@ void main() {
 
       for (final label in labels) {
         test('parses "$label" without error', () {
-          final result = _createResult(rawLabel: label, confidence: 0.9);
+          final result = createResult(rawLabel: label, confidence: 0.9);
           expect(result.cropName, isNotEmpty);
           expect(result.diseaseName, isNotEmpty);
           expect(result.displayLabel, contains('—'));
@@ -269,7 +265,7 @@ void main() {
 
     group('JSON serialization', () {
       test('toJson and fromJson round-trip with all fields', () {
-        final original = _createResult(
+        final original = createResult(
           rawLabel: 'Tomato___Late_blight',
           confidence: 0.95,
           symptoms: 'symptoms text',
@@ -293,7 +289,7 @@ void main() {
       });
 
       test('toJson and fromJson round-trip with null optional fields', () {
-        final original = _createResult(
+        final original = createResult(
           rawLabel: 'Blueberry___healthy',
           confidence: 0.99,
         );
