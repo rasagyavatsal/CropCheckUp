@@ -19,7 +19,7 @@ dependencies:
   image: ^4.9.1
   path_provider: ^2.1.5
   google_fonts: ^8.1.0
-  image_picker: ^1.1.2
+  image_picker: ^1.2.2
   image_background_remover: ^2.0.0
 
 dev_dependencies:
