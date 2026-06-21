@@ -17,7 +17,7 @@ dependencies:
   tflite_flutter: ^0.11.0
   camera: ^0.11.1
   image: ^4.9.1
-  path_provider: ^2.1.5
+  path_provider: ^2.1.6
   google_fonts: ^8.1.0
   image_picker: ^1.1.2
   image_background_remover: ^2.0.0
