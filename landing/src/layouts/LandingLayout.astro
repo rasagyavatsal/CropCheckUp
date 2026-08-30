@@ -43,12 +43,13 @@ const logoImageURL = new URL('logo-with-back.png', Astro.site);
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={logoImageURL} />
-		<script is:inline>
-			if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
+		<script>
+			const savedTheme = localStorage.getItem('color-theme');
+			const shouldUseDarkTheme =
+				savedTheme === 'dark' ||
+				(savedTheme === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+			document.documentElement.classList.toggle('dark', shouldUseDarkTheme);
 		</script>
 	</head>
 	<body>

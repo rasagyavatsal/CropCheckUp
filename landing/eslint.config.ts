@@ -1,9 +1,11 @@
+import type { Linter } from 'eslint';
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import globals from 'globals';
 
 const tsFiles = ['**/*.{ts,mts,cts}'];
-const tsRecommended = tsEslintPlugin.configs['flat/recommended'].map((config) => ({
+const tsRecommendedConfig = tsEslintPlugin.configs['flat/recommended'] as unknown as Linter.Config[];
+const tsRecommended: Linter.Config[] = tsRecommendedConfig.map((config) => ({
   ...config,
   files: config.files ?? tsFiles,
 }));

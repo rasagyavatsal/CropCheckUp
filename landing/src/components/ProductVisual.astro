@@ -35,7 +35,7 @@ const darkVideoSrc = '/videos/dark.mp4';
 <script>
   const themeVideo = document.querySelector<HTMLVideoElement>('[data-theme-video]');
 
-  const getThemeVideoSource = () => {
+  const getThemeVideoSource = (): string | undefined => {
     if (!themeVideo) {
       return undefined;
     }
@@ -45,7 +45,7 @@ const darkVideoSrc = '/videos/dark.mp4';
       : themeVideo.dataset.lightSrc;
   };
 
-  const updateThemeVideo = () => {
+  const updateThemeVideo = (): void => {
     if (!themeVideo) {
       return;
     }
