@@ -26,17 +26,15 @@ test('Hero section contains CTA links', async ({ page }) => {
   await expect(datasetLink).toHaveAttribute('href', 'https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset');
 });
 
-test('Hero section contains ProductVisual showing the workflow', async ({ page }) => {
+test('Hero section contains the theme-aware product walkthrough', async ({ page }) => {
   await page.goto('/');
-  
+
   const visual = page.locator('.product-visual');
   await expect(visual).toBeVisible();
-  
-  await expect(visual.locator('text=Input Image')).toBeVisible();
-  await expect(visual.locator('text=Background Removed')).toBeVisible();
-  await expect(visual.locator('text=Model Inference')).toBeVisible();
-  await expect(visual.locator('text=Diagnosis Result')).toBeVisible();
 
-  const logo = visual.locator('img[alt="CropCheckUp Logo"]');
-  await expect(logo).toBeVisible();
+  const video = visual.locator('video.app-video');
+  await expect(video).toBeVisible();
+  await expect(video).toHaveAttribute('data-light-src', '/videos/light.mp4');
+  await expect(video).toHaveAttribute('data-dark-src', '/videos/dark.mp4');
+  await expect(video).toHaveAttribute('aria-label', 'CropCheckUp mobile app walkthrough');
 });
