@@ -5,7 +5,7 @@ AI-assisted crop leaf disease detection for mobile devices.
 CropCheckUp is a Flutter app that analyzes a leaf image on-device, removes the
 background, resizes the processed image for a bundled TensorFlow Lite model, and
 shows the predicted crop condition with confidence and management information.
-The repository also includes an Astro landing site for the public project page.
+The repository also includes a React + TypeScript landing site for the public project page.
 
 ## Model Scope
 
@@ -45,7 +45,7 @@ trained labels.
 |   |-- services/            # Classifier, camera, background removal, workflow
 |   `-- ui/                  # Design system, tokens, components, copy, routing
 |-- test/                    # Flutter unit and widget tests
-|-- landing/                 # Astro landing site
+|-- landing/                 # React + TypeScript landing site
 |-- ATTRIBUTION.md           # Dataset and source attribution
 |-- DATASET_LICENSE.md       # Derived dataset license
 |-- MODEL_LICENSE.md         # Bundled model artifact license
@@ -107,8 +107,9 @@ npm ci
 npm run dev
 ```
 
-The landing site source lives in `landing/src/` and builds to a static Astro
-site.
+The landing site source lives in `landing/src/` and builds to a static Vite
+site. React components are pre-rendered at build time for SEO and hydrated in
+the browser for interactive behavior.
 
 ## Data, Model, and Attribution
 

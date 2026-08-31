@@ -19,7 +19,7 @@ test('Model output section contains example result block', async ({ page }) => {
   await page.goto('/');
   const section = page.locator('#model-output');
   
-  await expect(section.getByText('Raw label', { exact: true })).toBeVisible();
+  await expect(section.getByText('Raw Label', { exact: true })).toBeVisible();
   await expect(section.getByText(/Tomato___Late_blight/i)).toBeVisible();
   await expect(section.getByText(/Displayed result/i)).toBeVisible();
   await expect(section.getByText(/Tomato - Late blight/i)).toBeVisible();
@@ -40,7 +40,7 @@ test('Model output section contains output list', async ({ page }) => {
   ];
 
   for (const item of listItems) {
-    await expect(section.getByText(item)).toBeVisible();
+    await expect(section.getByText(item, { exact: true })).toBeVisible();
   }
 });
 

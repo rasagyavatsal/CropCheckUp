@@ -2,7 +2,7 @@
   "name": "cropcheckup-landing",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Astro landing site for CropCheckUp",
+  "description": "React landing site for CropCheckUp",
   "repository": {
     "type": "git",
     "url": "https://github.com/rasagyavatsal/CropCheckUp.git"
@@ -16,27 +16,30 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "check": "astro check",
-    "build": "astro build",
-    "preview": "astro preview",
-    "lint": "eslint .",
-    "astro": "astro"
+    "dev": "vite",
+    "check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings=0",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.2"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
     "@typescript-eslint/eslint-plugin": "^8.60.0",
     "@typescript-eslint/parser": "^8.60.0",
+    "@vitejs/plugin-react": "^5.0.0",
     "eslint": "^10.4.1",
-    "eslint-plugin-astro": "^1.7.0",
     "firebase-tools": "^15.19.1",
     "globals": "^16.5.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^7.0.0"
   }
 }
