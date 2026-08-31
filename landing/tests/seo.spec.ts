@@ -7,7 +7,7 @@ test.describe('SEO Metadata', () => {
     await expect(page).toHaveTitle('CropCheckUp - AI Plant Disease Detection');
 
     const metaDescription = page.locator('meta[name="description"]');
-    await expect(metaDescription).toHaveAttribute('content', 'Detect crop leaf disease from camera or gallery images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
+    await expect(metaDescription).toHaveAttribute('content', 'Detect crop leaf disease from uploaded images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
 
     // Canonical
     const canonical = page.locator('link[rel="canonical"]');
@@ -18,7 +18,7 @@ test.describe('SEO Metadata', () => {
     await expect(ogTitle).toHaveAttribute('content', 'CropCheckUp - AI Plant Disease Detection');
     
     const ogDescription = page.locator('meta[property="og:description"]');
-    await expect(ogDescription).toHaveAttribute('content', 'Detect crop leaf disease from camera or gallery images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
+    await expect(ogDescription).toHaveAttribute('content', 'Detect crop leaf disease from uploaded images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
 
     const ogType = page.locator('meta[property="og:type"]');
     await expect(ogType).toHaveAttribute('content', 'website');
@@ -34,7 +34,7 @@ test.describe('SEO Metadata', () => {
     await expect(twitterTitle).toHaveAttribute('content', 'CropCheckUp - AI Plant Disease Detection');
 
     const twitterDescription = page.locator('meta[name="twitter:description"]');
-    await expect(twitterDescription).toHaveAttribute('content', 'Detect crop leaf disease from camera or gallery images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
+    await expect(twitterDescription).toHaveAttribute('content', 'Detect crop leaf disease from uploaded images with AI-assisted diagnosis, background removal, and TensorFlow Lite inference.');
   });
 
   test('serves robots.txt', async ({ request }) => {

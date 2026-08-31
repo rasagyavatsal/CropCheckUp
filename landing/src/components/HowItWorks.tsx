@@ -10,15 +10,15 @@ type Step = {
 
 const steps: Step[] = [
   {
-    title: 'Capture or upload',
-    description: 'The user captures a live camera frame or selects an image from the gallery.',
+    title: 'Choose an image',
+    description: 'The user selects a leaf image from the device.',
     detail: 'CropCheckUp starts with one visible leaf. A clean single-subject image gives the downstream segmentation and classifier less irrelevant texture to absorb.',
-    checks: ['Camera or gallery input', 'Single leaf only', 'Visible disease area'],
-    icon: 'camera',
+    checks: ['Upload from your device', 'Single leaf only', 'Visible disease area'],
+    icon: 'image',
   },
   {
     title: 'Remove background',
-    description: 'The app isolates the leaf so the classifier focuses on the plant area.',
+    description: 'The website isolates the leaf so the classifier focuses on the plant area.',
     detail: 'Background removal reduces noise from soil, hands, pots, shadows, and neighboring plants before the model sees the image.',
     checks: ['Leaf mask extracted', 'Non-leaf pixels suppressed', 'Transparent pixels handled later'],
     icon: 'remove-background',
@@ -33,13 +33,13 @@ const steps: Step[] = [
   {
     title: 'Run inference',
     description: 'A TensorFlow Lite model predicts the most likely crop condition.',
-    detail: 'The app converts the resized RGB image into a tensor, runs local inference, and reads the top-scoring label from the output vector.',
+    detail: 'The website converts the resized RGB image into a tensor, runs local inference, and reads the top-scoring label from the output vector.',
     checks: ['RGB tensor generated', '0-255 value range', 'Highest score selected'],
     icon: 'zap',
   },
   {
     title: 'Show diagnosis',
-    description: 'The app displays crop name, condition, confidence, symptoms, causes, and management guidance.',
+    description: 'The website displays crop name, condition, confidence, symptoms, causes, and management guidance.',
     detail: 'Raw model labels are translated into readable names and paired with the supporting context a user needs before deciding what to inspect next.',
     checks: ['Readable crop and condition', 'Confidence percentage', 'Symptoms and next steps'],
     icon: 'chart',
@@ -53,7 +53,7 @@ export function HowItWorks() {
         <div className="section-header">
           <h2>How It <span className="text-highlight">Works</span></h2>
           <p className="section-subtitle">
-            The app is intentionally narrow: one leaf image goes through segmentation, model-ready preprocessing, TensorFlow Lite inference, then a readable diagnosis summary.
+            The website is intentionally narrow: one uploaded leaf image goes through segmentation, model-ready preprocessing, TensorFlow Lite inference, then a readable diagnosis summary.
           </p>
         </div>
 

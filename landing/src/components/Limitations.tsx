@@ -3,14 +3,14 @@ import type { ReactNode } from 'react';
 import { Icon } from './Icon';
 
 type Rule = {
-  icon: 'camera' | 'ban' | 'target';
+  icon: 'image' | 'ban' | 'target';
   children: ReactNode;
 };
 
 const rules: Rule[] = [
   {
-    icon: 'camera',
-    children: <><strong>Use a clear image of one leaf.</strong> Keep the leaf in focus, fill the frame with the relevant surface, and avoid mixing multiple plants in one capture.</>,
+    icon: 'image',
+    children: <><strong>Use a clear image of one leaf.</strong> Keep the leaf in focus, fill the frame with the relevant surface, and avoid mixing multiple plants in one upload.</>,
   },
   {
     icon: 'ban',
@@ -18,7 +18,7 @@ const rules: Rule[] = [
   },
   {
     icon: 'target',
-    children: <><strong>The app can only classify supported labels.</strong> Unknown crops, new diseases, mixed symptoms, pests, nutrient stress, or water damage may still map to the nearest known label.</>,
+    children: <><strong>The website can only classify supported labels.</strong> Unknown crops, new diseases, mixed symptoms, pests, nutrient stress, or water damage may still map to the nearest known label.</>,
   },
 ];
 

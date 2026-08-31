@@ -4,7 +4,6 @@ export type IconName =
   | 'ban'
   | 'book'
   | 'brain'
-  | 'camera'
   | 'chart'
   | 'check'
   | 'device'
@@ -13,7 +12,6 @@ export type IconName =
   | 'image'
   | 'info'
   | 'moon'
-  | 'play'
   | 'remove-background'
   | 'resize'
   | 'sun'
@@ -69,12 +67,6 @@ export function Icon({ name, size = 24, ...props }: IconProps) {
           <path d="M10 22h4" />
         </>
       )}
-      {name === 'camera' && (
-        <>
-          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-          <circle cx="12" cy="13" r="3" />
-        </>
-      )}
       {name === 'chart' && (
         <>
           <path d="M3 3v18h18" />
@@ -115,7 +107,6 @@ export function Icon({ name, size = 24, ...props }: IconProps) {
         </>
       )}
       {name === 'moon' && <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />}
-      {name === 'play' && <polygon points="5 3 19 12 5 21 5 3" />}
       {name === 'remove-background' && (
         <>
           <circle cx="6" cy="6" r="3" />

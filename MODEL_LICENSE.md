@@ -1,14 +1,30 @@
-# Model License
+# Model Licenses
 
-This license applies to the following model artifacts bundled with this repository:
-- `assets/plant_disease_model.tflite`
-- `assets/labels.txt`
-- `assets/disease_info.json`
+## Plant-disease classifier
 
-## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (`CC-BY-NC-SA-4.0`)
+The following model artifacts are bundled under `landing/public/models/`:
 
-These model artifacts are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (`CC-BY-NC-SA-4.0`) license.
+- `plant_disease_model.tflite`
+- `labels.txt`
+- `disease_info.json`
 
-- **Non-Commercial**: The model artifacts are for non-commercial use only. You may not use the material for commercial purposes.
-- **ShareAlike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
-- **No Commercial Rights via Code License**: The source code of this repository is licensed under `Apache-2.0`. However, `Apache-2.0` does not grant any commercial rights or otherwise alter the licensing of these bundled model artifacts.
+These artifacts are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (`CC-BY-NC-SA-4.0`) license.
+
+- **Non-Commercial**: The model artifacts are for non-commercial use only.
+- **ShareAlike**: Remixes or adaptations must be distributed under the same license.
+- **No commercial rights via code license**: The repository source code is Apache-2.0, but that does not grant commercial rights to these artifacts.
+
+## Background-removal model
+
+`background_removal.onnx` is bundled under the BSD-3-Clause license. The full
+notice and copyright attribution are included in
+`landing/public/models/BACKGROUND_REMOVER_LICENSE.txt`.
+
+
+## Browser runtime notices
+
+The web TFLite client and its WASM assets are generated from TensorFlow.js TFLite
+web support `0.0.1-alpha.10` under Apache-2.0. ONNX Runtime Web is used under
+MIT for background segmentation. The corresponding notices are shipped with
+the assets in `landing/public/models/TFLITE_RUNTIME_LICENSE.txt` and
+`landing/public/models/ONNXRUNTIME_LICENSE.txt`.

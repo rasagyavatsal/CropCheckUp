@@ -1,3 +1,4 @@
+import { DiagnosisWorkspace } from './components/DiagnosisWorkspace';
 import { DatasetReferences } from './components/DatasetReferences';
 import { Hero } from './components/Hero';
 import { HowItWorks } from './components/HowItWorks';
@@ -13,6 +14,7 @@ export function App() {
       <SiteHeader />
       <main>
         <Hero />
+        <DiagnosisWorkspace />
         <HowItWorks />
         <ProcessingPipeline />
         <ModelOutput />

@@ -6,35 +6,24 @@ test('Hero section contains the product name as a heading', async ({ page }) => 
   await expect(heading).toBeVisible();
 });
 
-test('Hero section contains subheading and description', async ({ page }) => {
+test('Hero section contains subheading and upload-first description', async ({ page }) => {
   await page.goto('/');
-  const subheading = page.locator('p', { hasText: 'AI-assisted crop leaf disease detection.' });
-  await expect(subheading).toBeVisible();
-
-  const description = page.locator('p', { hasText: 'CropCheckUp analyzes a leaf image, removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.' });
-  await expect(description).toBeVisible();
+  await expect(page.locator('p', { hasText: 'AI-assisted crop leaf disease detection.' })).toBeVisible();
+  await expect(page.locator('p', { hasText: 'Upload a leaf image and CropCheckUp removes the background, prepares the image for a TensorFlow Lite model, and shows the predicted crop condition with confidence and management information.' })).toBeVisible();
 });
 
-test('Hero section contains CTA links', async ({ page }) => {
+test('Hero section links to diagnosis and project resources', async ({ page }) => {
   await page.goto('/');
-  const notebookLink = page.locator('a', { hasText: 'View Kaggle Notebook' });
-  await expect(notebookLink).toBeVisible();
-  await expect(notebookLink).toHaveAttribute('href', 'https://www.kaggle.com/code/rasagyavatsal/cropcheckup');
-
-  const datasetLink = page.locator('a', { hasText: 'View Dataset' });
-  await expect(datasetLink).toBeVisible();
-  await expect(datasetLink).toHaveAttribute('href', 'https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset');
+  await expect(page.locator('a', { hasText: 'Check a leaf' })).toHaveAttribute('href', '#diagnose');
+  await expect(page.locator('a', { hasText: 'View Kaggle Notebook' })).toHaveAttribute('href', 'https://www.kaggle.com/code/rasagyavatsal/cropcheckup');
+  await expect(page.locator('a', { hasText: 'View Dataset' })).toHaveAttribute('href', 'https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset');
 });
 
-test('Hero section contains the theme-aware product walkthrough', async ({ page }) => {
+test('Hero section previews the browser diagnosis workflow', async ({ page }) => {
   await page.goto('/');
-
-  const visual = page.locator('.product-visual');
+  const visual = page.locator('.hero-browser-card');
   await expect(visual).toBeVisible();
-
-  const video = visual.locator('video.app-video');
-  await expect(video).toBeVisible();
-  await expect(video).toHaveAttribute('data-light-src', '/videos/light.mp4');
-  await expect(video).toHaveAttribute('data-dark-src', '/videos/dark.mp4');
-  await expect(video).toHaveAttribute('aria-label', 'CropCheckUp mobile app walkthrough');
+  await expect(visual.getByText('Upload one clear leaf photo')).toBeVisible();
+  await expect(visual.getByText('Local processing')).toBeVisible();
+  await expect(visual.getByText('Private result')).toBeVisible();
 });

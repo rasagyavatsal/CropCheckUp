@@ -53,5 +53,5 @@ test('Footer displays the landing package version', async ({ page }) => {
   await page.goto('/');
   const footer = page.locator('footer');
 
-  await expect(footer.getByText(`Landing v${packageJson.version}`)).toBeVisible();
+  await expect(footer.getByText(`Website v${packageJson.version}`)).toBeVisible();
 });

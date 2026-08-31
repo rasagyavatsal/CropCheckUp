@@ -12,7 +12,7 @@ test('Model output section contains explanatory copy', async ({ page }) => {
   
   await expect(section.getByText(/classifier returns the highest-scoring label/i)).toBeVisible();
   await expect(section.getByText(/Labels follow a crop and condition format/i)).toBeVisible();
-  await expect(section.getByText(/app converts raw labels into readable/i)).toBeVisible();
+  await expect(section.getByText(/website converts raw labels into readable/i)).toBeVisible();
 });
 
 test('Model output section contains example result block', async ({ page }) => {

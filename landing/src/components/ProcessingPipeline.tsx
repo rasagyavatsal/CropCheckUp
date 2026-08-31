@@ -7,7 +7,7 @@ type Stage = {
 };
 
 const stages: Stage[] = [
-  { name: 'Camera / Gallery', detail: 'Raw leaf photo enters from the mobile capture flow.', icon: 'device' },
+  { name: 'Upload image', detail: 'A raw leaf photo enters from the browser file picker.', icon: 'image' },
   { name: 'Background removal', detail: 'Leaf pixels are isolated so the model sees less surrounding scene noise.', icon: 'remove-background' },
   { name: '224 x 224 image', detail: "The isolated image is resized to the model's expected square input.", icon: 'image' },
   { name: 'RGB tensor', detail: 'Pixels are packed as RGB values before inference.', icon: 'grid' },
@@ -22,7 +22,7 @@ export function ProcessingPipeline() {
         <div className="section-header">
           <h2>Processing <span className="text-highlight">Pipeline</span></h2>
           <p className="section-subtitle">
-            The landing page exposes the exact assumptions that matter for this app: input size, color channel handling, label conversion, and what happens to transparent background pixels.
+            The website exposes the exact assumptions that matter for diagnosis: input size, color channel handling, label conversion, and what happens to transparent background pixels.
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export function ProcessingPipeline() {
               <h3>Preprocessing contract</h3>
               <p>The model receives a 224 x 224 RGB image. Pixel values are passed in the 0-255 range because preprocessing is included inside the model.</p>
               <p>Transparent background pixels are treated as black during tensor conversion.</p>
-              <p>The highest scoring label is resolved against the app's label file before the result screen is rendered.</p>
+              <p>The highest scoring label is resolved against the website's label file before the result screen is rendered.</p>
             </div>
           </div>
         </div>

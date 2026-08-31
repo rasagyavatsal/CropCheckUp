@@ -25,7 +25,7 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="description">
-              AI-assisted plant disease detection. Built for single-leaf image analysis with background removal, model-ready preprocessing, and on-device inference.
+              AI-assisted plant disease detection. Built for single-leaf image analysis with background removal, model-ready preprocessing, and local browser inference.
             </p>
           </div>
 
@@ -49,7 +49,7 @@ export function SiteFooter() {
 
         <div className="footer-bottom">
           <p className="copyright">© {new Date().getFullYear()} CropCheckUp.</p>
-          <p className="version">Landing v{landingVersion}</p>
+          <p className="version">Website v{landingVersion}</p>
           <p className="license-summary">
             <a href={`${repositoryUrl}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer">Code: Apache-2.0</a>.{' '}
             <a href={`${repositoryUrl}/blob/main/DATASET_LICENSE.md`} target="_blank" rel="noopener noreferrer">Model/data: CC-BY-NC-SA-4.0 non-commercial</a>.

@@ -17,7 +17,7 @@ export function ModelOutput() {
         <div className="section-header model-section-header">
           <h2>Model <span className="text-highlight">Output</span></h2>
           <p className="section-subtitle">
-            The classifier returns one top label and a score. The app turns that raw model output into a result a grower can scan quickly: crop, condition, confidence, symptoms, causes, management guidance, and the processed leaf preview.
+            The classifier returns one top label and a score. The website turns that raw model output into a result a grower can scan quickly: crop, condition, confidence, symptoms, causes, management guidance, and the processed leaf preview.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export function ModelOutput() {
               The classifier returns the highest-scoring label from the model output. Labels follow a crop and condition format such as <code className="code-badge">Crop___Disease</code> or <code className="code-badge">Crop___healthy</code>.
             </p>
             <p>
-              The app converts raw labels into readable crop and disease names, keeps the confidence percentage visible, and separates advisory content from the model prediction.
+              The website converts raw labels into readable crop and disease names, keeps the confidence percentage visible, and separates advisory content from the model prediction.
             </p>
 
             <div className="info-alert">

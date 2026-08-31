@@ -1,7 +1,5 @@
 import { ThemeToggle } from './ThemeToggle';
 
-const notebookUrl = 'https://www.kaggle.com/code/rasagyavatsal/cropcheckup';
-
 export function SiteHeader() {
   return (
     <header className="site-header glass-panel">
@@ -21,6 +19,7 @@ export function SiteHeader() {
         </div>
 
         <nav className="main-nav" aria-label="Primary navigation">
+          <a href="#diagnose" className="nav-link">Diagnose</a>
           <a href="#how-it-works" className="nav-link">Workflow</a>
           <a href="#pipeline" className="nav-link">Pipeline</a>
           <a href="#model-output" className="nav-link">Output</a>
@@ -31,12 +30,10 @@ export function SiteHeader() {
         <div className="header-actions">
           <ThemeToggle />
           <a
-            href={notebookUrl}
+            href="#diagnose"
             className="btn btn-primary nav-cta"
-            target="_blank"
-            rel="noopener noreferrer"
           >
-            Kaggle Notebook
+            Choose a photo
           </a>
         </div>
       </div>
