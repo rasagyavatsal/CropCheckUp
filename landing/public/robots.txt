@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://github.com/rasagyavatsal/CropCheckUp/sitemap-index.xml
