@@ -3,7 +3,7 @@
 A small, local command-line tool for crop leaf disease screening.
 
 CropCheckUp reads one image from the local filesystem, center-crops it to the
-classifier input size, runs the bundled TensorFlow Lite model, and prints the
+classifier input size, runs the bundled Keras model, and prints the
 predicted crop condition with confidence and management information. The CLI
 makes no network requests and does not write image data.
 
@@ -13,11 +13,11 @@ and whether the crop condition is represented in the trained labels.
 
 ## Quick start
 
-Requirements: Python `3.10+` and a local installation of the CLI dependencies.
+Requirements: Python `3.10–3.13` (Python 3.12 recommended) and a local installation of the CLI dependencies.
 
 ```sh
-python3 -m venv .venv
-. .venv/bin/activate
+python3.12 -m venv .venv-keras
+. .venv-keras/bin/activate
 python -m pip install -r requirements.txt
 python cropcheckup.py path/to/leaf.jpg
 ```
@@ -43,9 +43,27 @@ The JSON result contains the top prediction, confidence, raw label, crop and
 condition names, supporting disease information when available, and the
 remaining top-k alternatives.
 
+## Model export
+
+The CLI loads `models/plant_disease_model.keras` with
+`tensorflow.keras.models.load_model(..., compile=False)` and runs inference
+with `training=False`. The original `.h5` and `.tflite` artifacts are retained
+as migration sources; the CLI uses the `.keras` file.
+
+`train.py` now saves `plant_disease_model.keras` directly, without TFLite
+conversion. After training, copy that file and the matching `labels.txt` from
+`plant_disease_outputs/` into `models/`. Keep `disease_info.json` alongside them.
+The label order must match the model output order.
+
+The bundled `.keras` model was migrated from the supplied `.h5` checkpoint
+without retraining. Its redundant pass-through preprocessing Lambda was
+removed; MobileNetV3's internal rescaling still handles raw RGB values.
+The supplied checkpoint has different classifier weights from the previous
+TFLite artifact, so predictions may differ from the previous CLI.
+
 ## Model contract
 
-The bundled classifier is exported as TensorFlow Lite from a MobileNetV3Large
+The bundled classifier is saved in the `.keras` format from a MobileNetV3Large
 transfer-learning pipeline. It expects a `1 x 224 x 224 x 3` `float32` input
 with RGB values in the `0-255` range. `cropcheckup.py` preserves this contract
 by center-cropping, resizing with bilinear interpolation, converting to RGB,
@@ -59,23 +77,24 @@ and Zucchini.
 
 Training uses an ImageNet-pretrained MobileNetV3Large backbone, GPU-side image
 augmentation, class-weighted sparse categorical cross-entropy for dataset
-imbalance, and an 80/20 training/validation split. The current Kaggle training
-run used 59,989 images across 68 labels. The final fine-tuned checkpoint
-restored the best validation-loss epoch, which reported 96.11% validation
-accuracy and 0.1251 validation loss before TFLite export.
+imbalance, and an 80/20 training/validation split. Earlier Kaggle training
+logs recorded 59,989 images across 68 labels, with 96.11% validation accuracy
+and 0.1251 validation loss at the restored best validation-loss epoch. These
+metrics have not been revalidated for the supplied H5 checkpoint used for
+the current Keras model.
 
 ## Repository layout
 
 ```text
 .
 |-- cropcheckup.py            # The complete CLI entry point
-|-- models/                   # TFLite model, labels, and disease information
+|-- models/                   # Keras model, labels, and disease information
 |-- tests/                    # Standard-library unittest coverage
 |-- ATTRIBUTION.md            # Dataset and model-source attribution
 |-- DATASET_LICENSE.md        # Derived dataset license
 |-- MODEL_LICENSE.md          # Bundled model license
 |-- PRIVACY.md                # CLI data-handling notes
-|-- requirements.txt          # Small runtime dependency set
+|-- requirements.txt          # TensorFlow, NumPy, and Pillow
 `-- LICENSE                   # Source code license
 ```
 

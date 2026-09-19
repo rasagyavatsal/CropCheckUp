@@ -2,6 +2,8 @@
 
 The following files are bundled under `models/`:
 
+- `plant_disease_model.keras`
+- `plant_disease_model.h5`
 - `plant_disease_model.tflite`
 - `labels.txt`
 - `disease_info.json`
