@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models, optimizers, callbacks
-from tensorflow.keras.applications.mobilenet_v3 import preprocess_input
 import os
 import zipfile
 
@@ -80,7 +79,7 @@ IMG_SIZE = (224, 224)
 BATCH_SIZE = 64   # Good GPU utilization; RAM issues were from cache/XLA, not batch size
 
 # 3. Data Augmentation — runs ON GPU as part of the training model's forward pass.
-#    NOT part of the inference/export model, so TFLite stays clean.
+#    NOT part of the inference/export model, so the exported model stays clean.
 #    Previously this ran on CPU via tf.data.map(), which starved the GPU
 #    (Colab instances often only have 2 CPU cores).
 data_augmentation = models.Sequential([
@@ -105,13 +104,10 @@ def build_model(num_classes):
     base_model.trainable = False
 
     # 6. Build the Classification Head.
-    #    The preprocessing Lambda normalises [0, 255] → [-1, 1] using
-    #    MobileNetV3's official preprocess_input.  This layer IS part of the
-    #    exported TFLite graph, so the Dart client only needs to feed raw
-    #    [0, 255] uint8-range values.
+    #    MobileNetV3 includes a Rescaling layer, so the CLI feeds float32
+    #    RGB values in [0, 255] directly to the saved model.
     model = models.Sequential([
         layers.Input(shape=(*IMG_SIZE, 3)),
-        layers.Lambda(preprocess_input, name='mobilenet_preprocessing'),
         base_model,
         layers.Dropout(0.3),
         layers.Dense(num_classes, dtype='float32'),  # Force FP32 for numerically stable softmax
@@ -142,7 +138,7 @@ if __name__ == "__main__":
 
     # --- SAVE AUTHORITATIVE LABEL ORDER ---
     # class_names is the alphabetical directory order that Keras assigns to
-    # integer indices.  The mobile app MUST use this exact list.
+    # integer indices.  The CLI MUST use this exact list.
     class_names = train_ds.class_names
     labels_path = os.path.join(OUTPUT_DIR, 'labels.txt')
     with open(labels_path, 'w') as f:
@@ -174,7 +170,7 @@ if __name__ == "__main__":
     val_ds = val_ds.prefetch(buffer_size=tf.data.AUTOTUNE)
 
     # --- BUILD MODELS ---
-    # `model` = clean inference model (for TFLite export, no augmentation)
+    # `model` = clean inference model (for Keras export, no augmentation)
     # `train_model` = wraps `model` with GPU-accelerated augmentation
     num_classes = len(class_names)
     print(f"Building model for {num_classes} classes...")
@@ -222,9 +218,8 @@ if __name__ == "__main__":
 
     # 8. Fine-Tuning (Unfreeze the base model)
     print("Starting fine-tuning (All Layers)...")
-    # The base_model is layer index 1 inside the inner `model` Sequential:
-    # [Lambda(preprocessing), BaseModel, Dropout, Dense, Activation]
-    model.layers[1].trainable = True 
+    # The backbone is the first layer of the inference model.
+    model.layers[0].trainable = True
     
     train_model.compile(
         optimizer=optimizers.Adam(learning_rate=0.0001),
@@ -239,23 +234,7 @@ if __name__ == "__main__":
         class_weight=class_weight_dict
     )
 
-    # 9. Save Final Keras Model to Drive
-    keras_path = os.path.join(OUTPUT_DIR, 'plant_disease_model.h5')
+    # 9. Save the inference model without training augmentation.
+    keras_path = os.path.join(OUTPUT_DIR, 'plant_disease_model.keras')
     model.save(keras_path)
     print(f"Keras model saved to {keras_path}")
-
-    # 10. Export to TFLite for Mobile Deployment (Saved to Drive)
-    #     Rebuild a clean float32 model and copy trained weights
-    #     to ensure perfect compatibility with TFLite converter.
-    print("Building float32 model for TFLite export...")
-    tf.keras.mixed_precision.set_global_policy('float32')
-    export_model = build_model(num_classes)
-    export_model.set_weights(model.get_weights())
-
-    converter = tf.lite.TFLiteConverter.from_keras_model(export_model)
-    tflite_model = converter.convert()
-    tflite_path = os.path.join(OUTPUT_DIR, 'plant_disease_model.tflite')
-    with open(tflite_path, 'wb') as f:
-        f.write(tflite_model)
-    
-    print(f"TFLite model saved to {tflite_path}")

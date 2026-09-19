@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Classify a crop-leaf image with the bundled CropCheckUp TFLite model."""
+"""Classify a crop-leaf image with the CropCheckUp Keras model."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--model-dir",
         type=Path,
         default=DEFAULT_MODEL_DIR,
-        help="directory containing plant_disease_model.tflite, labels.txt, and disease_info.json",
+        help="directory containing plant_disease_model.keras, labels.txt, and disease_info.json",
     )
     parser.add_argument(
         "--top-k",
@@ -112,11 +112,11 @@ def make_prediction(raw_label: str, confidence: float, info: dict[str, Any] | No
 def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
     try:
         import numpy as np
-        from ai_edge_litert.interpreter import Interpreter
+        from tensorflow import keras
     except ImportError as error:
         raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
 
-    model_path = model_dir / "plant_disease_model.tflite"
+    model_path = model_dir / "plant_disease_model.keras"
     labels_path = model_dir / "labels.txt"
     info_path = model_dir / "disease_info.json"
     for resource in (model_path, labels_path, info_path):
@@ -126,42 +126,30 @@ def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
     input_data = prepare_image(image_path)
-    interpreter = Interpreter(model_path=str(model_path))
+    model = keras.models.load_model(model_path, compile=False)
+    if len(model.inputs) != 1 or len(model.outputs) != 1:
+        raise ValueError("the classifier must expose one input tensor and one output tensor")
+    input_tensor = model.inputs[0]
+    actual_shape = tuple(input_tensor.shape)
+    if actual_shape not in ((None, INPUT_SIZE, INPUT_SIZE, 3), (1, INPUT_SIZE, INPUT_SIZE, 3)):
+        raise ValueError(f"the classifier input shape is {actual_shape}; expected (None or 1, 224, 224, 3)")
+    if np.dtype(input_tensor.dtype) != np.dtype(np.float32):
+        raise ValueError(f"the classifier input type is {input_tensor.dtype}; expected float32")
 
-    try:
-        interpreter.allocate_tensors()
-        input_details = interpreter.get_input_details()
-        output_details = interpreter.get_output_details()
-        if len(input_details) != 1 or len(output_details) != 1:
-            raise ValueError("the classifier must expose one input tensor and one output tensor")
+    scores = np.asarray(model(input_data, training=False), dtype=np.float32)
+    if scores.shape != (1, len(labels)):
+        raise ValueError(f"the classifier output shape is {scores.shape}; expected (1, {len(labels)})")
+    scores = scores[0]
+    if not np.isfinite(scores).all():
+        raise ValueError("the classifier returned a non-finite score")
 
-        input_detail = input_details[0]
-        expected_shape = (1, INPUT_SIZE, INPUT_SIZE, 3)
-        actual_shape = tuple(int(value) for value in input_detail["shape"])
-        if actual_shape != expected_shape:
-            raise ValueError(f"the classifier input shape is {actual_shape}; expected {expected_shape}")
-        if np.dtype(input_detail["dtype"]) != np.dtype(np.float32):
-            raise ValueError(f"the classifier input type is {input_detail['dtype']}; expected float32")
-
-        interpreter.set_tensor(input_detail["index"], input_data)
-        interpreter.invoke()
-        scores = np.asarray(interpreter.get_tensor(output_details[0]["index"]), dtype=np.float32).reshape(-1)
-        if len(scores) != len(labels):
-            raise ValueError(f"the classifier returned {len(scores)} scores; expected {len(labels)}")
-        if not np.isfinite(scores).all():
-            raise ValueError("the classifier returned a non-finite score")
-
-        indices = np.argsort(scores)[::-1][: min(top_k, len(labels))]
-        predictions = [make_prediction(labels[int(index)], float(scores[index]), disease_info.get(labels[int(index)])) for index in indices]
-        return {
-            "image": str(image_path),
-            "prediction": predictions[0],
-            "alternatives": predictions[1:],
-        }
-    finally:
-        close = getattr(interpreter, "close", None)
-        if callable(close):
-            close()
+    indices = np.argsort(scores)[::-1][: min(top_k, len(labels))]
+    predictions = [make_prediction(labels[int(index)], float(scores[index]), disease_info.get(labels[int(index)])) for index in indices]
+    return {
+        "image": str(image_path),
+        "prediction": predictions[0],
+        "alternatives": predictions[1:],
+    }
 
 
 def print_result(result: dict[str, Any]) -> None:
