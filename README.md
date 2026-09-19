@@ -1,19 +1,12 @@
 # CropCheckUp
 
-A small, local command-line tool for crop leaf disease screening.
+A local command-line tool that classifies crop-leaf images into 68 crop and
+condition labels using a bundled Keras model. It reports predictions, confidence
+scores, and disease information when available. Images are processed locally.
 
-CropCheckUp reads one image from the local filesystem, center-crops it to the
-classifier input size, runs the bundled Keras model, and prints the
-predicted crop condition with confidence and management information. The CLI
-makes no network requests and does not write image data.
+## Setup and usage
 
-CropCheckUp is an AI-assisted screening tool, not a substitute for expert
-agronomy advice. Results depend on image quality, lighting, leaf visibility,
-and whether the crop condition is represented in the trained labels.
-
-## Quick start
-
-Requirements: Python `3.10–3.13` (Python 3.12 recommended) and a local installation of the CLI dependencies.
+Use Python 3.12. Run these commands from the repository root:
 
 ```sh
 python3.12 -m venv .venv-keras
@@ -22,125 +15,31 @@ python -m pip install -r requirements.txt
 python cropcheckup.py path/to/leaf.jpg
 ```
 
-The command accepts PNG, JPEG, WebP, and other formats supported by Pillow.
-The model runs on the local CPU. No server, account, or external service is
-needed.
+Supports PNG, JPEG, WebP, and other Pillow-readable image formats.
 
-### Options
+- `--top-k 5`: show the five highest-scoring predictions (default: 3).
+- `--json`: output results as JSON.
+- `--model-dir PATH`: load `plant_disease_model.keras`, `labels.txt`, and
+  `disease_info.json` from another directory (default: the bundled `models/`).
 
-```sh
-# Show the five highest-scoring labels.
-python cropcheckup.py path/to/leaf.jpg --top-k 5
+## Training
 
-# Emit machine-readable output for another shell program.
-python cropcheckup.py path/to/leaf.jpg --json
+Place training images in `CropCheckUp-dataset/`, with one subdirectory per class,
+then run `python train.py`. The script trains a MobileNetV3Large classifier and
+saves the model and labels to `plant_disease_outputs/`.
 
-# Use a copy of the model assets in another directory.
-python cropcheckup.py path/to/leaf.jpg --model-dir ./models
-```
+To use the trained model, copy `plant_disease_model.keras` and its matching
+`labels.txt` into `models/`, keeping `disease_info.json` alongside them. The CLI
+requires 68 labels in model output order.
 
-The JSON result contains the top prediction, confidence, raw label, crop and
-condition names, supporting disease information when available, and the
-remaining top-k alternatives.
-
-## Model export
-
-The CLI loads `models/plant_disease_model.keras` with
-`tensorflow.keras.models.load_model(..., compile=False)` and runs inference
-with `training=False`. The original `.h5` and `.tflite` artifacts are retained
-as migration sources; the CLI uses the `.keras` file.
-
-`train.py` now saves `plant_disease_model.keras` directly, without TFLite
-conversion. After training, copy that file and the matching `labels.txt` from
-`plant_disease_outputs/` into `models/`. Keep `disease_info.json` alongside them.
-The label order must match the model output order.
-
-The bundled `.keras` model was migrated from the supplied `.h5` checkpoint
-without retraining. Its redundant pass-through preprocessing Lambda was
-removed; MobileNetV3's internal rescaling still handles raw RGB values.
-The supplied checkpoint has different classifier weights from the previous
-TFLite artifact, so predictions may differ from the previous CLI.
-
-## Model contract
-
-The bundled classifier is saved in the `.keras` format from a MobileNetV3Large
-transfer-learning pipeline. It expects a `1 x 224 x 224 x 3` `float32` input
-with RGB values in the `0-255` range. `cropcheckup.py` preserves this contract
-by center-cropping, resizing with bilinear interpolation, converting to RGB,
-and treating fully transparent pixels as black.
-
-The model supports 68 crop and condition labels across:
-
-Apple, Blueberry, Bottle Gourd, Cherry, Corn, Grape, Mango, Orange, Papaya,
-Peach, Bell Pepper, Potato, Raspberry, Soybean, Squash, Strawberry, Tomato,
-and Zucchini.
-
-Training uses an ImageNet-pretrained MobileNetV3Large backbone, GPU-side image
-augmentation, class-weighted sparse categorical cross-entropy for dataset
-imbalance, and an 80/20 training/validation split. Earlier Kaggle training
-logs recorded 59,989 images across 68 labels, with 96.11% validation accuracy
-and 0.1251 validation loss at the restored best validation-loss epoch. These
-metrics have not been revalidated for the supplied H5 checkpoint used for
-the current Keras model.
-
-## Repository layout
-
-```text
-.
-|-- cropcheckup.py            # The complete CLI entry point
-|-- models/                   # Keras model, labels, and disease information
-|-- tests/                    # Standard-library unittest coverage
-|-- ATTRIBUTION.md            # Dataset and model-source attribution
-|-- DATASET_LICENSE.md        # Derived dataset license
-|-- MODEL_LICENSE.md          # Bundled model license
-|-- PRIVACY.md                # CLI data-handling notes
-|-- requirements.txt          # TensorFlow, NumPy, and Pillow
-`-- LICENSE                   # Source code license
-```
-
-## Validation
+## Tests
 
 ```sh
 python -m unittest discover -s tests -p 'test_*.py' -v
-python -m compileall -q cropcheckup.py tests
 ```
 
-## Data, model, and attribution
+## License and attribution
 
-Project resources:
-
-- Kaggle notebook: https://www.kaggle.com/code/rasagyavatsal/cropcheckup
-- CropCheckUp dataset: https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset
-- Source attribution: [ATTRIBUTION.md](ATTRIBUTION.md)
-- Dataset license: [DATASET_LICENSE.md](DATASET_LICENSE.md)
-- Model license: [MODEL_LICENSE.md](MODEL_LICENSE.md)
-
-The derived dataset uses data from PlantVillage and Mango Leaf Disease sources.
-See [ATTRIBUTION.md](ATTRIBUTION.md) for original dataset links, licenses, and
-citations.
-
-## Privacy
-
-The CLI processes the selected file in memory and makes no network requests.
-It does not create an account, send image bytes to an API, or save diagnosis
-history. See [PRIVACY.md](PRIVACY.md).
-
-## Licensing
-
-This repository uses split licensing:
-
-- Source code and documentation are licensed under Apache-2.0. See
-  [LICENSE](LICENSE).
-- The plant-disease model artifacts are licensed under `CC-BY-NC-SA-4.0`. See
-  [MODEL_LICENSE.md](MODEL_LICENSE.md).
-- The derived CropCheckUp dataset is licensed under `CC-BY-NC-SA-4.0`. See
-  [DATASET_LICENSE.md](DATASET_LICENSE.md).
-
-The Apache-2.0 source code license does not grant commercial rights to the
-bundled model artifacts or derived dataset.
-
-## Citation
-
-If you use this project or the associated datasets, cite CropCheckUp using
-[CITATION.cff](CITATION.cff), and also cite the original source datasets listed
-in [ATTRIBUTION.md](ATTRIBUTION.md).
+Source code: [Apache-2.0](LICENSE). Bundled [model assets](MODEL_LICENSE.md) and
+[dataset](DATASET_LICENSE.md): CC-BY-NC-SA-4.0 (non-commercial).
+See [ATTRIBUTION.md](ATTRIBUTION.md) for dataset sources and citations.
