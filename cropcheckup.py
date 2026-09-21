@@ -45,7 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--model-dir",
         type=Path,
         default=DEFAULT_MODEL_DIR,
-        help="directory containing plant_disease_model.keras, labels.txt, and disease_info.json",
+        help="directory containing the classifier assets and background_removal.onnx",
     )
     parser.add_argument(
         "--top-k",
@@ -71,8 +71,8 @@ def load_disease_info(path: Path) -> dict[str, dict[str, Any]]:
     return {key: item for key, item in value.items() if isinstance(key, str) and isinstance(item, dict)}
 
 
-def prepare_image(path: Path):
-    """Center-crop and resize an image to the model's 224 x 224 RGB contract."""
+def prepare_image(path: Path, background_model_path: Path | None = None):
+    """Optionally remove its background, then prepare a 224 x 224 RGB input."""
     try:
         import numpy as np
         from PIL import Image, ImageOps
@@ -81,6 +81,10 @@ def prepare_image(path: Path):
 
     with Image.open(path) as image:
         oriented = ImageOps.exif_transpose(image.convert("RGBA"))
+        if background_model_path is not None:
+            from background_removal import remove_background
+
+            oriented = remove_background(oriented, background_model_path)
         rgba = ImageOps.fit(
             oriented,
             (INPUT_SIZE, INPUT_SIZE),
@@ -119,13 +123,14 @@ def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
     model_path = model_dir / "plant_disease_model.keras"
     labels_path = model_dir / "labels.txt"
     info_path = model_dir / "disease_info.json"
-    for resource in (model_path, labels_path, info_path):
+    background_model_path = model_dir / "background_removal.onnx"
+    for resource in (model_path, labels_path, info_path, background_model_path):
         if not resource.is_file():
             raise FileNotFoundError(f"required model resource not found: {resource}")
 
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
-    input_data = prepare_image(image_path)
+    input_data = prepare_image(image_path, background_model_path)
     model = keras.models.load_model(model_path, compile=False)
     if len(model.inputs) != 1 or len(model.outputs) != 1:
         raise ValueError("the classifier must expose one input tensor and one output tensor")
