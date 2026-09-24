@@ -8,6 +8,17 @@ CropCheckUp.
 - **CropCheckUp Dataset**: [https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset](https://www.kaggle.com/datasets/rasagyavatsal/cropcheckup-dataset)
 - **CropCheckUp Kaggle Notebook**: [https://www.kaggle.com/code/rasagyavatsal/cropcheckup](https://www.kaggle.com/code/rasagyavatsal/cropcheckup)
 
+## Background-removal model
+
+- **File**: `models/background_removal.onnx`
+- **Copyright**: Netesh Paudel, 2025
+- **License**: BSD 3-Clause; see [`models/BACKGROUND_REMOVER_LICENSE.txt`](models/BACKGROUND_REMOVER_LICENSE.txt)
+- **Recovered from**: the historical CropCheckUp browser implementation at [commit `b8036567f6af4208d61202167a3022549ebfdc75`](https://github.com/rasagyavatsal/CropCheckUp/tree/b8036567f6af4208d61202167a3022549ebfdc75)
+
+This is the model previously used for app inputs. The model used to prepare
+the training dataset has not been identified, so this asset should not be
+described as that dataset-preparation model.
+
 ## PlantVillage Dataset
 
 - **URL**: [https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset)

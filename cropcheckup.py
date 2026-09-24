@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -45,13 +46,19 @@ def build_parser() -> argparse.ArgumentParser:
         "--model-dir",
         type=Path,
         default=DEFAULT_MODEL_DIR,
-        help="directory containing plant_disease_model.keras, labels.txt, and disease_info.json",
+        help="directory containing the classifier assets and background_removal.onnx",
     )
     parser.add_argument(
         "--top-k",
         type=positive_integer,
         default=3,
         help="number of predictions to show (default: 3)",
+    )
+    parser.add_argument(
+        "--save-processed",
+        type=Path,
+        metavar="PATH",
+        help="save the final 224×224 RGB classifier input as a PNG",
     )
     parser.add_argument("--json", action="store_true", help="write the result as JSON")
     return parser
@@ -71,8 +78,19 @@ def load_disease_info(path: Path) -> dict[str, dict[str, Any]]:
     return {key: item for key, item in value.items() if isinstance(key, str) and isinstance(item, dict)}
 
 
-def prepare_image(path: Path):
-    """Center-crop and resize an image to the model's 224 x 224 RGB contract."""
+def prepare_image(
+    path: Path,
+    background_model_path: Path | None = None,
+    save_processed: Path | None = None,
+):
+    """Orient, optionally segment, composite, and resize for the classifier."""
+    if save_processed is not None:
+        save_processed = Path(save_processed)
+        if save_processed.resolve() == path.resolve() or (
+            save_processed.exists() and save_processed.samefile(path)
+        ):
+            raise ValueError(f"processed image output must not overwrite the source image: {path}")
+
     try:
         import numpy as np
         from PIL import Image, ImageOps
@@ -80,18 +98,21 @@ def prepare_image(path: Path):
         raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
 
     with Image.open(path) as image:
-        oriented = ImageOps.exif_transpose(image.convert("RGBA"))
-        rgba = ImageOps.fit(
-            oriented,
-            (INPUT_SIZE, INPUT_SIZE),
-            method=Image.Resampling.BILINEAR,
-            centering=(0.5, 0.5),
-        )
-        pixels = np.asarray(rgba, dtype=np.uint8)
+        oriented = ImageOps.exif_transpose(image).convert("RGBA")
+        if background_model_path is not None:
+            from background_removal import remove_background
 
-    rgb = pixels[:, :, :3].copy()
-    rgb[pixels[:, :, 3] == 0] = 0
-    return np.expand_dims(rgb.astype(np.float32), axis=0)
+            oriented = remove_background(oriented, background_model_path)
+        # Composite before resizing so hidden RGB does not bleed into leaf edges.
+        black = Image.new("RGBA", oriented.size, (0, 0, 0, 255))
+        rgb = Image.alpha_composite(black, oriented).convert("RGB")
+        resized = rgb.resize((INPUT_SIZE, INPUT_SIZE), resample=Image.Resampling.BILINEAR)
+        if save_processed is not None:
+            try:
+                resized.save(save_processed, format="PNG")
+            except (OSError, ValueError) as error:
+                raise OSError(f"could not save processed image to {save_processed}: {error}") from error
+        return np.expand_dims(np.asarray(resized, dtype=np.float32), axis=0)
 
 
 def make_prediction(raw_label: str, confidence: float, info: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -109,23 +130,35 @@ def make_prediction(raw_label: str, confidence: float, info: dict[str, Any] | No
     return prediction
 
 
-def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
+def classify(
+    image_path: Path,
+    model_dir: Path,
+    top_k: int,
+    save_processed: Path | None = None,
+) -> dict[str, Any]:
+    model_dir = Path(model_dir)
+    if not model_dir.is_dir():
+        raise FileNotFoundError(f"model directory not found: {model_dir}; choose a directory with --model-dir")
+    model_path = model_dir / "plant_disease_model.keras"
+    labels_path = model_dir / "labels.txt"
+    info_path = model_dir / "disease_info.json"
+    background_model_path = model_dir / "background_removal.onnx"
+    for resource in (model_path, labels_path, info_path, background_model_path):
+        if not resource.is_file():
+            raise FileNotFoundError(
+                f"required model resource not found: {resource}; "
+                "add it to --model-dir or select a directory with all four model assets"
+            )
+
     try:
         import numpy as np
         from tensorflow import keras
     except ImportError as error:
         raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
 
-    model_path = model_dir / "plant_disease_model.keras"
-    labels_path = model_dir / "labels.txt"
-    info_path = model_dir / "disease_info.json"
-    for resource in (model_path, labels_path, info_path):
-        if not resource.is_file():
-            raise FileNotFoundError(f"required model resource not found: {resource}")
-
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
-    input_data = prepare_image(image_path)
+    input_data = prepare_image(image_path, background_model_path, save_processed)
     model = keras.models.load_model(model_path, compile=False)
     if len(model.inputs) != 1 or len(model.outputs) != 1:
         raise ValueError("the classifier must expose one input tensor and one output tensor")
@@ -175,7 +208,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     try:
-        result = classify(args.image, args.model_dir, args.top_k)
+        # Keep library diagnostics off stdout so --json emits one JSON document.
+        with redirect_stdout(sys.stderr):
+            result = classify(
+                args.image,
+                args.model_dir,
+                args.top_k,
+                save_processed=args.save_processed,
+            )
     except (OSError, RuntimeError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
