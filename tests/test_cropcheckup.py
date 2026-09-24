@@ -1,6 +1,8 @@
+import io
 import json
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,6 +12,7 @@ from cropcheckup import (
     classify,
     label_parts,
     load_labels,
+    main,
     prepare_image,
 )
 
@@ -121,6 +124,81 @@ class CropCheckUpTests(unittest.TestCase):
         np.testing.assert_array_equal(data[0, 0, 112], [255, 0, 0])
         np.testing.assert_array_equal(data[0, -1, 112], [0, 0, 255])
 
+    def test_saved_processed_png_matches_classifier_input(self):
+        import numpy as np
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "source.png"
+            output_path = Path(directory) / "processed.png"
+            model_path = Path(directory) / "background_removal.onnx"
+            source = Image.new("RGBA", (3, 1))
+            source.putdata([(255, 0, 0, 255), (0, 255, 0, 128), (0, 0, 255, 0)])
+            source.save(source_path)
+            original_bytes = source_path.read_bytes()
+
+            def mask_image(image, model_path):
+                return apply_background_mask(image, np.full((1, 1), 0.5, dtype=np.float32))
+
+            with patch("background_removal.remove_background", side_effect=mask_image):
+                data = prepare_image(source_path, model_path, output_path)
+
+            with Image.open(output_path) as saved:
+                self.assertEqual(saved.format, "PNG")
+                self.assertEqual(saved.mode, "RGB")
+                self.assertEqual(saved.size, (224, 224))
+                np.testing.assert_array_equal(np.asarray(saved, dtype=np.float32), data[0])
+            self.assertEqual(source_path.read_bytes(), original_bytes)
+
+    def test_save_processed_rejects_source_aliases(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "source.png"
+            Image.new("RGB", (2, 2), (255, 0, 0)).save(source_path)
+            original_bytes = source_path.read_bytes()
+            symlink_path = Path(directory) / "symlink.png"
+            symlink_path.symlink_to(source_path)
+            hardlink_path = Path(directory) / "hardlink.png"
+            hardlink_path.hardlink_to(source_path)
+
+            for output_path in (source_path, symlink_path, hardlink_path):
+                with self.subTest(output_path=output_path):
+                    with self.assertRaisesRegex(ValueError, "must not overwrite the source image"):
+                        prepare_image(source_path, save_processed=output_path)
+                    self.assertEqual(source_path.read_bytes(), original_bytes)
+
+    def test_save_processed_reports_write_failure(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "source.png"
+            output_path = Path(directory) / "missing" / "processed.png"
+            Image.new("RGB", (2, 2), (255, 0, 0)).save(source_path)
+
+            with self.assertRaisesRegex(OSError, "could not save processed image to"):
+                prepare_image(source_path, save_processed=output_path)
+
+    def test_cli_passes_save_processed_path_and_keeps_json_parseable(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "source.png"
+            output_path = Path(directory) / "processed.png"
+            Image.new("RGB", (2, 2), (255, 0, 0)).save(source_path)
+            result = {"image": str(source_path), "prediction": {"label": "test"}, "alternatives": []}
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with patch("cropcheckup.classify", return_value=result) as classify_mock:
+                with redirect_stdout(stdout), redirect_stderr(stderr):
+                    exit_status = main([str(source_path), "--save-processed", str(output_path), "--json"])
+
+            self.assertEqual(exit_status, 0)
+            classify_mock.assert_called_once_with(source_path, DEFAULT_MODEL_DIR, 3, output_path)
+            self.assertEqual(json.loads(stdout.getvalue()), result)
+            self.assertEqual(stderr.getvalue(), "")
+
     def test_bundled_model_produces_prediction(self):
         try:
             import numpy as np
@@ -130,12 +208,17 @@ class CropCheckUpTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "leaf.png"
+            output_path = Path(directory) / "processed.png"
             image = Image.new("RGB", (320, 240), (235, 240, 220))
             draw = ImageDraw.Draw(image)
             draw.ellipse((80, 20, 260, 220), fill=(40, 145, 60))
             draw.line((170, 40, 170, 205), fill=(220, 220, 120), width=6)
             image.save(path)
-            result = classify(path, DEFAULT_MODEL_DIR, top_k=2)
+            result = classify(path, DEFAULT_MODEL_DIR, top_k=2, save_processed=output_path)
+            with Image.open(output_path) as saved:
+                self.assertEqual(saved.format, "PNG")
+                self.assertEqual(saved.mode, "RGB")
+                self.assertEqual(saved.size, (224, 224))
 
         self.assertIn("prediction", result)
         self.assertIn(result["prediction"]["label"], load_labels(DEFAULT_MODEL_DIR / "labels.txt"))

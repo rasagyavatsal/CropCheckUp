@@ -13,12 +13,15 @@ python3.12 -m venv .venv-keras
 . .venv-keras/bin/activate
 python -m pip install -r requirements.txt
 python cropcheckup.py path/to/leaf.jpg
+python cropcheckup.py path/to/leaf.jpg --save-processed processed.png
 ```
 
 Supports PNG, JPEG, WebP, and other Pillow-readable image formats.
 
 - `--top-k 5`: show the five highest-scoring predictions (default: 3).
 - `--json`: output results as JSON.
+- `--save-processed PATH`: save the final 224×224 RGB classifier input as a
+  lossless PNG for visual inspection. The source image cannot be overwritten.
 - `--model-dir PATH`: load `plant_disease_model.keras`, `labels.txt`, and
   `disease_info.json` from another directory (default: the bundled `models/`).
 

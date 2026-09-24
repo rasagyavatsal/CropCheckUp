@@ -53,6 +53,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=3,
         help="number of predictions to show (default: 3)",
     )
+    parser.add_argument(
+        "--save-processed",
+        type=Path,
+        metavar="PATH",
+        help="save the final 224×224 RGB classifier input as a PNG",
+    )
     parser.add_argument("--json", action="store_true", help="write the result as JSON")
     return parser
 
@@ -71,8 +77,19 @@ def load_disease_info(path: Path) -> dict[str, dict[str, Any]]:
     return {key: item for key, item in value.items() if isinstance(key, str) and isinstance(item, dict)}
 
 
-def prepare_image(path: Path, background_model_path: Path | None = None):
+def prepare_image(
+    path: Path,
+    background_model_path: Path | None = None,
+    save_processed: Path | None = None,
+):
     """Orient, optionally segment, composite, and resize for the classifier."""
+    if save_processed is not None:
+        save_processed = Path(save_processed)
+        if save_processed.resolve() == path.resolve() or (
+            save_processed.exists() and save_processed.samefile(path)
+        ):
+            raise ValueError(f"processed image output must not overwrite the source image: {path}")
+
     try:
         import numpy as np
         from PIL import Image, ImageOps
@@ -89,6 +106,11 @@ def prepare_image(path: Path, background_model_path: Path | None = None):
         black = Image.new("RGBA", oriented.size, (0, 0, 0, 255))
         rgb = Image.alpha_composite(black, oriented).convert("RGB")
         resized = rgb.resize((INPUT_SIZE, INPUT_SIZE), resample=Image.Resampling.BILINEAR)
+        if save_processed is not None:
+            try:
+                resized.save(save_processed, format="PNG")
+            except (OSError, ValueError) as error:
+                raise OSError(f"could not save processed image to {save_processed}: {error}") from error
         return np.expand_dims(np.asarray(resized, dtype=np.float32), axis=0)
 
 
@@ -107,7 +129,12 @@ def make_prediction(raw_label: str, confidence: float, info: dict[str, Any] | No
     return prediction
 
 
-def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
+def classify(
+    image_path: Path,
+    model_dir: Path,
+    top_k: int,
+    save_processed: Path | None = None,
+) -> dict[str, Any]:
     try:
         import numpy as np
         from tensorflow import keras
@@ -124,7 +151,7 @@ def classify(image_path: Path, model_dir: Path, top_k: int) -> dict[str, Any]:
 
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
-    input_data = prepare_image(image_path, background_model_path)
+    input_data = prepare_image(image_path, background_model_path, save_processed)
     model = keras.models.load_model(model_path, compile=False)
     if len(model.inputs) != 1 or len(model.outputs) != 1:
         raise ValueError("the classifier must expose one input tensor and one output tensor")
@@ -174,7 +201,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     try:
-        result = classify(args.image, args.model_dir, args.top_k)
+        result = classify(args.image, args.model_dir, args.top_k, args.save_processed)
     except (OSError, RuntimeError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
