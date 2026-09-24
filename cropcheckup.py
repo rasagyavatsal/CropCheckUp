@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -207,7 +208,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
     try:
-        result = classify(args.image, args.model_dir, args.top_k, args.save_processed)
+        # Keep library diagnostics off stdout so --json emits one JSON document.
+        with redirect_stdout(sys.stderr):
+            result = classify(
+                args.image,
+                args.model_dir,
+                args.top_k,
+                save_processed=args.save_processed,
+            )
     except (OSError, RuntimeError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1

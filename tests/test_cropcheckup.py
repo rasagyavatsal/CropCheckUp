@@ -187,27 +187,68 @@ class CropCheckUpTests(unittest.TestCase):
             with self.assertRaisesRegex(OSError, "could not save processed image to"):
                 prepare_image(source_path, save_processed=output_path)
 
-    def test_cli_passes_save_processed_path_and_keeps_json_parseable(self):
+    def test_cli_preserves_text_and_json_output_with_diagnostics_on_stderr(self):
         from PIL import Image
 
         with tempfile.TemporaryDirectory() as directory:
             source_path = Path(directory) / "source.png"
             output_path = Path(directory) / "processed.png"
             Image.new("RGB", (2, 2), (255, 0, 0)).save(source_path)
-            result = {"image": str(source_path), "prediction": {"label": "test"}, "alternatives": []}
-            stdout = io.StringIO()
-            stderr = io.StringIO()
+            result = {
+                "image": str(source_path),
+                "prediction": {
+                    "label": "Apple___Black_rot",
+                    "crop": "Apple",
+                    "condition": "Black rot",
+                    "confidence": 0.625,
+                    "symptoms": "Dark spots",
+                },
+                "alternatives": [{
+                    "label": "Apple___healthy",
+                    "crop": "Apple",
+                    "condition": "Healthy",
+                    "confidence": 0.25,
+                }],
+            }
 
-            with patch("cropcheckup.classify", return_value=result) as classify_mock:
-                with redirect_stdout(stdout), redirect_stderr(stderr):
-                    exit_status = main([str(source_path), "--save-processed", str(output_path), "--json"])
+            def noisy_classify(*args, **kwargs):
+                print("model initialized")
+                return result
 
-            self.assertEqual(exit_status, 0)
-            classify_mock.assert_called_once_with(source_path, DEFAULT_MODEL_DIR, 3, output_path)
-            self.assertEqual(json.loads(stdout.getvalue()), result)
-            self.assertEqual(stderr.getvalue(), "")
+            cases = (
+                (("--top-k", "2", "--json", "--save-processed", str(output_path)), 2, output_path),
+                ((), 3, None),
+            )
+            for flags, expected_top_k, expected_output in cases:
+                with self.subTest(flags=flags):
+                    stdout = io.StringIO()
+                    stderr = io.StringIO()
+                    with patch("cropcheckup.classify", side_effect=noisy_classify) as classify_mock:
+                        with redirect_stdout(stdout), redirect_stderr(stderr):
+                            exit_status = main([str(source_path), *flags])
 
-    def test_classify_loads_background_model_from_selected_model_dir(self):
+                    self.assertEqual(exit_status, 0)
+                    classify_mock.assert_called_once_with(
+                        source_path,
+                        DEFAULT_MODEL_DIR,
+                        expected_top_k,
+                        save_processed=expected_output,
+                    )
+                    self.assertEqual(stderr.getvalue(), "model initialized\n")
+                    if flags:
+                        self.assertEqual(json.loads(stdout.getvalue()), result)
+                    else:
+                        self.assertEqual(
+                            stdout.getvalue(),
+                            "Prediction: Apple — Black rot\n"
+                            "Confidence: 62.5%\n"
+                            "Label: Apple___Black_rot\n"
+                            "Symptoms: Dark spots\n"
+                            "\nAlternatives:\n"
+                            "- Apple — Healthy (25.0%)\n",
+                        )
+
+    def test_classify_keeps_positional_arguments_and_prediction_fields(self):
         import numpy as np
 
         class FakeClassifier:
@@ -215,23 +256,53 @@ class CropCheckUpTests(unittest.TestCase):
             outputs = [object()]
 
             def __call__(self, input_data, training=False):
-                return np.full((1, 68), 1 / 68, dtype=np.float32)
+                scores = np.zeros((1, 68), dtype=np.float32)
+                scores[0, 1] = 0.625
+                scores[0, 2] = 0.25
+                scores[0, 0] = 0.125
+                return scores
 
         with tempfile.TemporaryDirectory() as directory:
             model_dir = Path(directory) / "custom-models"
             self._write_stub_model_assets(model_dir)
+            (model_dir / "disease_info.json").write_text(
+                json.dumps({"Apple___Black_rot": {"symptoms": "Dark spots", "management": "Remove leaves"}}),
+                encoding="utf-8",
+            )
             image_path = Path(directory) / "leaf.png"
+            output_path = Path(directory) / "processed.png"
             load_model = Mock(return_value=FakeClassifier())
             tensorflow_stub = ModuleType("tensorflow")
             tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
 
             with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
                 with patch("cropcheckup.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
-                    result = classify(image_path, model_dir, top_k=1)
+                    result = classify(image_path, model_dir, 2)
+                    result_with_output = classify(image_path, model_dir, 1, save_processed=output_path)
 
-            prepare.assert_called_once_with(image_path, model_dir / "background_removal.onnx", None)
-            load_model.assert_called_once_with(model_dir / "plant_disease_model.keras", compile=False)
-            self.assertIn("prediction", result)
+            self.assertEqual(prepare.call_count, 2)
+            prepare.assert_any_call(image_path, model_dir / "background_removal.onnx", None)
+            prepare.assert_any_call(image_path, model_dir / "background_removal.onnx", output_path)
+            self.assertEqual(load_model.call_count, 2)
+            self.assertEqual(result, {
+                "image": str(image_path),
+                "prediction": {
+                    "label": "Apple___Black_rot",
+                    "crop": "Apple",
+                    "condition": "Black rot",
+                    "confidence": 0.625,
+                    "symptoms": "Dark spots",
+                    "management": "Remove leaves",
+                },
+                "alternatives": [{
+                    "label": "Apple___Cedar_apple_rust",
+                    "crop": "Apple",
+                    "condition": "Cedar apple rust",
+                    "confidence": 0.25,
+                }],
+            })
+            self.assertEqual(result_with_output["prediction"], result["prediction"])
+            self.assertEqual(result_with_output["alternatives"], [])
 
     def test_missing_background_asset_fails_without_json_output(self):
         from PIL import Image
