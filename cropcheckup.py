@@ -72,7 +72,7 @@ def load_disease_info(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def prepare_image(path: Path, background_model_path: Path | None = None):
-    """Optionally remove its background, then prepare a 224 x 224 RGB input."""
+    """Orient, optionally segment, composite, and resize for the classifier."""
     try:
         import numpy as np
         from PIL import Image, ImageOps
@@ -80,22 +80,16 @@ def prepare_image(path: Path, background_model_path: Path | None = None):
         raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
 
     with Image.open(path) as image:
-        oriented = ImageOps.exif_transpose(image.convert("RGBA"))
+        oriented = ImageOps.exif_transpose(image).convert("RGBA")
         if background_model_path is not None:
             from background_removal import remove_background
 
             oriented = remove_background(oriented, background_model_path)
-        rgba = ImageOps.fit(
-            oriented,
-            (INPUT_SIZE, INPUT_SIZE),
-            method=Image.Resampling.BILINEAR,
-            centering=(0.5, 0.5),
-        )
-        pixels = np.asarray(rgba, dtype=np.uint8)
-
-    rgb = pixels[:, :, :3].copy()
-    rgb[pixels[:, :, 3] == 0] = 0
-    return np.expand_dims(rgb.astype(np.float32), axis=0)
+        # Composite before resizing so hidden RGB does not bleed into leaf edges.
+        black = Image.new("RGBA", oriented.size, (0, 0, 0, 255))
+        rgb = Image.alpha_composite(black, oriented).convert("RGB")
+        resized = rgb.resize((INPUT_SIZE, INPUT_SIZE), resample=Image.Resampling.BILINEAR)
+        return np.expand_dims(np.asarray(resized, dtype=np.float32), axis=0)
 
 
 def make_prediction(raw_label: str, confidence: float, info: dict[str, Any] | None = None) -> dict[str, Any]:
