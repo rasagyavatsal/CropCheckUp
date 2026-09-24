@@ -146,6 +146,12 @@ class BackgroundRemovalService:
                 "expected (1, 1, H, W)"
             )
 
+        output_type = getattr(outputs[0], "type", None)
+        if output_type is not None and output_type != "tensor(float)":
+            raise BackgroundRemovalError(
+                f"background-removal mask output type is {output_type!r}; expected 'tensor(float)'"
+            )
+
 
 def create_model_input(image: Any, *, np: Any | None = None) -> Any:
     """Create the normalized NCHW float32 tensor expected by the ONNX model."""
@@ -243,7 +249,15 @@ def _extract_mask(outputs: Any, *, np: Any) -> Any:
     except (IndexError, KeyError, TypeError) as error:
         raise BackgroundRemovalError("background-removal model returned no mask output") from error
 
-    mask = np.asarray(first_output, dtype=np.float32)
+    try:
+        mask = np.asarray(first_output)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise BackgroundRemovalError(f"background-removal mask output is invalid: {error}") from error
+    if mask.dtype.kind != "f":
+        raise BackgroundRemovalError(
+            f"background-removal mask output has type {mask.dtype}; expected floating-point values"
+        )
+    mask = np.asarray(mask, dtype=np.float32)
     if mask.ndim == 4 and mask.shape[0] == 1 and mask.shape[1] == 1:
         mask = mask[0, 0]
     elif mask.ndim == 3 and mask.shape[0] == 1:

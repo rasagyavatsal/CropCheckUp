@@ -4,9 +4,10 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from unittest.mock import patch
+from types import ModuleType, SimpleNamespace
+from unittest.mock import Mock, patch
 
-from background_removal import apply_background_mask
+from background_removal import BackgroundRemovalError, apply_background_mask
 from cropcheckup import (
     DEFAULT_MODEL_DIR,
     classify,
@@ -18,6 +19,13 @@ from cropcheckup import (
 
 
 class CropCheckUpTests(unittest.TestCase):
+    def _write_stub_model_assets(self, model_dir):
+        model_dir.mkdir()
+        (model_dir / "plant_disease_model.keras").write_bytes(b"stub classifier")
+        (model_dir / "labels.txt").write_bytes((DEFAULT_MODEL_DIR / "labels.txt").read_bytes())
+        (model_dir / "disease_info.json").write_text("{}", encoding="utf-8")
+        (model_dir / "background_removal.onnx").write_bytes(b"stub segmentation model")
+
     def test_label_parts_humanizes_crop_and_condition(self):
         self.assertEqual(label_parts("Cherry_(including_sour)___healthy"), ("Cherry (including sour)", "Healthy"))
         self.assertEqual(label_parts("Tomato___Late_blight"), ("Tomato", "Late blight"))
@@ -198,6 +206,85 @@ class CropCheckUpTests(unittest.TestCase):
             classify_mock.assert_called_once_with(source_path, DEFAULT_MODEL_DIR, 3, output_path)
             self.assertEqual(json.loads(stdout.getvalue()), result)
             self.assertEqual(stderr.getvalue(), "")
+
+    def test_classify_loads_background_model_from_selected_model_dir(self):
+        import numpy as np
+
+        class FakeClassifier:
+            inputs = [SimpleNamespace(shape=(None, 224, 224, 3), dtype=np.float32)]
+            outputs = [object()]
+
+            def __call__(self, input_data, training=False):
+                return np.full((1, 68), 1 / 68, dtype=np.float32)
+
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory) / "custom-models"
+            self._write_stub_model_assets(model_dir)
+            image_path = Path(directory) / "leaf.png"
+            load_model = Mock(return_value=FakeClassifier())
+            tensorflow_stub = ModuleType("tensorflow")
+            tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
+
+            with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
+                with patch("cropcheckup.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
+                    result = classify(image_path, model_dir, top_k=1)
+
+            prepare.assert_called_once_with(image_path, model_dir / "background_removal.onnx", None)
+            load_model.assert_called_once_with(model_dir / "plant_disease_model.keras", compile=False)
+            self.assertIn("prediction", result)
+
+    def test_missing_background_asset_fails_without_json_output(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory) / "custom-models"
+            self._write_stub_model_assets(model_dir)
+            (model_dir / "background_removal.onnx").unlink()
+            image_path = Path(directory) / "leaf.png"
+            Image.new("RGB", (2, 2), (30, 80, 40)).save(image_path)
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with redirect_stdout(stdout), redirect_stderr(stderr):
+                status = main([str(image_path), "--model-dir", str(model_dir), "--json"])
+
+            self.assertEqual(status, 1)
+            self.assertEqual(stdout.getvalue(), "")
+            self.assertIn(str(model_dir / "background_removal.onnx"), stderr.getvalue())
+            self.assertIn("--model-dir", stderr.getvalue())
+
+    def test_inference_and_save_failures_stop_before_classification(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as directory:
+            model_dir = Path(directory) / "custom-models"
+            self._write_stub_model_assets(model_dir)
+            image_path = Path(directory) / "leaf.png"
+            Image.new("RGB", (2, 2), (30, 80, 40)).save(image_path)
+            load_model = Mock()
+            tensorflow_stub = ModuleType("tensorflow")
+            tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
+
+            cases = (
+                (BackgroundRemovalError("background-removal inference failed: device error"), None, "inference failed"),
+                (None, Path(directory) / "missing" / "processed.png", "could not save processed image"),
+            )
+            for failure, output_path, expected_error in cases:
+                with self.subTest(expected_error=expected_error):
+                    stdout = io.StringIO()
+                    stderr = io.StringIO()
+                    with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
+                        with patch("background_removal.remove_background", side_effect=failure or (lambda image, path: image)):
+                            arguments = [str(image_path), "--model-dir", str(model_dir), "--json"]
+                            if output_path is not None:
+                                arguments.extend(("--save-processed", str(output_path)))
+                            with redirect_stdout(stdout), redirect_stderr(stderr):
+                                status = main(arguments)
+
+                    self.assertEqual(status, 1)
+                    self.assertEqual(stdout.getvalue(), "")
+                    self.assertIn(expected_error, stderr.getvalue())
+                    load_model.assert_not_called()
 
     def test_bundled_model_produces_prediction(self):
         try:

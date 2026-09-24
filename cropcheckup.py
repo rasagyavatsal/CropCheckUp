@@ -135,19 +135,25 @@ def classify(
     top_k: int,
     save_processed: Path | None = None,
 ) -> dict[str, Any]:
-    try:
-        import numpy as np
-        from tensorflow import keras
-    except ImportError as error:
-        raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
-
+    model_dir = Path(model_dir)
+    if not model_dir.is_dir():
+        raise FileNotFoundError(f"model directory not found: {model_dir}; choose a directory with --model-dir")
     model_path = model_dir / "plant_disease_model.keras"
     labels_path = model_dir / "labels.txt"
     info_path = model_dir / "disease_info.json"
     background_model_path = model_dir / "background_removal.onnx"
     for resource in (model_path, labels_path, info_path, background_model_path):
         if not resource.is_file():
-            raise FileNotFoundError(f"required model resource not found: {resource}")
+            raise FileNotFoundError(
+                f"required model resource not found: {resource}; "
+                "add it to --model-dir or select a directory with all four model assets"
+            )
+
+    try:
+        import numpy as np
+        from tensorflow import keras
+    except ImportError as error:
+        raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
 
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)

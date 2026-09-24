@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from background_removal import (
     BACKGROUND_MODEL_SIZE,
@@ -107,6 +108,58 @@ class BackgroundRemovalTests(unittest.TestCase):
             service = BackgroundRemovalService(Path(model_file.name), session_factory=lambda path: session)
             with self.assertRaisesRegex(BackgroundRemovalError, "mask has shape"):
                 service.remove_background(self.Image.new("RGB", (2, 2), (20, 40, 60)))
+
+    def test_non_numeric_mask_output_fails_clearly(self):
+        with tempfile.NamedTemporaryFile(suffix=".onnx") as model_file:
+            cases = (
+                (self.np.array([["invalid"]], dtype=object), "mask output has type object"),
+                ([[1.0], [1.0, 2.0]], "mask output is invalid"),
+            )
+            for output, expected_error in cases:
+                with self.subTest(expected_error=expected_error):
+                    service = BackgroundRemovalService(
+                        Path(model_file.name), session_factory=lambda path: _FakeSession(output)
+                    )
+                    with self.assertRaisesRegex(BackgroundRemovalError, expected_error):
+                        service.remove_background(self.Image.new("RGB", (2, 2), (20, 40, 60)))
+
+    def test_invalid_output_metadata_fails_before_inference(self):
+        class InvalidOutputSession(_FakeSession):
+            def get_outputs(self):
+                return [_Metadata("mask", [1, 1, 2, 2], "tensor(int64)")]
+
+        session = InvalidOutputSession(self.np.ones((1, 1, 2, 2), dtype=self.np.float32))
+        with tempfile.NamedTemporaryFile(suffix=".onnx") as model_file:
+            service = BackgroundRemovalService(Path(model_file.name), session_factory=lambda path: session)
+            with self.assertRaisesRegex(BackgroundRemovalError, "mask output type"):
+                service.remove_background(self.Image.new("RGB", (2, 2), (20, 40, 60)))
+        self.assertEqual(session.run_calls, 0)
+
+    def test_inference_failure_fails_clearly(self):
+        class FailingSession(_FakeSession):
+            def run(self, output_names, inputs):
+                raise RuntimeError("inference device failed")
+
+        with tempfile.NamedTemporaryFile(suffix=".onnx") as model_file:
+            service = BackgroundRemovalService(
+                Path(model_file.name), session_factory=lambda path: FailingSession(None)
+            )
+            with self.assertRaisesRegex(BackgroundRemovalError, "background-removal inference failed: inference device failed"):
+                service.remove_background(self.Image.new("RGB", (2, 2), (20, 40, 60)))
+
+    def test_missing_runtime_and_corrupt_asset_have_actionable_errors(self):
+        with tempfile.NamedTemporaryFile(suffix=".onnx") as model_file:
+            model_path = Path(model_file.name)
+            model_file.write(b"not an ONNX model")
+            model_file.flush()
+
+            with patch.dict("sys.modules", {"onnxruntime": None}):
+                with self.assertRaisesRegex(RuntimeError, "ONNX Runtime is required.*pip install -r requirements.txt"):
+                    BackgroundRemovalService(model_path).initialize()
+
+            with self.assertRaisesRegex(BackgroundRemovalError, "could not load background-removal model") as error:
+                BackgroundRemovalService(model_path).initialize()
+            self.assertIn(str(model_path), str(error.exception))
 
 
 if __name__ == "__main__":

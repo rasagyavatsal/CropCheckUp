@@ -22,8 +22,11 @@ Supports PNG, JPEG, WebP, and other Pillow-readable image formats.
 - `--json`: output results as JSON.
 - `--save-processed PATH`: save the final 224×224 RGB classifier input as a
   lossless PNG for visual inspection. The source image cannot be overwritten.
-- `--model-dir PATH`: load `plant_disease_model.keras`, `labels.txt`, and
-  `disease_info.json` from another directory (default: the bundled `models/`).
+- `--model-dir PATH`: load `plant_disease_model.keras`, `labels.txt`,
+  `disease_info.json`, and `background_removal.onnx` from another directory
+  (default: the bundled `models/`). All four files are required. Background
+  removal runs locally with ONNX Runtime and does not fall back to the original
+  photo if its model is missing or fails.
 
 ## Training
 
@@ -32,8 +35,9 @@ then run `python train.py`. The script trains a MobileNetV3Large classifier and
 saves the model and labels to `plant_disease_outputs/`.
 
 To use the trained model, copy `plant_disease_model.keras` and its matching
-`labels.txt` into `models/`, keeping `disease_info.json` alongside them. The CLI
-requires 68 labels in model output order.
+`labels.txt` into `models/`, keeping `disease_info.json` and
+`background_removal.onnx` alongside them. The CLI requires 68 labels in model
+output order.
 
 ## Tests
 
