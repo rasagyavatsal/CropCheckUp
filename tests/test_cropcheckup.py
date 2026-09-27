@@ -7,15 +7,15 @@ from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from unittest.mock import Mock, patch
 
-from background_removal import BackgroundRemovalError, apply_background_mask
-from classifier import (
+from cropcheckup.background_removal import BackgroundRemovalError, apply_background_mask
+from cropcheckup.classifier import (
     DEFAULT_MODEL_DIR,
     classify,
     label_parts,
     load_labels,
     prepare_image,
 )
-from cli import main
+from cropcheckup.cli import main
 
 
 class CropCheckUpTests(unittest.TestCase):
@@ -83,7 +83,7 @@ class CropCheckUpTests(unittest.TestCase):
             path = Path(directory) / "partial.png"
             model_path = Path(directory) / "background_removal.onnx"
             Image.new("RGBA", (1, 1), (255, 0, 0, 128)).save(path)
-            with patch("background_removal.remove_background", side_effect=mask_image):
+            with patch("cropcheckup.background_removal.remove_background", side_effect=mask_image):
                 data = prepare_image(path, model_path)
 
         self.assertEqual(seen, [("RGBA", (255, 0, 0, 128), model_path)])
@@ -125,7 +125,7 @@ class CropCheckUpTests(unittest.TestCase):
             exif = Image.Exif()
             exif[274] = 6
             image.save(path, exif=exif)
-            with patch("background_removal.remove_background", side_effect=capture_image):
+            with patch("cropcheckup.background_removal.remove_background", side_effect=capture_image):
                 data = prepare_image(path, Path(directory) / "background_removal.onnx")
 
         self.assertEqual(seen, [((2, 4), (255, 0, 0, 255), (0, 0, 255, 255))])
@@ -148,7 +148,7 @@ class CropCheckUpTests(unittest.TestCase):
             def mask_image(image, model_path):
                 return apply_background_mask(image, np.full((1, 1), 0.5, dtype=np.float32))
 
-            with patch("background_removal.remove_background", side_effect=mask_image):
+            with patch("cropcheckup.background_removal.remove_background", side_effect=mask_image):
                 data = prepare_image(source_path, model_path, output_path)
 
             with Image.open(output_path) as saved:
@@ -223,7 +223,7 @@ class CropCheckUpTests(unittest.TestCase):
                 with self.subTest(flags=flags):
                     stdout = io.StringIO()
                     stderr = io.StringIO()
-                    with patch("cli.classify", side_effect=noisy_classify) as classify_mock:
+                    with patch("cropcheckup.cli.classify", side_effect=noisy_classify) as classify_mock:
                         with redirect_stdout(stdout), redirect_stderr(stderr):
                             exit_status = main([str(source_path), *flags])
 
@@ -276,7 +276,7 @@ class CropCheckUpTests(unittest.TestCase):
             tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
 
             with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
-                with patch("classifier.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
+                with patch("cropcheckup.classifier.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
                     result = classify(image_path, model_dir, 2)
                     result_with_output = classify(image_path, model_dir, 1, save_processed=output_path)
 
@@ -345,7 +345,7 @@ class CropCheckUpTests(unittest.TestCase):
                     stdout = io.StringIO()
                     stderr = io.StringIO()
                     with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
-                        with patch("background_removal.remove_background", side_effect=failure or (lambda image, path: image)):
+                        with patch("cropcheckup.background_removal.remove_background", side_effect=failure or (lambda image, path: image)):
                             arguments = [str(image_path), "--model-dir", str(model_dir), "--json"]
                             if output_path is not None:
                                 arguments.extend(("--save-processed", str(output_path)))

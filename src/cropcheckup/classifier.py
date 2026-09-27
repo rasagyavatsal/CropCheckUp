@@ -56,12 +56,12 @@ def prepare_image(
         import numpy as np
         from PIL import Image, ImageOps
     except ImportError as error:
-        raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
+        raise RuntimeError("install CropCheckUp and its dependencies with: python -m pip install -e .") from error
 
     with Image.open(path) as image:
         oriented = ImageOps.exif_transpose(image).convert("RGBA")
         if background_model_path is not None:
-            from background_removal import remove_background
+            from .background_removal import remove_background
 
             oriented = remove_background(oriented, background_model_path)
         # Composite before resizing so hidden RGB does not bleed into leaf edges.
@@ -115,7 +115,7 @@ def classify(
         import numpy as np
         from tensorflow import keras
     except ImportError as error:
-        raise RuntimeError("install the CLI dependencies with: python -m pip install -r requirements.txt") from error
+        raise RuntimeError("install CropCheckUp and its dependencies with: python -m pip install -e .") from error
 
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
