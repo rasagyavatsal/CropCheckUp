@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cropcheckup"
+version = "0.1.0"
+description = "Local crop-leaf disease classification CLI"
+readme = "README.md"
+requires-python = ">=3.12"
+dynamic = ["dependencies"]
+license-files = ["LICENSE", "MODEL_LICENSE.md", "src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt"]
+
+[project.scripts]
+cropcheckup = "cropcheckup.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+cropcheckup = ["models/*"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}

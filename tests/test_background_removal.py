@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from background_removal import (
+from cropcheckup.background_removal import (
     BACKGROUND_MODEL_SIZE,
     MODEL_INPUT_NAME,
     MODEL_INPUT_SHAPE,
@@ -154,7 +154,7 @@ class BackgroundRemovalTests(unittest.TestCase):
             model_file.flush()
 
             with patch.dict("sys.modules", {"onnxruntime": None}):
-                with self.assertRaisesRegex(RuntimeError, "ONNX Runtime is required.*pip install -r requirements.txt"):
+                with self.assertRaisesRegex(RuntimeError, "ONNX Runtime is required.*pip install -e"):
                     BackgroundRemovalService(model_path).initialize()
 
             with self.assertRaisesRegex(BackgroundRemovalError, "could not load background-removal model") as error:

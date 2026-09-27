@@ -10,9 +10,9 @@ CropCheckUp.
 
 ## Background-removal model
 
-- **File**: `models/background_removal.onnx`
+- **File**: `src/cropcheckup/models/background_removal.onnx`
 - **Copyright**: Netesh Paudel, 2025
-- **License**: BSD 3-Clause; see [`models/BACKGROUND_REMOVER_LICENSE.txt`](models/BACKGROUND_REMOVER_LICENSE.txt)
+- **License**: BSD 3-Clause; see [`src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt`](src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt)
 - **Recovered from**: the historical CropCheckUp browser implementation at [commit `b8036567f6af4208d61202167a3022549ebfdc75`](https://github.com/rasagyavatsal/CropCheckUp/tree/b8036567f6af4208d61202167a3022549ebfdc75)
 
 This is the model previously used for app inputs. The model used to prepare

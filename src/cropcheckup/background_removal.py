@@ -77,7 +77,7 @@ class BackgroundRemovalService:
             except ImportError as error:
                 raise RuntimeError(
                     "ONNX Runtime is required for background removal; "
-                    "install the CLI dependencies with: python -m pip install -r requirements.txt"
+                    "install CropCheckUp and its dependencies with: python -m pip install -e ."
                 ) from error
 
             try:
@@ -162,7 +162,7 @@ def create_model_input(image: Any, *, np: Any | None = None) -> Any:
     except ImportError as error:
         raise RuntimeError(
             "Pillow is required for background removal; "
-            "install the CLI dependencies with: python -m pip install -r requirements.txt"
+            "install CropCheckUp and its dependencies with: python -m pip install -e ."
         ) from error
 
     resized = image.convert("RGB").resize(
@@ -189,7 +189,7 @@ def apply_background_mask(image: Any, mask: Any, *, np: Any | None = None) -> An
     except ImportError as error:
         raise RuntimeError(
             "Pillow is required for background removal; "
-            "install the CLI dependencies with: python -m pip install -r requirements.txt"
+            "install CropCheckUp and its dependencies with: python -m pip install -e ."
         ) from error
 
     source = image.convert("RGBA")
@@ -359,6 +359,6 @@ def _load_numpy() -> Any:
     except ImportError as error:
         raise RuntimeError(
             "NumPy is required for background removal; "
-            "install the CLI dependencies with: python -m pip install -r requirements.txt"
+            "install CropCheckUp and its dependencies with: python -m pip install -e ."
         ) from error
     return np

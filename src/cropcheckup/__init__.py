@@ -1,0 +1,1 @@
+"""CropCheckUp image classification package."""

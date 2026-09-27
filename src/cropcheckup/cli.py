@@ -10,7 +10,7 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any, Sequence
 
-from classifier import DEFAULT_MODEL_DIR, classify
+from .classifier import DEFAULT_MODEL_DIR, classify
 
 
 def positive_integer(value: str) -> int:

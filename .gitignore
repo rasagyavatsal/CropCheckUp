@@ -5,11 +5,13 @@ node_modules/
 __pycache__/
 *.py[cod]
 .venv/
-.venv-keras/
 venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+build/
+dist/
+*.egg-info/
 
 # Local tooling and generated files
 *.log

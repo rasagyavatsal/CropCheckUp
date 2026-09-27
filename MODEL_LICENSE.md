@@ -3,7 +3,7 @@
 ## Plant disease classifier
 
 The following classifier and supporting information files are bundled under
-`models/`:
+`src/cropcheckup/models/`:
 
 - `plant_disease_model.keras`
 - `plant_disease_model.h5`
@@ -21,13 +21,13 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 
 ## Background-removal model
 
-The following background-removal model is also bundled under `models/`:
+The following background-removal model is also bundled under `src/cropcheckup/models/`:
 
 - `background_removal.onnx`
 
 This model is distributed under the BSD 3-Clause License, copyright (c) 2025
 Netesh Paudel. The complete notice is preserved in
-[`models/BACKGROUND_REMOVER_LICENSE.txt`](models/BACKGROUND_REMOVER_LICENSE.txt).
+[`src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt`](src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt).
 
 The ONNX model was recovered from the historical CropCheckUp browser
 implementation at commit
