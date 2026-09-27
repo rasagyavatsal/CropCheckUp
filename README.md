@@ -24,9 +24,9 @@ is applied at the source image's full resolution, with no 1024-pixel limit.
 ## Classify an image
 
 ```sh
-python cropcheckup.py leaf.jpg
-python cropcheckup.py leaf.jpg --save-processed processed.png
-python cropcheckup.py leaf.jpg --json
+python cli.py leaf.jpg
+python cli.py leaf.jpg --save-processed processed.png
+python cli.py leaf.jpg --json
 ```
 
 The CLI accepts PNG, JPEG, WebP, and other Pillow-readable formats. By default,

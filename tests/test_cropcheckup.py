@@ -8,14 +8,14 @@ from types import ModuleType, SimpleNamespace
 from unittest.mock import Mock, patch
 
 from background_removal import BackgroundRemovalError, apply_background_mask
-from cropcheckup import (
+from classifier import (
     DEFAULT_MODEL_DIR,
     classify,
     label_parts,
     load_labels,
-    main,
     prepare_image,
 )
+from cli import main
 
 
 class CropCheckUpTests(unittest.TestCase):
@@ -223,7 +223,7 @@ class CropCheckUpTests(unittest.TestCase):
                 with self.subTest(flags=flags):
                     stdout = io.StringIO()
                     stderr = io.StringIO()
-                    with patch("cropcheckup.classify", side_effect=noisy_classify) as classify_mock:
+                    with patch("cli.classify", side_effect=noisy_classify) as classify_mock:
                         with redirect_stdout(stdout), redirect_stderr(stderr):
                             exit_status = main([str(source_path), *flags])
 
@@ -276,7 +276,7 @@ class CropCheckUpTests(unittest.TestCase):
             tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
 
             with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
-                with patch("cropcheckup.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
+                with patch("classifier.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
                     result = classify(image_path, model_dir, 2)
                     result_with_output = classify(image_path, model_dir, 1, save_processed=output_path)
 
