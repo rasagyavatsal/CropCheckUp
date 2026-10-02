@@ -54,13 +54,24 @@ flowchart TD
 
 The project's [dataset attribution](ATTRIBUTION.md) records the CropCheckUp
 dataset and Kaggle notebook, along with source datasets including PlantVillage
-and the Mango Leaf Disease Dataset. Dataset terms are documented in
+and the Mango Leaf Disease Dataset, plus the combined bottle-gourd, zucchini,
+and papaya leaf dataset from Mendeley Data. Dataset terms are documented in
 [DATASET_LICENSE.md](DATASET_LICENSE.md).
 
 The bundled [label list](src/cropcheckup/models/labels.txt) covers apple,
 blueberry, bottle gourd, cherry, corn, grape, mango, orange, papaya, peach,
 bell pepper, potato, raspberry, soybean, squash, strawberry, tomato, and
 zucchini. The 68 labels represent crop–condition pairs.
+
+The local `dataset/` contains **77,957 image files in 68 class folders** as of
+2 October 2026. Its 23 bottle-gourd, papaya, and zucchini folders were replaced
+with **20,170 downloaded augmented images**, after excluding all **2,048 files**
+in confirmed exact cross-label duplicate groups. Folder names follow the bundled
+label list. Counts include repeated augmentations and same-label duplicates.
+The previous 2,031 images were archived under `quarantine/`; the
+[replacement manifest](dataset_audit/crop_replacement_2026-10-02_114255_utc.json)
+records the backup, filename mappings, exclusions, and verified checksums. See
+the [per-class replacement counts](dataset_audit/crop_replacement_counts_2026-10-02_114255_utc.csv).
 
 The [training script](scripts/train.py) defines the following configuration:
 

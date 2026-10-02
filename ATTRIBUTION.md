@@ -32,3 +32,20 @@ described as that dataset-preparation model.
 - **Creator**: Arya Shah (as shown on Kaggle)
 - **License**: `CC-BY-NC-4.0`
 - **Citation**: Ali, Sawkat; Ibrahim, Muhammad; Ahmed, Sarder Iftekhar; Nadim, Md.; Mizanur, Mizanur Rahman; Shejunti, Maria Mehjabin; Jabid, Taskeed (2022), “MangoLeafBD Dataset”, Mendeley Data, V1, doi: 10.17632/hxsnvwty3r.1.
+
+## Bottle Gourd, Zucchini, and Papaya Leaf Dataset
+
+- **Title**: A Combined Dataset of Bottle Gourd, Zucchini, and Papaya Leaf Diseases for Machine Learning and Deep Learning Applications
+- **URL**: [Mendeley Data, version 2](https://data.mendeley.com/datasets/c34t55y9gj/2)
+- **Creators**: Md Masum Billah, Md Anisur Rahman, and Mohammad Shorif Uddin
+- **Institution**: Daffodil International University, Dhaka, Bangladesh
+- **Published**: 17 December 2025
+- **License**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), as listed by the publisher
+- **Citation**: Billah, Md Masum; Rahman, Md Anisur; Shorif Uddin, Mohammad (2025), “A Combined Dataset of Bottle Gourd, Zucchini, and Papaya Leaf Diseases for Machine Learning and Deep Learning Applications”, Mendeley Data, V2, doi: [10.17632/c34t55y9gj.2](https://doi.org/10.17632/c34t55y9gj.2).
+- **Local use and modifications**: On 2 October 2026, 20,170 augmented image files
+  replaced the 23 bottle-gourd, papaya, and zucchini class folders in `dataset/`.
+  All 2,048 files in confirmed exact cross-label duplicate groups were excluded,
+  and folder names were normalized to the existing model labels. The publisher's
+  downloaded files were preserved. The
+  [replacement manifest](dataset_audit/crop_replacement_2026-10-02_114255_utc.json)
+  records the source files, exclusions, backup, and copied-image checksums.
