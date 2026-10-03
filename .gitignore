@@ -32,3 +32,5 @@ dist/
 .antigravitycli/
 PROMPT.md
 AGENTS.md
+dataset/
+dataset_v2/
