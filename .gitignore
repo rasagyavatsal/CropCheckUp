@@ -36,3 +36,5 @@ plantvillage_new/
 
 # Classifier model, kept locally: train it with the CropCheckUp-training repository
 src/cropcheckup/models/plant_disease_model.onnx
+
+CLAUDE.md
