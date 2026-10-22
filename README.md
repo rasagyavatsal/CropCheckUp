@@ -1,14 +1,14 @@
 # CropCheckUp
 
-CropCheckUp is a Python command-line tool for identifying crop-leaf conditions
-from images. It combines ONNX background removal with a ConvNeXt classifier,
-also run with ONNX Runtime, to predict **38 crop and condition labels across 14
-crops**, including healthy leaves, diseases, and pest damage.
+CropCheckUp is a web app for identifying crop-leaf conditions from photos. It
+combines ONNX background removal with a ConvNeXt classifier, both run in the
+browser with ONNX Runtime Web, to predict **38 crop and condition labels across
+14 crops**, including healthy leaves, diseases, and pest damage.
 
 Each result includes the predicted crop and condition, a confidence score, and
 alternative predictions. Symptoms, causes, and management information are
-included when available. All image processing and inference run locally, so
-images do not need to be uploaded to a service.
+included when available. All image processing and inference run in the browser,
+so photos are never uploaded.
 
 ## Technical highlights
 
@@ -19,23 +19,24 @@ images do not need to be uploaded to a service.
   random crops, colour jitter, and blur. Classes are sampled in proportion to
   the square root of their size, and the train/test split keeps duplicate
   photos of one leaf together.
-- **Two-model inference pipeline:** ONNX Runtime produces a foreground mask,
-  falling back to the whole photo when the mask keeps too little, and then
-  classifies the processed leaf image.
-- **Inspectable preprocessing:** EXIF orientation and transparency are handled
-  explicitly, and the exact classifier input can be saved as a PNG.
-- **Scriptable interface:** an installable `cropcheckup` command supports
-  configurable top-k predictions, custom model directories, and JSON output
-  with diagnostics routed to stderr.
+- **Two-model inference pipeline:** ONNX Runtime Web produces a foreground
+  mask, falling back to the whole photo when the mask keeps too little, and then
+  classifies the processed leaf image. Both models run in a Web Worker, so the
+  page stays responsive.
+- **Faithful preprocessing:** resizing and alpha compositing reproduce Pillow's
+  integer arithmetic, so the classifier sees the same input as in evaluation.
+  EXIF orientation and transparency are handled, and the exact classifier input
+  can be saved as a PNG.
 - **Validation and tests:** model tensor shapes and types are checked, invalid
-  outputs produce clear errors, and tests cover preprocessing, CLI behavior,
-  background removal, and inference with the local models.
+  outputs produce clear errors, and tests cover preprocessing against Pillow
+  reference values, background removal, ranking, and inference with the local
+  models.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A[Leaf image] --> B[Correct EXIF orientation]
+    A[Leaf photo chosen, dropped or pasted] --> B[Decode with EXIF orientation in a Web Worker]
     B --> C[ONNX background removal]
     C --> D{Mask keeps at least 20% of the photo?}
     D -- yes --> E[Preserve transparency and composite onto black]
@@ -44,23 +45,23 @@ flowchart TD
     F --> G
     G --> H[ONNX ConvNeXt crop-condition classifier]
     H --> I[Rank predictions and look up disease information]
-    I --> J[Text or JSON output]
+    I --> J[Results in the page]
 ```
 
 | Component | Technology / responsibility |
 | --- | --- |
 | Model training | PyTorch and timm on Kaggle, in the CropCheckUp-training repository |
-| Classification and background removal | ONNX Runtime with CPU inference |
-| Image preparation | Pillow and NumPy |
-| Command-line interface | Python `argparse`, text and JSON output |
-| Packaging and tests | `setuptools`, `unittest` |
+| Classification and background removal | ONNX Runtime Web (WebAssembly) in a Web Worker |
+| Image preparation | TypeScript on raw RGBA pixels, matching Pillow |
+| User interface | React and TypeScript |
+| Build and tests | Vite, Vitest |
 
 ## Dataset and model training
 
 The classifier is trained on the CropCheckUp dataset, built from source
 datasets including PlantVillage and the Mango Leaf Disease Dataset.
 
-The [label list](src/cropcheckup/models/labels.txt) covers apple, blueberry,
+The [label list](src/data/labels.txt) covers apple, blueberry,
 cherry, corn, grape, orange, peach, bell pepper, potato, raspberry, soybean,
 squash, strawberry, and tomato. The 38 labels are the PlantVillage
 crop–condition pairs.
@@ -86,72 +87,75 @@ Results on the 5,371-image test split:
 | --- | --- | --- |
 | BiRefNet cutouts, as in training | 99.61% | 99.20% |
 | Centre crop hiding the background | 99.48% | 99.08% |
-| Raw photos through this CLI's background removal and fallback | about 99.4% | — |
+| Raw photos through the app's background removal and fallback | about 99.4% | — |
 
 These are PlantVillage photos taken against plain backgrounds. Accuracy on
 field photos has not been measured and will be lower.
 
 ## Setup
 
-Use Python 3.12. From the repository root, create an environment and install
-the dependencies:
+Use Node.js 22.12 or later. From the repository root, install the dependencies
+and start the development server:
 
 ```sh
-python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install -e .
+npm install
+npm run dev
 ```
-
-The package dependencies are ONNX Runtime, NumPy, and Pillow. The models run
-locally; inference does not need a network connection.
 
 The classifier model, `plant_disease_model.onnx` (112 MB), is over GitHub's file
 size limit and is not in this repository. Copy it from a training run's output
-into `src/cropcheckup/models/`, where it is gitignored.
+into `public/models/`, where it is gitignored. Without it, the app asks you to
+choose the file and loads it in that browser tab only.
 
-## Classify an image
+## Classify a photo
+
+Open the app, then choose, drop, or paste a leaf photo. Any format the browser
+can decode works, such as JPEG, PNG, and WebP. The page shows:
+
+- the predicted crop and condition with its confidence, and symptoms, causes,
+  and management information when available;
+- the top 3, 5, or 10 predictions;
+- the exact 224×224 classifier input, which can be saved as a lossless PNG;
+- whether the background was removed or the whole photo was classified.
+
+**Copy as JSON** copies the result, including the alternatives shown.
+
+## Build and deploy
 
 ```sh
-cropcheckup leaf.jpg
-cropcheckup leaf.jpg --save-processed processed.png
-cropcheckup leaf.jpg --json
+npm run build
+npm run preview
 ```
 
-The CLI accepts PNG, JPEG, WebP, and other Pillow-readable formats.
-
-- `--top-k 5`: show the five highest-scoring predictions (default: 3).
-- `--json`: output results as JSON; diagnostics go to stderr.
-- `--save-processed PATH`: save the final 224×224 RGB classifier input as a
-  lossless PNG for visual inspection. The source image is left intact and cannot
-  be used as the output path.
-- `--model-dir PATH`: load `plant_disease_model.onnx`, `labels.txt`,
-  `disease_info.json`, and `background_removal.onnx` from another directory
-  (default: the package's bundled models directory, located at
-  `src/cropcheckup/models/` in this repository). All four files are required.
+`npm run build` type-checks the app and writes a static site to `dist/`, which
+any static host can serve. It uses relative paths, so it also works from a
+subdirectory. Put `plant_disease_model.onnx` in `public/models/` before
+building to include it in `dist/models/`. Browsers download the 112 MB model
+when the page opens; whether later visits reuse it depends on the host's cache
+headers.
 
 ## Image preprocessing
 
-By default, the CLI corrects EXIF orientation, removes the background with the
-bundled ONNX model, preserves existing transparency, and composites the result
-onto black. It then resizes the entire image to 224×224 with bilinear
-interpolation and passes float32 RGB values in `[0, 255]` to the classifier,
-which normalises them itself. Rectangular images are resized without cropping or padding. If
+The app corrects EXIF orientation, removes the background with the bundled ONNX
+model, preserves existing transparency, and composites the result onto black.
+It then resizes the entire image to 224×224 with bilinear interpolation and
+passes float32 RGB values in `[0, 255]` to the classifier, which normalises
+them itself. Rectangular images are resized without cropping or padding. If
 background removal fails, classification stops with an error instead of using
 the original photo.
 
 On close-ups where the leaf fills the frame, the background-removal model often
 finds no subject and erases most of the leaf. When the mask keeps less than 20%
-of the photo, the CLI classifies the whole photo instead.
+of the photo, the app classifies the whole photo instead.
 
-Background removal adds CPU work and memory use. The ONNX file is about
-4.6 MB. Its input is 320×320, but the mask is applied at the source image's full
-resolution, with no 1024-pixel limit.
+The background-removal ONNX file is about 4.6 MB. Its input is 320×320, but the
+mask is applied at the photo's full resolution.
 
 ### Background-removal model
 
-The bundled [`background_removal.onnx`](src/cropcheckup/models/background_removal.onnx) was
+The bundled [`background_removal.onnx`](public/models/background_removal.onnx) was
 recovered from the [historical CropCheckUp browser implementation](https://github.com/rasagyavatsal/CropCheckUp/tree/b8036567f6af4208d61202167a3022549ebfdc75).
-It was previously used for app input images. The training images were cut out
+It removed backgrounds from the app's input photos there as well. The training images were cut out
 with the much larger BiRefNet-General instead; with the fallback above, using
 this model costs about 0.2 points of test accuracy. The ONNX asset is BSD
 3-Clause licensed.
@@ -164,22 +168,19 @@ repository. Its `kaggle/train/` notebook trains the classifier on a Kaggle T4
 GPU in about 85 minutes and writes `plant_disease_model.onnx`, `labels.txt`,
 and test metrics to the notebook's output.
 
-With an editable install, copy `plant_disease_model.onnx` and its matching
-`labels.txt` into `src/cropcheckup/models/`, keeping `disease_info.json` and
-`background_removal.onnx` alongside them. For a regular install, put all four
-files in another directory and select it with `--model-dir`. The CLI requires
-38 labels in model output order.
+Copy `plant_disease_model.onnx` into `public/models/`, and its matching
+`labels.txt` into `src/data/`. The app requires 38 labels in model output order.
 
 ## Tests
 
-The test suite covers image orientation, alpha compositing, tensor preparation,
-processed-image export, text and JSON output, model validation, and error
-handling. It also includes an inference smoke test using the local models
-and a generated image, which is skipped when `plant_disease_model.onnx` is
-missing.
+The test suite covers resizing and compositing against Pillow reference values,
+background masking, model validation, label parsing, and prediction ranking. It
+also includes an inference smoke test using the local models and a generated
+image, which is skipped when `plant_disease_model.onnx` is missing.
 
 ```sh
-python -m unittest discover -s tests -p 'test_*.py' -v
+npm test
+npm run typecheck
 ```
 
 ## License and attribution
