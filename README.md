@@ -57,10 +57,8 @@ flowchart TD
 
 ## Dataset and model training
 
-The project's [dataset attribution](ATTRIBUTION.md) records the CropCheckUp
-dataset and Kaggle notebook, along with source datasets including PlantVillage
-and the Mango Leaf Disease Dataset. Dataset terms are documented in
-[DATASET_LICENSE.md](DATASET_LICENSE.md).
+The classifier is trained on the CropCheckUp dataset, built from source
+datasets including PlantVillage and the Mango Leaf Disease Dataset.
 
 The [label list](src/cropcheckup/models/labels.txt) covers apple, blueberry,
 cherry, corn, grape, orange, peach, bell pepper, potato, raspberry, soybean,
@@ -155,8 +153,8 @@ The bundled [`background_removal.onnx`](src/cropcheckup/models/background_remova
 recovered from the [historical CropCheckUp browser implementation](https://github.com/rasagyavatsal/CropCheckUp/tree/b8036567f6af4208d61202167a3022549ebfdc75).
 It was previously used for app input images. The training images were cut out
 with the much larger BiRefNet-General instead; with the fallback above, using
-this model costs about 0.2 points of test accuracy. The ONNX asset is BSD 3-Clause licensed; its [full notice](src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt)
-and further [attribution](ATTRIBUTION.md) are included in this repository.
+this model costs about 0.2 points of test accuracy. The ONNX asset is BSD
+3-Clause licensed.
 
 ## Train the model
 
@@ -186,8 +184,5 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 
 ## License and attribution
 
-Source code: [Apache-2.0](LICENSE). The classifier assets are
-[CC-BY-NC-SA-4.0](MODEL_LICENSE.md) (non-commercial); the background-removal
-model is [BSD 3-Clause](src/cropcheckup/models/BACKGROUND_REMOVER_LICENSE.txt). See
-[DATASET_LICENSE.md](DATASET_LICENSE.md) and [ATTRIBUTION.md](ATTRIBUTION.md)
-for dataset terms, sources, and citations.
+Source code: Apache-2.0. The classifier assets are CC-BY-NC-SA-4.0
+(non-commercial); the background-removal model is BSD 3-Clause.
