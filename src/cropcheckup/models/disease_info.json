@@ -17,48 +17,6 @@
     "causes": "Fungus (Gymnosporangium juniperi-virginianae). Requires two hosts (Apple and Cedar) to complete its life cycle.",
     "management": "Remove nearby cedar trees or galls from them; plant resistant apple varieties like 'Delicious'; apply preventative fungicides from pink bud through petal fall."
   },
-  "Bottle_Gourd___Alternaria_Leaf_Blight": {
-    "name": "Alternaria Leaf Blight",
-    "symptoms": "Small light-brown spots with concentric 'target' rings on older leaves. Severe cases lead to leaf drying and premature defoliation.",
-    "causes": "Fungus (Alternaria cucumerina). Favored by warm, humid weather; spread by wind and rain.",
-    "management": "Use disease-free seeds; practice 2-year crop rotation; remove crop debris; apply fungicides like Mancozeb."
-  },
-  "Bottle_Gourd___Anthracnose": {
-    "name": "Anthracnose",
-    "symptoms": "Water-soaked lesions turning into sunken dark brown or black spots on leaves and fruit. Pinkish spore masses may ooze in humid weather.",
-    "causes": "Fungus (Colletotrichum lagenarium). Thrives in high humidity and moderate temperatures.",
-    "management": "Hot water seed treatment; deep plowing to bury debris; avoid overhead irrigation; apply Carbendazim or Mancozeb."
-  },
-  "Bottle_Gourd___Downy_Mildew": {
-    "name": "Downy Mildew",
-    "symptoms": "Angular yellow spots on upper leaf surfaces; grayish-purple 'downy' growth on leaf undersides. Leaves shrivel and die quickly.",
-    "causes": "Fungus-like organism (Pseudoperonospora cubensis). Highly dependent on leaf wetness and high humidity.",
-    "management": "Increase plant spacing for airflow; use resistant varieties; apply fungicides like Metalaxyl or Cymoxanil mixed with Mancozeb."
-  },
-  "Bottle_Gourd___Early_Alternaria_Leaf_Blight": {
-    "name": "Early Alternaria Leaf Blight",
-    "symptoms": "Initial stage of Alternaria blight showing small, circular light-brown spots on lower leaves before concentric rings develop.",
-    "causes": "Fungus (Alternaria cucumerina). Favored by warm, humid conditions.",
-    "management": "Sanitation; crop rotation; seed treatment with Trichoderma viride; foliar sprays of Neem oil."
-  },
-  "Bottle_Gourd___Fungal_Damage_Leaf": {
-    "name": "Fungal Damage Leaf",
-    "symptoms": "General fungal symptoms including necrotic spots with yellow halos, white powdery patches, or sudden wilting.",
-    "causes": "Various fungal pathogens favored by leaf wetness and poor field sanitation.",
-    "management": "Reduce leaf wetness via drip irrigation; maintain field sanitation; apply broad-spectrum fungicides if specific cause is unknown."
-  },
-  "Bottle_Gourd___Hole_Angular_Leaf_Spot": {
-    "name": "Angular Leaf Spot",
-    "symptoms": "Water-soaked angular spots delimited by veins; spots dry and fall out, creating a 'shot-hole' effect. White bacterial crust may appear.",
-    "causes": "Bacterium (Pseudomonas syringae pv. lachrymans). Seed-borne; spread by splashing water.",
-    "management": "Use certified pathogen-free seeds; avoid working in wet fields; spray copper-based fungicides or Streptomycin."
-  },
-  "Bottle_Gourd___Mosaic_Virus": {
-    "name": "Bottle Gourd Mosaic Virus",
-    "symptoms": "Light and dark green mosaic patterns on leaves; leaf curling, puckering, and dark green blistering. Stunted growth and deformed fruit.",
-    "causes": "Various viruses (e.g., CMV) transmitted primarily by aphids and whiteflies.",
-    "management": "Uproot and burn infected plants; control aphid vectors using Neem oil or Imidacloprid; keep field free of weeds."
-  },
   "Cherry_(including_sour)___Powdery_mildew": {
     "name": "Cherry Powdery Mildew",
     "symptoms": "White, patches of felt-like fungal growth on leaves; leaves may pucker, curl upward, and become brittle. Fruit may show white powdery bloom.",
@@ -101,77 +59,11 @@
     "causes": "Fungus (Pseudocercospora vitis). Minor disease appearing late in the season.",
     "management": "Improve air circulation; destroy crop residues; standard fungicide programs for other grape diseases usually control it."
   },
-  "Mango___Anthracnose": {
-    "name": "Mango Anthracnose",
-    "symptoms": "Sunken, dark brown to black spots on leaves, flowers, and fruits. Causes blossom blight and fruit rot in storage.",
-    "causes": "Fungus (Colletotrichum gloeosporioides). Thrives in high humidity and rainy conditions.",
-    "management": "Prune infected twigs; apply copper-based fungicides before flowering; post-harvest hot water treatment for fruit."
-  },
-  "Mango___Bacterial_Canker": {
-    "name": "Mango Bacterial Canker",
-    "symptoms": "Angular, water-soaked black raised spots on leaves. Fruits develop star-shaped cracks and ooze sticky bacterial fluid.",
-    "causes": "Bacterium (Xanthomonas campestris pv. mangiferaeindicae).",
-    "management": "Use disease-free planting material; prune and burn infected parts; apply Streptomycin or Copper Oxychloride."
-  },
-  "Mango___Die_Back": {
-    "name": "Mango Die Back",
-    "symptoms": "Twigs and branches dry from tip downwards; leaves turn brown, curl, and remain attached.",
-    "causes": "Fungus (Lasiodiplodia theobromae). Triggered by plant stress like drought or nutrient deficiency.",
-    "management": "Prune branches 3 inches below infection; apply copper fungicides or Carbendazim to cut ends."
-  },
-  "Mango___Gall_Midge": {
-    "name": "Mango Gall Midge",
-    "symptoms": "Small, raised, wart-like galls on young leaves. Infested leaves become deformed, curl, and drop prematurely.",
-    "causes": "Tiny flies (Procontarinia spp.) whose larvae feed inside leaf tissue, forming galls.",
-    "management": "Prune and destroy infested shoots; spray systemic insecticides like Imidacloprid during new flushes."
-  },
-  "Mango___Powdery_Mildew": {
-    "name": "Mango Powdery Mildew",
-    "symptoms": "White, powdery fungal growth on leaves, flower stalks, and young fruits, causing them to shed prematurely.",
-    "causes": "Fungus (Oidium mangiferae). Favored by cool nights and high humidity during flowering.",
-    "management": "Apply sulfur-based or systemic fungicides like Hexaconazole at the start of flowering."
-  },
-  "Mango___Sooty_Mould": {
-    "name": "Mango Sooty Mould",
-    "symptoms": "Black, velvety film covering leaves and fruits, blocking sunlight and reducing photosynthesis.",
-    "causes": "Fungi (Capnodium spp.) growing on honeydew secreted by sap-sucking insects.",
-    "management": "Control insects (aphids, hoppers) using neem oil or insecticides; wash off mould with starch solution or soap."
-  },
   "Orange___Haunglongbing_(Citrus_greening)": {
     "name": "Huanglongbing (Citrus Greening)",
     "symptoms": "Asymmetrical yellow mottling ('blotchy mottle') on leaves. Fruits are small, lopsided, bitter, and stay green at the bottom.",
     "causes": "Bacterium (Candidatus Liberibacter asiaticus), spread by the Asian Citrus Psyllid.",
     "management": "No cure; use pathogen-free nursery stock; remove infected trees immediately; control the psyllid vector with insecticides."
-  },
-  "Papaya___Bacterial_Blight": {
-    "name": "Papaya Bacterial Blight",
-    "symptoms": "Water-soaked lesions on leaf stalks; leaves turn yellow and collapse. Growing tip may rot, leading to plant death.",
-    "causes": "Bacterium (Erwinia papayae).",
-    "management": "Remove and burn infected plants; avoid overhead irrigation to reduce moisture on the crown."
-  },
-  "Papaya___Carica_Insect_Hole": {
-    "name": "Insect Damage (Holes)",
-    "symptoms": "Small holes, pimples, or galls on leaves; distorted or curled young leaves.",
-    "causes": "Gall midges, mites, or thrips feeding on leaf tissue.",
-    "management": "Prune infested parts; use miticides or neem-based sprays; systemic insecticides for gall midges."
-  },
-  "Papaya___Curled_Yellow_Spot": {
-    "name": "Yellow Spot / Leaf Curl",
-    "symptoms": "White powdery patches on leaf undersides; upper surfaces show yellow spots. Leaves may curl and drop.",
-    "causes": "Fungus (Oidium caricae) or viral pathogens spread by insects.",
-    "management": "Dust with sulfur; spray fungicides like Calixin; control insect vectors to prevent viral spread."
-  },
-  "Papaya___Pathogen_Symptoms": {
-    "name": "General Papaya Pathogen Symptoms",
-    "symptoms": "Water-soaked spots, yellowing, or necrotic patches on leaves and fruit, often leading to rot.",
-    "causes": "Various bacterial or fungal pathogens favored by high humidity and rain.",
-    "management": "Improve drainage; practice sanitation; avoid wounding plants; apply protective copper sprays."
-  },
-  "Papaya___Yellow_Necrotic_Spots_Holes": {
-    "name": "Yellow Necrotic Spots and Holes",
-    "symptoms": "Yellow spots that turn necrotic (brown/dead) and eventually fall out, leaving holes in the leaves.",
-    "causes": "Fungal infections like Alternaria or Bacterial spot; sometimes mechanical or insect damage followed by infection.",
-    "management": "Sanitation; remove infected leaves; apply fungicides or bactericides based on specific diagnosis."
   },
   "Peach___Bacterial_spot": {
     "name": "Peach Bacterial Spot",
@@ -262,53 +154,5 @@
     "symptoms": "Mottling of leaves with light and dark green patches; leaf curling, twisting, or stunting. Fruit may show internal browning.",
     "causes": "Extremely stable virus spread by contaminated tools, hands, clothing, and seeds.",
     "management": "Use certified seeds and resistant varieties; strict sanitation (wash hands, disinfect tools); rogue infected plants."
-  },
-  "Zucchini___Angular_Leaf_Spot": {
-    "name": "Angular Leaf Spot",
-    "symptoms": "Water-soaked gray-green angular spots limited by veins; spots dry and fall out leaving 'shot-holes'. White bacterial ooze on fruit.",
-    "causes": "Bacterium (Pseudomonas syringae pv. lachrymans). Favored by warm, wet, and humid conditions.",
-    "management": "Certified disease-free seeds; 2-3 year crop rotation; avoid overhead irrigation; apply copper-based bactericides."
-  },
-  "Zucchini___Anthracnose": {
-    "name": "Anthracnose",
-    "symptoms": "Yellowish water-soaked spots on leaves turning brown/black. Sunken lesions on fruit with pinkish spore masses in humid weather.",
-    "causes": "Fungus (Colletotrichum orbiculare). Spread by splashing rain, wind, and contaminated tools.",
-    "management": "Plant resistant varieties; destroy infected debris; avoid working when plants are wet; use fungicides like chlorothalonil."
-  },
-  "Zucchini___Downy_Mildew": {
-    "name": "Downy Mildew",
-    "symptoms": "Angular yellow spots on upper surfaces; fuzzy gray-to-purple mold on undersides. Leaves brown and die, but fruit is usually unaffected.",
-    "causes": "Water mold (Pseudoperonospora cubensis). Requires high humidity and cool-to-moderate temperatures.",
-    "management": "Improve air circulation; water early in the day; apply preventative copper or mancozeb fungicides."
-  },
-  "Zucchini___Dry_Leaf": {
-    "name": "Dry Leaf Symptoms",
-    "symptoms": "Leaf edges or entire leaves turn brown, brittle, and crispy.",
-    "causes": "Environmental stress (drought, windburn, extreme heat), old age, or final stages of other diseases.",
-    "management": "Consistent root-zone moisture; use mulch; prune off old dried lower leaves."
-  },
-  "Zucchini___Insect_Damage": {
-    "name": "General Insect Damage",
-    "symptoms": "Holes in leaves (beetles), wilting of vines (borers), or yellow-speckled leaves (bugs).",
-    "causes": "Squash bugs, cucumber beetles, aphids, or squash vine borers.",
-    "management": "Hand-pick pests; yellow sticky traps or row covers; inject Bt for borers; use neem oil for aphids."
-  },
-  "Zucchini___Iron_Chlorosis_Damage": {
-    "name": "Iron Chlorosis",
-    "symptoms": "Interveinal chlorosis (yellow tissue between green veins). In severe cases, leaves turn almost white with scorched edges.",
-    "causes": "Iron deficiency, usually due to high soil pH (alkaline) or poorly drained soil.",
-    "management": "Test and lower soil pH; apply chelated iron (soil or foliar); improve soil drainage."
-  },
-  "Zucchini___Xanthomonas_Leaf_Spot": {
-    "name": "Bacterial Leaf Spot",
-    "symptoms": "Small round water-soaked spots on leaf undersides, yellow on top. Spots turn brown with yellow halos. Sunken beige spots on fruit.",
-    "causes": "Bacterium (Xanthomonas campestris pv. cucurbitae). Introduced via infected seeds.",
-    "management": "Use clean seeds; 2-year crop rotation; avoid overhead watering; copper sprays can help limit spread."
-  },
-  "Zucchini___Yellow_Mosaic_Virus": {
-    "name": "Zucchini Yellow Mosaic Virus (ZYMV)",
-    "symptoms": "Yellow mosaic/mottled patterns; severe leaf distortion, blistering, or 'shoestring' effect. Stunted plants and bumpy fruit.",
-    "causes": "Virus transmitted primarily by aphids and mechanical contact.",
-    "management": "Plant resistant varieties; control aphids with neem oil or soap; immediately remove and destroy infected plants."
   }
 }
