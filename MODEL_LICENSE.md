@@ -2,14 +2,15 @@
 
 ## Plant disease classifier
 
-The following classifier and supporting information files are bundled under
+The following supporting information files are bundled under
 `src/cropcheckup/models/`:
 
-- `plant_disease_model.keras`
-- `plant_disease_model.h5`
-- `plant_disease_model.tflite`
 - `labels.txt`
 - `disease_info.json`
+
+The classifier model itself, `plant_disease_model.onnx`, is not in this
+repository; it is trained with the CropCheckUp-training repository and placed
+in the same directory locally.
 
 These model and supporting information artifacts are licensed under the
 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International

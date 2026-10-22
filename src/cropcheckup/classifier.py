@@ -1,4 +1,4 @@
-"""Prepare crop-leaf images and run the CropCheckUp Keras classifier."""
+"""Prepare crop-leaf images and run the CropCheckUp ONNX classifier."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 INPUT_SIZE = 224
-EXPECTED_LABEL_COUNT = 68
+EXPECTED_LABEL_COUNT = 38
 # Below this share of the photo kept, the background-removal mask is treated as a miss. Picked on the PlantVillage
 # test split, where falling back below 20% recovered nearly all the accuracy lost to empty masks.
 MIN_FOREGROUND_FRACTION = 0.2
@@ -106,7 +106,7 @@ def classify(
     model_dir = Path(model_dir)
     if not model_dir.is_dir():
         raise FileNotFoundError(f"model directory not found: {model_dir}; choose a directory with --model-dir")
-    model_path = model_dir / "plant_disease_model.keras"
+    model_path = model_dir / "plant_disease_model.onnx"
     labels_path = model_dir / "labels.txt"
     info_path = model_dir / "disease_info.json"
     background_model_path = model_dir / "background_removal.onnx"
@@ -119,24 +119,28 @@ def classify(
 
     try:
         import numpy as np
-        from tensorflow import keras
+        import onnxruntime as ort
     except ImportError as error:
         raise RuntimeError("install CropCheckUp and its dependencies with: python -m pip install -e .") from error
 
     labels = load_labels(labels_path)
     disease_info = load_disease_info(info_path)
     input_data = prepare_image(image_path, background_model_path, save_processed)
-    model = keras.models.load_model(model_path, compile=False)
-    if len(model.inputs) != 1 or len(model.outputs) != 1:
+    try:
+        session = ort.InferenceSession(str(model_path), providers=["CPUExecutionProvider"])
+    except Exception as error:  # ONNX Runtime exposes backend-specific exception types.
+        raise ValueError(f"could not load classifier model {model_path}: {error}") from error
+    if len(session.get_inputs()) != 1 or len(session.get_outputs()) != 1:
         raise ValueError("the classifier must expose one input tensor and one output tensor")
-    input_tensor = model.inputs[0]
-    actual_shape = tuple(input_tensor.shape)
+    input_tensor = session.get_inputs()[0]
+    # A dynamic batch dimension is reported as a name or None.
+    actual_shape = tuple(None if not isinstance(dim, int) else dim for dim in input_tensor.shape)
     if actual_shape not in ((None, INPUT_SIZE, INPUT_SIZE, 3), (1, INPUT_SIZE, INPUT_SIZE, 3)):
         raise ValueError(f"the classifier input shape is {actual_shape}; expected (None or 1, 224, 224, 3)")
-    if np.dtype(input_tensor.dtype) != np.dtype(np.float32):
-        raise ValueError(f"the classifier input type is {input_tensor.dtype}; expected float32")
+    if input_tensor.type != "tensor(float)":
+        raise ValueError(f"the classifier input type is {input_tensor.type}; expected tensor(float)")
 
-    scores = np.asarray(model(input_data, training=False), dtype=np.float32)
+    scores = np.asarray(session.run(None, {input_tensor.name: input_data})[0], dtype=np.float32)
     if scores.shape != (1, len(labels)):
         raise ValueError(f"the classifier output shape is {scores.shape}; expected (1, {len(labels)})")
     scores = scores[0]

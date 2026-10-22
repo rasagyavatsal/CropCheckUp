@@ -21,7 +21,7 @@ from cropcheckup.cli import main
 class CropCheckUpTests(unittest.TestCase):
     def _write_stub_model_assets(self, model_dir):
         model_dir.mkdir()
-        (model_dir / "plant_disease_model.keras").write_bytes(b"stub classifier")
+        (model_dir / "plant_disease_model.onnx").write_bytes(b"stub classifier")
         (model_dir / "labels.txt").write_bytes((DEFAULT_MODEL_DIR / "labels.txt").read_bytes())
         (model_dir / "disease_info.json").write_text("{}", encoding="utf-8")
         (model_dir / "background_removal.onnx").write_bytes(b"stub segmentation model")
@@ -33,7 +33,7 @@ class CropCheckUpTests(unittest.TestCase):
 
     def test_bundled_labels_have_expected_count(self):
         labels = load_labels(DEFAULT_MODEL_DIR / "labels.txt")
-        self.assertEqual(len(labels), 68)
+        self.assertEqual(len(labels), 38)
         self.assertEqual(labels[0], "Apple___Apple_scab")
 
     def test_prepare_image_returns_rgb_float32_model_input(self):
@@ -273,16 +273,20 @@ class CropCheckUpTests(unittest.TestCase):
     def test_classify_keeps_positional_arguments_and_prediction_fields(self):
         import numpy as np
 
-        class FakeClassifier:
-            inputs = [SimpleNamespace(shape=(None, 224, 224, 3), dtype=np.float32)]
-            outputs = [object()]
+        class FakeSession:
+            def get_inputs(self):
+                return [SimpleNamespace(name="image", shape=["batch", 224, 224, 3], type="tensor(float)")]
 
-            def __call__(self, input_data, training=False):
-                scores = np.zeros((1, 68), dtype=np.float32)
+            def get_outputs(self):
+                return [SimpleNamespace(name="probabilities")]
+
+            def run(self, output_names, inputs):
+                self.inputs = inputs
+                scores = np.zeros((1, 38), dtype=np.float32)
                 scores[0, 1] = 0.625
                 scores[0, 2] = 0.25
                 scores[0, 0] = 0.125
-                return scores
+                return [scores]
 
         with tempfile.TemporaryDirectory() as directory:
             model_dir = Path(directory) / "custom-models"
@@ -293,11 +297,11 @@ class CropCheckUpTests(unittest.TestCase):
             )
             image_path = Path(directory) / "leaf.png"
             output_path = Path(directory) / "processed.png"
-            load_model = Mock(return_value=FakeClassifier())
-            tensorflow_stub = ModuleType("tensorflow")
-            tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
+            load_model = Mock(return_value=FakeSession())
+            onnxruntime_stub = ModuleType("onnxruntime")
+            onnxruntime_stub.InferenceSession = load_model
 
-            with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
+            with patch.dict("sys.modules", {"onnxruntime": onnxruntime_stub}):
                 with patch("cropcheckup.classifier.prepare_image", return_value=np.zeros((1, 224, 224, 3), dtype=np.float32)) as prepare:
                     result = classify(image_path, model_dir, 2)
                     result_with_output = classify(image_path, model_dir, 1, save_processed=output_path)
@@ -306,6 +310,8 @@ class CropCheckUpTests(unittest.TestCase):
             prepare.assert_any_call(image_path, model_dir / "background_removal.onnx", None)
             prepare.assert_any_call(image_path, model_dir / "background_removal.onnx", output_path)
             self.assertEqual(load_model.call_count, 2)
+            load_model.assert_called_with(str(model_dir / "plant_disease_model.onnx"), providers=["CPUExecutionProvider"])
+            self.assertEqual(list(load_model.return_value.inputs), ["image"])
             self.assertEqual(result, {
                 "image": str(image_path),
                 "prediction": {
@@ -355,8 +361,8 @@ class CropCheckUpTests(unittest.TestCase):
             image_path = Path(directory) / "leaf.png"
             Image.new("RGB", (2, 2), (30, 80, 40)).save(image_path)
             load_model = Mock()
-            tensorflow_stub = ModuleType("tensorflow")
-            tensorflow_stub.keras = SimpleNamespace(models=SimpleNamespace(load_model=load_model))
+            onnxruntime_stub = ModuleType("onnxruntime")
+            onnxruntime_stub.InferenceSession = load_model
 
             cases = (
                 (BackgroundRemovalError("background-removal inference failed: device error"), None, "inference failed"),
@@ -366,7 +372,7 @@ class CropCheckUpTests(unittest.TestCase):
                 with self.subTest(expected_error=expected_error):
                     stdout = io.StringIO()
                     stderr = io.StringIO()
-                    with patch.dict("sys.modules", {"tensorflow": tensorflow_stub}):
+                    with patch.dict("sys.modules", {"onnxruntime": onnxruntime_stub}):
                         with patch("cropcheckup.background_removal.remove_background", side_effect=failure or (lambda image, path: image)):
                             arguments = [str(image_path), "--model-dir", str(model_dir), "--json"]
                             if output_path is not None:
@@ -385,6 +391,8 @@ class CropCheckUpTests(unittest.TestCase):
             from PIL import Image, ImageDraw
         except ImportError as error:  # pragma: no cover - dependencies are installed in test environments
             self.skipTest(str(error))
+        if not (DEFAULT_MODEL_DIR / "plant_disease_model.onnx").is_file():
+            self.skipTest("plant_disease_model.onnx is not in the repository; add it to run this test")
 
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "leaf.png"
