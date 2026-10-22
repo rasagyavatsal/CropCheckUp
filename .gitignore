@@ -1,26 +1,17 @@
 # Dependencies
 node_modules/
 
-# Python caches and environments
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-build/
+# Build output
 dist/
-*.egg-info/
 
 # Local tooling and generated files
 *.log
-*.pyc
 .DS_Store
 .env
 .env.*
 !.env.example
 .cache/
+.venv/
 
 # IDE files
 .idea/
@@ -35,6 +26,6 @@ AGENTS.md
 plantvillage_new/
 
 # Classifier model, kept locally: train it with the CropCheckUp-training repository
-src/cropcheckup/models/plant_disease_model.onnx
+public/models/plant_disease_model.onnx
 
 CLAUDE.md
