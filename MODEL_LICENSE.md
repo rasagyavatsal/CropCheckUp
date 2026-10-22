@@ -33,5 +33,5 @@ Netesh Paudel. The complete notice is preserved in
 The ONNX model was recovered from the historical CropCheckUp browser
 implementation at commit
 [`b8036567f6af4208d61202167a3022549ebfdc75`](https://github.com/rasagyavatsal/CropCheckUp/tree/b8036567f6af4208d61202167a3022549ebfdc75).
-This is the model previously used for app inputs; its identity as the model
-used to prepare the training dataset has not been established.
+This is the model used for app inputs. The classifier's training images were
+prepared with BiRefNet-General, not with this model.
