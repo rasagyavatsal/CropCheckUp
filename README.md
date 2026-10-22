@@ -61,8 +61,8 @@ flowchart TD
 
 ## Dataset and model training
 
-The classifier is trained on the CropCheckUp dataset, built from source
-datasets including PlantVillage and the Mango Leaf Disease Dataset.
+The classifier is trained on the CropCheckUp dataset, which is the
+PlantVillage dataset with backgrounds removed and unusable photos taken out.
 
 The [label list](src/data/labels.txt) covers apple, blueberry,
 cherry, corn, grape, orange, peach, bell pepper, potato, raspberry, soybean,
@@ -209,5 +209,28 @@ npm run typecheck
 
 ## License and attribution
 
-Source code: Apache-2.0. The classifier assets are CC-BY-NC-SA-4.0
-(non-commercial); the background-removal model is BSD 3-Clause.
+The source code is licensed under the [MIT License](LICENSE). The models are
+licensed separately:
+
+| Asset | License |
+| --- | --- |
+| Classifier, `plant_disease_model.onnx` | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): non-commercial use only, adaptations shared under the same license |
+| Background-removal model, `public/models/background_removal.onnx` | BSD 3-Clause, copyright (c) 2025 Netesh Paudel; see [its notice](public/models/background_removal.LICENSE.txt) |
+
+The classifier is trained on the PlantVillage dataset, distributed on Kaggle as
+[`abdallahalidev/plantvillage-dataset`](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset)
+under CC BY-NC-SA 4.0, so the model carries the same terms. The MIT License
+for the code grants no rights to the classifier.
+
+The classifier was built with:
+
+- **PlantVillage:** Mohanty, S. P., Hughes, D. P., & Salathé, M. (2016). "Using
+  deep learning for image-based plant disease detection." *Frontiers in Plant
+  Science*, 7, 1419. <https://doi.org/10.3389/fpls.2016.01419>
+- **ConvNeXt** (MIT), the pretrained backbone: Liu, Z., Mao, H., Wu, C.-Y.,
+  Feichtenhofer, C., Darrell, T., & Xie, S. (2022). "A ConvNet for the 2020s."
+  *CVPR*, 11976–11986.
+- **BiRefNet** (MIT), which removed the training images' backgrounds: Zheng,
+  P., Gao, D., Fan, D.-P., Liu, L., Laaksonen, J., Ouyang, W., & Sebe, N.
+  (2024). "Bilateral Reference for High-Resolution Dichotomous Image
+  Segmentation." *CAAI Artificial Intelligence Research*, 3, 9150038.
