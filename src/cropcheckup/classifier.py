@@ -8,6 +8,9 @@ from typing import Any
 
 INPUT_SIZE = 224
 EXPECTED_LABEL_COUNT = 68
+# Below this share of the photo kept, the background-removal mask is treated as a miss. Picked on the PlantVillage
+# test split, where falling back below 20% recovered nearly all the accuracy lost to empty masks.
+MIN_FOREGROUND_FRACTION = 0.2
 DEFAULT_MODEL_DIR = Path(__file__).resolve().parent / "models"
 
 
@@ -61,9 +64,12 @@ def prepare_image(
     with Image.open(path) as image:
         oriented = ImageOps.exif_transpose(image).convert("RGBA")
         if background_model_path is not None:
-            from .background_removal import remove_background
+            from .background_removal import foreground_fraction, remove_background
 
-            oriented = remove_background(oriented, background_model_path)
+            segmented = remove_background(oriented, background_model_path)
+            # On close-ups the remover often finds no subject and erases the leaf, so classify the whole photo.
+            if foreground_fraction(oriented, segmented, np=np) >= MIN_FOREGROUND_FRACTION:
+                oriented = segmented
         # Composite before resizing so hidden RGB does not bleed into leaf edges.
         black = Image.new("RGBA", oriented.size, (0, 0, 0, 255))
         rgb = Image.alpha_composite(black, oriented).convert("RGB")

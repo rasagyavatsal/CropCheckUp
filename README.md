@@ -125,6 +125,10 @@ classifier. Rectangular images are resized without cropping or padding. If
 background removal fails, classification stops with an error instead of using
 the original photo.
 
+On close-ups where the leaf fills the frame, the background-removal model often
+finds no subject and erases most of the leaf. When the mask keeps less than 20%
+of the photo, the CLI classifies the whole photo instead.
+
 Background removal adds CPU work and memory use. The ONNX file is about
 4.6 MB. Its input is 320×320, but the mask is applied at the source image's full
 resolution, with no 1024-pixel limit.

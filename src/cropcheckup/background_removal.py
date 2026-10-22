@@ -220,6 +220,14 @@ def apply_background_mask(image: Any, mask: Any, *, np: Any | None = None) -> An
     return Image.fromarray(rgba)
 
 
+def foreground_fraction(source: Any, segmented: Any, *, np: Any | None = None) -> float:
+    """Return the share of the source image's opacity that the mask kept."""
+    np = np or _load_numpy()
+    before = float(np.asarray(source.convert("RGBA").getchannel("A"), dtype=np.float64).sum())
+    after = float(np.asarray(segmented.convert("RGBA").getchannel("A"), dtype=np.float64).sum())
+    return after / before if before > 0 else 0.0
+
+
 def remove_background(image: Any, model_path: Path) -> Any:
     """Apply background removal using the cached service for ``model_path``."""
     return get_background_removal_service(model_path).remove_background(image)

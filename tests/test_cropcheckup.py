@@ -89,6 +89,28 @@ class CropCheckUpTests(unittest.TestCase):
         self.assertEqual(seen, [("RGBA", (255, 0, 0, 128), model_path)])
         np.testing.assert_array_equal(data[0, 112, 112], [64, 0, 0])
 
+    def test_prepare_image_falls_back_to_whole_photo_when_mask_keeps_too_little(self):
+        import numpy as np
+        from PIL import Image
+
+        def keep_top(fraction):
+            def mask_image(image, model_path):
+                mask = np.zeros((10, 10), dtype=np.float32)
+                mask[: round(fraction * 10)] = 1.0
+                return apply_background_mask(image, mask)
+
+            return mask_image
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "close-up.png"
+            Image.new("RGB", (10, 10), (40, 145, 60)).save(path)
+            model_path = Path(directory) / "background_removal.onnx"
+            for fraction, expected_bottom in ((0.1, [40, 145, 60]), (0.5, [0, 0, 0])):
+                with self.subTest(fraction=fraction):
+                    with patch("cropcheckup.background_removal.remove_background", side_effect=keep_top(fraction)):
+                        data = prepare_image(path, model_path)
+                    np.testing.assert_array_equal(data[0, -1, 112], expected_bottom)
+
     def test_prepare_image_resizes_full_rectangular_image(self):
         import numpy as np
         from PIL import Image, ImageDraw
