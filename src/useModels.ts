@@ -20,6 +20,9 @@ function modelUrl(name: string): string {
   return new URL(`models/${name}`, document.baseURI).href;
 }
 
+// Deployments host the classifier elsewhere, since it is too large to serve with the app.
+const classifierUrl = import.meta.env.VITE_CLASSIFIER_URL || modelUrl('plant_disease_model.onnx');
+
 function failure(error: unknown): ModelState {
   if (error instanceof InferenceError && error.missingClassifier) {
     return { status: 'missing' };
@@ -35,7 +38,7 @@ export function useModels(): { state: ModelState; loadClassifierFile(file: File)
     let active = true;
     getClient()
       .load(
-        { backgroundModel: modelUrl('background_removal.onnx'), classifier: modelUrl('plant_disease_model.onnx') },
+        { backgroundModel: modelUrl('background_removal.onnx'), classifier: classifierUrl },
         (loaded, total) => active && setState({ status: 'loading', loaded, total }),
       )
       .then(

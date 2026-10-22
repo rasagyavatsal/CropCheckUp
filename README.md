@@ -132,7 +132,28 @@ any static host can serve. It uses relative paths, so it also works from a
 subdirectory. Put `plant_disease_model.onnx` in `public/models/` before
 building to include it in `dist/models/`. Browsers download the 112 MB model
 when the page opens; whether later visits reuse it depends on the host's cache
-headers.
+headers. To download the classifier from elsewhere, set `VITE_CLASSIFIER_URL`
+when building; that host must allow cross-origin GET requests.
+
+### Cloud Run
+
+The `Dockerfile` builds the app and serves it with nginx on port 8080. Cloud Run
+limits HTTP/1 responses to 32 MiB, so the classifier is served from the public
+Cloud Storage bucket `gs://leafcheckup-models` instead, and `.gcloudignore`
+keeps it out of the upload. Deploy from the repository root:
+
+```sh
+gcloud run deploy cropcheckup --source . --project leafcheckup \
+  --region us-central1 --allow-unauthenticated
+```
+
+To publish a new classifier, upload it over the bucket's copy:
+
+```sh
+gcloud storage cp public/models/plant_disease_model.onnx \
+  gs://leafcheckup-models/plant_disease_model.onnx \
+  --cache-control="public, max-age=86400"
+```
 
 ## Image preprocessing
 
