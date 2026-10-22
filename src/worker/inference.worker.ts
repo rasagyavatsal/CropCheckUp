@@ -4,10 +4,11 @@ import wasmUrl from 'onnxruntime-web/ort-wasm-simd-threaded.wasm?url';
 
 import diseaseInfo from '../data/disease_info.json';
 import labelsText from '../data/labels.txt?raw';
-import { classifyImage, type Models } from '../lib/classify';
+import { classifyImage } from '../lib/classify';
 import type { RgbaImage } from '../lib/imageProcessing';
 import { parseLabels } from '../lib/labels';
-import { BACKGROUND_INPUT_NAME, maskFromTensor, validateBackgroundModel, validateClassifier } from '../lib/modelValidation';
+import { validateBackgroundModel, validateClassifier } from '../lib/modelValidation';
+import { createModels } from '../lib/ortModels';
 import type { WorkerRequest, WorkerResponse } from './protocol';
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -82,31 +83,6 @@ async function createBackgroundModel(url: string): Promise<ort.InferenceSession>
   return session;
 }
 
-const models: Models = {
-  async segment(input) {
-    const session = backgroundSession!;
-    const outputs = await session.run({
-      [BACKGROUND_INPUT_NAME]: new ort.Tensor('float32', input, [1, 3, 320, 320]),
-    });
-    const mask = outputs[session.outputNames[0]!];
-    if (!mask) {
-      throw new Error('background-removal model returned no mask output');
-    }
-    return maskFromTensor(mask.dims, mask.data);
-  },
-  async classify(input) {
-    const session = classifierSession!;
-    const outputs = await session.run({
-      [session.inputNames[0]!]: new ort.Tensor('float32', input, [1, 224, 224, 3]),
-    });
-    const scores = outputs[session.outputNames[0]!];
-    if (!scores || scores.dims.join() !== `1,${labels.length}`) {
-      throw new Error(`the classifier output shape is (${scores?.dims.join(', ')}); expected (1, ${labels.length})`);
-    }
-    return scores.data as Float32Array;
-  },
-};
-
 async function decode(image: Blob): Promise<RgbaImage> {
   let bitmap: ImageBitmap;
   try {
@@ -153,6 +129,7 @@ async function handle(request: WorkerRequest): Promise<void> {
       if (!backgroundSession || !classifierSession) {
         throw new Error('the models are not loaded yet');
       }
+      const models = createModels(ort, backgroundSession, classifierSession, labels.length);
       const result = await classifyImage(await decode(request.image), models, labels, diseaseInfo);
       post({ id: request.id, type: 'result', result }, [result.processed.data.buffer]);
       return;
