@@ -10,6 +10,8 @@ alternative predictions. Symptoms, causes, and management information are
 included when available. All image processing and inference run in the browser,
 so photos are never uploaded.
 
+**Try it:** <https://cropcheckup-893696572314.us-central1.run.app>
+
 ## Technical highlights
 
 - **Transfer learning:** an ImageNet-22k-pretrained ConvNeXt-Tiny is
@@ -55,6 +57,7 @@ flowchart TD
 | Image preparation | TypeScript on raw RGBA pixels, matching Pillow |
 | User interface | React and TypeScript |
 | Build and tests | Vite, Vitest |
+| Hosting | Cloud Run (nginx) for the app; Cloud Storage for the classifier model |
 
 ## Dataset and model training
 
