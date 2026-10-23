@@ -235,6 +235,18 @@ code {
   text-decoration-color: currentColor;
 }
 
+.swap {
+  display: inline-block;
+  animation: swap-in 0.25s var(--ease-out);
+}
+
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);

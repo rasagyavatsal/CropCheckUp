@@ -97,7 +97,9 @@ export function ResultView({ result, fileName }: { result: ClassificationResult;
         ))}
       </ol>
       <button type="button" className="link-button" onClick={copy}>
-        {copied ? 'Copied' : 'Copy as JSON'}
+        <span key={String(copied)} className="swap">
+          {copied ? '✓ Copied' : 'Copy as JSON'}
+        </span>
       </button>
     </section>
   );
