@@ -6,7 +6,7 @@
   --text: #1b1b1a;
   --muted: #64645f;
   --accent: #078848;
-  --accent-soft: #e3f3e8;
+  --subtle: #efefed;
   --warning: #8a5a00;
   --warning-soft: #fdf3dc;
   --danger: #b42318;
@@ -29,7 +29,7 @@
     --text: #ececea;
     --muted: #a3a39e;
     --accent: #4cc27a;
-    --accent-soft: #1d3326;
+    --subtle: #262625;
     --warning: #f0c060;
     --warning-soft: #33290f;
     --danger: #ff8a80;
@@ -139,7 +139,7 @@ code {
   padding: 14px 16px;
   margin: 0 0 20px;
   border-radius: var(--radius);
-  background: var(--accent-soft);
+  background: var(--subtle);
   animation: rise-in var(--duration) var(--ease-out) both;
 }
 
@@ -159,7 +159,7 @@ code {
   border-radius: 999px;
   overflow: hidden;
   appearance: none;
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  background: var(--border);
   color: var(--accent);
 }
 
@@ -181,7 +181,7 @@ code {
 .notice progress:indeterminate {
   background:
     linear-gradient(90deg, transparent, var(--accent), transparent) 0 0 / 40% 100% no-repeat,
-    color-mix(in srgb, var(--accent) 18%, transparent);
+    var(--border);
   animation: indeterminate 1.2s ease-in-out infinite;
 }
 
@@ -369,7 +369,7 @@ code {
 .dropzone:focus-within,
 .dropzone-active {
   border-color: var(--accent);
-  background: var(--accent-soft);
+  background: var(--subtle);
 }
 
 .dropzone:has(:focus-visible) {
@@ -467,7 +467,7 @@ code {
 .skeleton span {
   height: 12px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent-soft) 30%, var(--border) 50%, var(--accent-soft) 70%) 0 0 / 300% 100%;
+  background: linear-gradient(90deg, var(--subtle) 30%, var(--border) 50%, var(--subtle) 70%) 0 0 / 300% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
@@ -533,7 +533,7 @@ code {
   flex: 1;
   height: 8px;
   border-radius: 999px;
-  background: var(--accent-soft);
+  background: var(--subtle);
   overflow: hidden;
 }
 
