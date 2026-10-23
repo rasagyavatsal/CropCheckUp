@@ -33,7 +33,7 @@ export function ModelStatus({ state, onClassifierFile }: { state: ModelState; on
             <input
               type="file"
               accept=".onnx"
-              hidden
+              className="visually-hidden"
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (file) onClassifierFile(file);
