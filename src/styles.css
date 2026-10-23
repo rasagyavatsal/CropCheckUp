@@ -624,6 +624,18 @@ select:hover {
   animation-delay: calc(0.05s * var(--index, 0));
 }
 
+.alternatives .confidence-track {
+  height: 6px;
+}
+
+.alternatives .confidence-fill {
+  background: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.alternatives .confidence-value {
+  color: var(--muted);
+}
+
 .footer {
   margin-top: 40px;
   font-size: 0.875rem;
