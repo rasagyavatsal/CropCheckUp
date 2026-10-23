@@ -115,6 +115,7 @@ code {
   margin: 0 0 20px;
   border-radius: var(--radius);
   background: var(--accent-soft);
+  animation: rise-in var(--duration) var(--ease-out) both;
 }
 
 .notice p {
@@ -126,8 +127,50 @@ code {
 }
 
 .notice progress {
+  display: block;
   width: 100%;
-  accent-color: var(--accent);
+  height: 6px;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  appearance: none;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+}
+
+.notice progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.notice progress::-webkit-progress-value {
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.3s var(--ease-out);
+}
+
+.notice progress::-moz-progress-bar {
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.notice progress:indeterminate {
+  background:
+    linear-gradient(90deg, transparent, var(--accent), transparent) 0 0 / 40% 100% no-repeat,
+    color-mix(in srgb, var(--accent) 18%, transparent);
+  animation: indeterminate 1.2s ease-in-out infinite;
+}
+
+.notice progress:indeterminate::-moz-progress-bar {
+  background: transparent;
+}
+
+@keyframes indeterminate {
+  from {
+    background-position: -70% 0, 0 0;
+  }
+  to {
+    background-position: 170% 0, 0 0;
+  }
 }
 
 .notice-warning {
