@@ -241,7 +241,10 @@ code {
   background: var(--surface);
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.25s var(--ease-out);
 }
 
 .dropzone:hover,
@@ -249,6 +252,20 @@ code {
 .dropzone-active {
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+.dropzone:has(:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.dropzone:active {
+  transform: scale(0.99);
+}
+
+.dropzone-active {
+  border-style: solid;
+  transform: scale(1.01);
 }
 
 .dropzone-compact {
@@ -265,6 +282,22 @@ code {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.dropzone:hover .dropzone-icon,
+.dropzone-active .dropzone-icon {
+  transform: translateY(-3px);
+}
+
+.dropzone-active .dropzone-icon {
+  animation: bob 1s ease-in-out infinite;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 .dropzone-compact .dropzone-icon {
