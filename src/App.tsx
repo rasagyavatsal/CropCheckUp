@@ -109,7 +109,8 @@ export function App() {
           crops.
         </p>
         <p>
-          <a href="https://github.com/rasagyavatsal/CropCheckUp">Source on GitHub</a>
+          <a href="https://github.com/rasagyavatsal/CropCheckUp">Source on GitHub</a> ·{' '}
+          <a href={`https://github.com/rasagyavatsal/CropCheckUp/releases/tag/v${__APP_VERSION__}`}>v{__APP_VERSION__}</a>
         </p>
       </footer>
     </div>
