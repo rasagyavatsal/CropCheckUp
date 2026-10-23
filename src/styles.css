@@ -69,6 +69,22 @@
 body {
   margin: 0;
   background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+dd {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
 a {
@@ -97,6 +113,15 @@ code {
   align-items: flex-start;
   margin-bottom: 28px;
   animation: rise-in var(--duration) var(--ease-out) both;
+}
+
+.header img {
+  flex: none;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.header:hover img {
+  transform: rotate(-8deg) scale(1.05);
 }
 
 .header h1 {
