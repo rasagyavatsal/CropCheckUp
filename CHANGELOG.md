@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.0.0](https://github.com/rasagyavatsal/CropCheckUp/compare/v1.0.0...v2.0.0) (2026-10-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* the `cropcheckup` command and Python package are removed.
+* the classifier asset is plant_disease_model.onnx, which is not in the repository, and labels.txt has 38 PlantVillage labels instead of 68; the mango, papaya, bottle gourd and zucchini labels are gone.
+
+### Features
+
+* add classification pipeline and model validation ([f776773](https://github.com/rasagyavatsal/CropCheckUp/commit/f776773588c0f800afdb37a1b8aa1fd82542c499))
+* add label parsing and prediction ranking ([1c7b0e2](https://github.com/rasagyavatsal/CropCheckUp/commit/1c7b0e22d865fa89d3fee14e0da3b2622834d757))
+* add leaf photo upload and results UI ([30a102b](https://github.com/rasagyavatsal/CropCheckUp/commit/30a102b344303aecc8997096a86ca6c3585008de))
+* classify the whole photo when background removal keeps too little ([936a604](https://github.com/rasagyavatsal/CropCheckUp/commit/936a604c838c0da44355ee4ad269037aa6acdf42))
+* deploy the web app to Cloud Run ([43482cf](https://github.com/rasagyavatsal/CropCheckUp/commit/43482cfa1d9be33ec70c888fabd82d34e17cb065))
+* port image preprocessing and background masking ([eb1c990](https://github.com/rasagyavatsal/CropCheckUp/commit/eb1c990606ff5c0ef76fe22cdb4b49b9815c82bb))
+* remove Python CLI ([bba9997](https://github.com/rasagyavatsal/CropCheckUp/commit/bba999757b2acd6da4ae94097c7b8a34babcb6ac))
+* replace the Keras classifier with a local ConvNeXt ONNX model ([30e7a54](https://github.com/rasagyavatsal/CropCheckUp/commit/30e7a546bdf264e92e0815249bc24bba8c681f9a))
+* run the ONNX models in a web worker ([5b20ed1](https://github.com/rasagyavatsal/CropCheckUp/commit/5b20ed15d2a1e4d82e49cde270864a6628c4ea2c))
+
 ## [1.0.0](https://github.com/rasagyavatsal/CropCheckUp/compare/v0.0.1...v1.0.0) (2026-09-27)
 
 
