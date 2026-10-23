@@ -61,7 +61,7 @@ export function App() {
       <main className={photo ? 'workspace' : undefined}>
         {photo && (
           <div className="photos">
-            <figure className="photo">
+            <figure className="photo" key={photo.url}>
               <img src={photo.url} alt="Selected leaf" />
               <figcaption>{photo.file.name}</figcaption>
             </figure>

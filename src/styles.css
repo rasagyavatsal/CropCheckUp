@@ -182,6 +182,12 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow);
+  animation: rise-in var(--duration) var(--ease-out) both;
+}
+
+.photo + .photo {
+  animation-delay: 0.08s;
 }
 
 .photo img,
@@ -212,6 +218,7 @@ code {
 
 .note {
   margin: 0;
+  animation: fade-in var(--duration) var(--ease-out) 0.16s both;
   font-size: 0.875rem;
   color: var(--muted);
 }
@@ -311,6 +318,8 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow);
+  animation: rise-in var(--duration) var(--ease-out) both;
 }
 
 .eyebrow {
