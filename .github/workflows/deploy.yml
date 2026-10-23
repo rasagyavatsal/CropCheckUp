@@ -8,10 +8,14 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ github.ref }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -21,25 +25,14 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-
-  # Deploy to Cloud Run after the build passes on a push to main.
-  deploy:
-    needs: build
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    concurrency:
-      group: deploy
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v5
-      - uses: google-github-actions/auth@v3
+      # Deploy to Cloud Run on a push to main. The identity provider only accepts main.
+      - if: github.event_name == 'push'
+        uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: projects/893696572314/locations/global/workloadIdentityPools/github/providers/cropcheckup
           service_account: github-deploy@leafcheckup.iam.gserviceaccount.com
-      - uses: google-github-actions/deploy-cloudrun@v3
+      - if: github.event_name == 'push'
+        uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: cropcheckup
           project_id: leafcheckup
