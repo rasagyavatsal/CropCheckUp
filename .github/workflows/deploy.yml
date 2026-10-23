@@ -1,0 +1,38 @@
+name: Deploy
+
+# Deploy to Cloud Run after CI passes on a push to main.
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/893696572314/locations/global/workloadIdentityPools/github/providers/cropcheckup
+          service_account: github-deploy@leafcheckup.iam.gserviceaccount.com
+      - uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: cropcheckup
+          project_id: leafcheckup
+          region: us-central1
+          source: .

@@ -143,7 +143,10 @@ when building; that host must allow cross-origin GET requests.
 The `Dockerfile` builds the app and serves it with nginx on port 8080. Cloud Run
 limits HTTP/1 responses to 32 MiB, so the classifier is served from the public
 Cloud Storage bucket `gs://leafcheckup-models` instead, and `.gcloudignore`
-keeps it out of the upload. Deploy from the repository root:
+keeps it out of the upload. The `Deploy` workflow deploys each push to `main`
+once CI passes, signing in to Google Cloud through Workload Identity
+Federation as `github-deploy@leafcheckup.iam.gserviceaccount.com`. To deploy by
+hand, run from the repository root:
 
 ```sh
 gcloud run deploy cropcheckup --source . --project leafcheckup \
