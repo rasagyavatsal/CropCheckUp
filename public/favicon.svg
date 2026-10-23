@@ -1,32 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="CropCheckUp logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CropCheckUp logo">
   <defs>
-    <linearGradient id="cropcheckup-c" x1="214" y1="815" x2="791" y2="185" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#04723A"/>
-      <stop offset="0.52" stop-color="#078848"/>
-      <stop offset="1" stop-color="#0D7B43"/>
-    </linearGradient>
-    <linearGradient id="cropcheckup-leaf" x1="348" y1="793" x2="735" y2="353" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5ACB73"/>
-      <stop offset="1" stop-color="#3AB663"/>
-    </linearGradient>
-    <linearGradient id="cropcheckup-vein" x1="333" y1="811" x2="682" y2="408" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#056E3C"/>
-      <stop offset="1" stop-color="#087D47"/>
+    <linearGradient id="ccu-bg" x1="0" y1="64" x2="64" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#056b39"/>
+      <stop offset="1" stop-color="#0b9e55"/>
     </linearGradient>
   </defs>
-  <path
-    d="M812 282A368 368 0 1 0 791 746"
-    fill="none"
-    stroke="url(#cropcheckup-c)"
-    stroke-linecap="round"
-    stroke-width="145"
-  />
-  <path
-    d="M337 806C309 645 369 507 519 425c87-48 214-75 214-75s-5 151-80 258c-65 94-161 129-259 146-31 5-49 20-57 52Z"
-    fill="url(#cropcheckup-leaf)"
-  />
-  <path
-    d="M337 806c64-162 189-299 346-426C545 518 430 656 337 806Z"
-    fill="url(#cropcheckup-vein)"
-  />
+  <rect width="64" height="64" rx="15" fill="url(#ccu-bg)"/>
+  <path d="M18 46l-7 7" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M15 49C14 27 28 13 52 12c1 24-14 38-37 37Z" fill="#fff"/>
+  <path d="M23.5 33.5l7 7 12.5-15.5" fill="none" stroke="#078848" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
