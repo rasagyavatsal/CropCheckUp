@@ -84,7 +84,7 @@ dd {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  background: color-mix(in srgb, var(--text) 16%, transparent);
 }
 
 a {
@@ -629,7 +629,7 @@ select:hover {
 }
 
 .alternatives .confidence-fill {
-  background: color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--muted) 55%, transparent);
 }
 
 .alternatives .confidence-value {
@@ -641,6 +641,10 @@ select:hover {
   font-size: 0.875rem;
   color: var(--muted);
   animation: fade-in var(--duration) var(--ease-out) 0.2s both;
+}
+
+.footer a {
+  color: inherit;
 }
 
 .footer p {
