@@ -79,10 +79,11 @@ export function App() {
         )}
 
         <div className="panel">
-          {analysis.status === 'running' && (
+          {(analysis.status === 'running' || (photo && analysis.status === 'idle' && models.state.status === 'loading')) && (
             <section className="result" role="status">
               <p className="status">
-                <span className="spinner" aria-hidden="true" /> Analysing the leaf…
+                <span className="spinner" aria-hidden="true" />{' '}
+                {analysis.status === 'running' ? 'Analysing the leaf…' : 'Waiting for the models…'}
               </p>
               <div className="skeleton" aria-hidden="true">
                 <span />
@@ -91,7 +92,6 @@ export function App() {
               </div>
             </section>
           )}
-          {photo && analysis.status === 'idle' && !ready && <p className="status">Waiting for the models…</p>}
           {analysis.status === 'error' && (
             <p className="notice notice-error" role="alert">
               Could not classify this image: {analysis.message}
