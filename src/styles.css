@@ -359,6 +359,14 @@ code {
   height: 100%;
   border-radius: inherit;
   background: var(--accent);
+  animation: grow 0.8s var(--ease-out) 0.15s both;
+  transition: width 0.4s var(--ease-out);
+}
+
+@keyframes grow {
+  from {
+    width: 0;
+  }
 }
 
 .confidence-value {
@@ -424,6 +432,8 @@ select {
   display: grid;
   gap: 4px;
   font-size: 0.95rem;
+  animation: rise-in var(--duration) var(--ease-out) both;
+  animation-delay: calc(0.05s * var(--index, 0));
 }
 
 .footer {

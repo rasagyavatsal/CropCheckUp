@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 
 import type { ClassificationResult } from '../lib/classify';
 import type { Prediction } from '../lib/labels';
@@ -87,8 +87,8 @@ export function ResultView({ result, fileName }: { result: ClassificationResult;
         </label>
       </div>
       <ol className="alternatives">
-        {alternatives.map((prediction) => (
-          <li key={prediction.label}>
+        {alternatives.map((prediction, index) => (
+          <li key={prediction.label} style={{ '--index': index } as CSSProperties}>
             <span>
               {prediction.crop} · <strong>{prediction.condition}</strong>
             </span>
