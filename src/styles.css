@@ -421,6 +421,37 @@ code {
   animation: spin 0.8s linear infinite;
 }
 
+.skeleton {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.skeleton span {
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-soft) 30%, var(--border) 50%, var(--accent-soft) 70%) 0 0 / 300% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton span:first-child {
+  width: 55%;
+  height: 22px;
+}
+
+.skeleton span:last-child {
+  width: 80%;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

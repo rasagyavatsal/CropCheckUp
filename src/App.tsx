@@ -80,9 +80,16 @@ export function App() {
 
         <div className="panel">
           {analysis.status === 'running' && (
-            <p className="status" role="status">
-              <span className="spinner" aria-hidden="true" /> Analysing the leaf…
-            </p>
+            <section className="result" role="status">
+              <p className="status">
+                <span className="spinner" aria-hidden="true" /> Analysing the leaf…
+              </p>
+              <div className="skeleton" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+            </section>
           )}
           {photo && analysis.status === 'idle' && !ready && <p className="status">Waiting for the models…</p>}
           {analysis.status === 'error' && (
